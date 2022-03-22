@@ -2,14 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './style.css'
 import * as THREE from 'three'
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls"
+import {TransformControls} from "three/examples/jsm/controls/TransformControls"
 import {DragControls} from "three/examples/jsm/controls/DragControls"
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls"
 
-
-ReactDOM.render(
-    <h1>🤖️ graphicsAI : Editor 🎨️</h1>,
-  document.getElementById('root')
-);
 
 const viewport = document.getElementById('webgl');
 viewport.style.width = window.width;
@@ -25,12 +21,14 @@ camera.position.set(3,3,6);
 //creating renderer
 const renderer = new THREE.WebGLRenderer({canvas:viewport});
 renderer.setSize(window.innerWidth, window.innerHeight);
-const orbitalControls = new OrbitControls(camera, renderer.domElement);
+renderer.setClearColor(0x3a3a3a);
+
+const orbitControls = new OrbitControls(camera, renderer.domElement);
 
 //creating helpers
 const helperGroup = new THREE.Group();
 //add grid
-const grid = new THREE.GridHelper(50,100);
+const grid = new THREE.GridHelper(50,100, 0x4a4a4a, 0x4a4a4a);
 // grid.material.opacity = 0.4;
 helperGroup.add(grid);
 //add axes
@@ -44,20 +42,33 @@ scene.add(helperGroup);
 
 //creating cube
 const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial({color:0x444444});
+const material = new THREE.MeshBasicMaterial({color:0x8e9091});
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 camera.lookAt(cube.position);
-
-const dragControls = new DragControls([cube], camera, renderer.domElement);
-dragControls.addEventListener('dragstart', (event)=>{
-    orbitalControls.enabled = false;
-    event.object.material.color.set( 0xaaaaaa );
+const transformControls = new TransformControls(camera, renderer.domElement);
+transformControls.attach(cube);
+transformControls.addEventListener('mouseDown',(event)=>{
+    orbitControls.enabled = false;
 });
-dragControls.addEventListener('dragend', (event)=>{
-    orbitalControls.enabled = true;
-    event.object.material.color.set( 0x444444 );
-})
+transformControls.addEventListener('mouseUp',(event)=>{
+    orbitControls.enabled = true;
+});
+window.addEventListener('keypress', (event)=>{
+    switch(event.code){
+        case 'KeyG':
+            transformControls.setMode('translate');
+            break;
+        case 'KeyR':
+            transformControls.setMode('rotate');
+            break;
+        case 'KeyS':
+            transformControls.setMode('scale');
+            break;
+    }
+});
+scene.add(transformControls);
+
 
 // helperGroup.visible = false;
 
