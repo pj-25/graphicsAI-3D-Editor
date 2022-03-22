@@ -1,7 +1,19 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
 import './style.css'
 import * as THREE from 'three'
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls"
 import {DragControls} from "three/examples/jsm/controls/DragControls"
+
+
+ReactDOM.render(
+    <h1>🤖️ graphicsAI : Editor 🎨️</h1>,
+  document.getElementById('root')
+);
+
+const viewport = document.getElementById('webgl');
+viewport.style.width = window.width;
+viewport.style.height = window.height;
 
 //creating scene
 const scene = new THREE.Scene();
@@ -11,9 +23,8 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHei
 camera.position.set(3,3,6);
 
 //creating renderer
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({canvas:viewport});
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
 const orbitalControls = new OrbitControls(camera, renderer.domElement);
 
 //creating helpers

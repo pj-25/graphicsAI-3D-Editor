@@ -4,7 +4,7 @@ const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 
 module.exports = {
-    entry: path.resolve(__dirname, '../src/script.js'),
+    entry: path.resolve(__dirname, '../src/index.js'),
     output:
     {
         filename: 'bundle.[contenthash].js',
@@ -82,7 +82,19 @@ module.exports = {
                         }
                     }
                 ]
-            }
+            },
+
+            //babel
+            {
+                test: /\.?js$/,
+                exclude: /node_modules/,
+                use: {
+                  loader: "babel-loader",
+                  options: {
+                    presets: ['@babel/preset-env', '@babel/preset-react']
+                  }
+                }
+              }
         ]
     }
 }
