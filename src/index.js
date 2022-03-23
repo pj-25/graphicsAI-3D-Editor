@@ -23,6 +23,14 @@ const renderer = new THREE.WebGLRenderer({canvas:viewport});
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x3a3a3a);
 
+window.addEventListener('resize', (event)=>{
+    const aspectRatio = window.innerWidth/window.innerHeight;
+    camera.aspect = aspectRatio;
+    camera.updateProjectionMatrix();
+    
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
 const orbitControls = new OrbitControls(camera, renderer.domElement);
 
 //creating helpers
@@ -72,10 +80,10 @@ scene.add(transformControls);
 
 // helperGroup.visible = false;
 
-function animate(){
+function render(){
     renderer.render(scene, camera);
-    requestAnimationFrame(animate);
+    requestAnimationFrame(render);
 }
 
 //rendering the scene
-animate();
+render();
