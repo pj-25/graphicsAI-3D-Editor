@@ -58,29 +58,28 @@ export default class Viewport {
 
     add(object){
         this.scene.add(object);
-        const transformControls = new TransformControls(this.camera, this.renderer.domElement);
-        transformControls.attach(object);
-        transformControls.addEventListener('mouseDown',(event)=>{
+        object.setTransformControls(new TransformControls(this.camera, this.renderer.domElement));
+        object.transformControls.attach(object);
+        object.transformControls.addEventListener('mouseDown',(event)=>{
             this.orbitControls.enabled = false;
         });
-        transformControls.addEventListener('mouseUp',(event)=>{
+        object.transformControls.addEventListener('mouseUp',(event)=>{
             this.orbitControls.enabled = true;
         });
         window.addEventListener('keypress', (event)=>{
             switch(event.code){
                 case 'KeyG':
-                    transformControls.setMode('translate');
+                    object.transformControls.setMode('translate');
                     break;
                 case 'KeyR':
-                    transformControls.setMode('rotate');
+                    object.transformControls.setMode('rotate');
                     break;
                 case 'KeyS':
-                    transformControls.setMode('scale');
+                    object.transformControls.setMode('scale');
                     break;
             }
         });
-        this.scene.add(transformControls);
-        return transformControls;
+        this.scene.add(object.transformControls);
     }
 
 

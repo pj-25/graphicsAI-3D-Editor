@@ -1,21 +1,22 @@
 import './style.css';
-import Viewport from './Viewport';
+import Editor from './Editor';
 import * as THREE from 'three';
-
+import InteractiveMesh from './InteractiveMesh';
 
 const viewportCanvas = document.getElementById('webgl');
+const sidePane = document.getElementById('sidepane');
 
-//create viewport
-const viewport = new Viewport(viewportCanvas, viewportCanvas.getBoundingClientRect().width, viewportCanvas.getBoundingClientRect().height); 
+//create editor
+const editor = new Editor(viewportCanvas, sidePane);
 
 //creating cube
 const geometry = new THREE.BoxBufferGeometry();
 const material = new THREE.MeshBasicMaterial({color:0x8e9091});
-const cube = new THREE.Mesh(geometry, material);
-viewport.add(cube);
-viewport.camera.lookAt(cube.position);
+const cube = new InteractiveMesh(geometry, material, editor.propertiesPane);
+editor.viewport.add(cube);
+editor.viewport.camera.lookAt(cube.position);
 
-// viewport.hideHelpers();
+// editor.viewport.hideHelpers();
 
-//rendering the viewport
-viewport.render();
+//rendering the editor.viewport
+editor.viewport.render();

@@ -1,14 +1,10 @@
+html,
 body{
     margin: 0;
+    height: 100%;
     background-color: #424242;
     color: antiquewhite;
 }
-
-#webgl{
-    width: 100%;
-    height: 100%;
-}
-
 
 #menubar{
     background-color: #1d1d1d;
@@ -29,6 +25,35 @@ body{
     list-style: none;
 }
 
+#editor{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: row;
+}
+
+@media screen and (orientation: portrait) {
+    #editor{
+        flex-flow: column;
+    }
+}
+
+#viewport-container{
+    flex-grow: 2;
+    height: 100%;
+    resize: horizontal;
+    overflow: auto;
+}
+
 #webgl{
+    width: 100%;
+    height: 100%;
     background-color: #3a3a3a;
+}
+
+#sidepane{
+    overflow: auto;
+    padding: 5px 5px 5px 5px;
+    flex-grow: 1;
+    background-color: #161616;
 }
