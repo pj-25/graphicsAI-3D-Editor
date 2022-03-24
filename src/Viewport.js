@@ -1,28 +1,30 @@
 import * as THREE from 'three';
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 import {TransformControls} from "three/examples/jsm/controls/TransformControls"
+import CameraHelper from './CameraHelper';
 
 
 export default class Viewport {
 
     constructor(domElement, width=window.innerWidth*0.75, height=window.innerHeight, cameraPosition = [1,2,3], clearColor=0x3a3a3a){
         this.render = ()=>{
-            this.renderer.render(this.scene, this.camera);
+            this.renderer.render(this.scene, this.cameraHelper.getCurrentCamera());
             requestAnimationFrame(this.render);
         }
 
         this.width = width;
         this.height = height;
 
+        console.log(width, height);
+        
         //creating scene
         this.scene = new THREE.Scene();
 
         //creating camera
-        this.camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
-        this.camera.position.set(...cameraPosition);
+        this.cameraHelper = new CameraHelper(width, height, cameraPosition, domElement);
+        this.scene.add(this.cameraHelper.getCurrentCamera());
 
         //creating renderer
-        this.renderer = new THREE.WebGLRenderer({canvas:domElement});
+        this.renderer = new THREE.WebGLRenderer({canvas:domElement, antialias: true});
         this.renderer.setSize(this.width, this.height);
         this.renderer.setClearColor(clearColor);
 
@@ -31,14 +33,11 @@ export default class Viewport {
             this.width = window.innerWidth;
             this.height = window.innerHeight;
             const aspectRatio = this.width/this.height;
-            this.camera.aspect = aspectRatio;
-            this.camera.updateProjectionMatrix();
+            this.cameraHelper.getCurrentCamera().aspect = aspectRatio;
+            this.cameraHelper.getCurrentCamera().updateProjectionMatrix();
             this.renderer.setSize(this.width, this.height);
         }
         this.addResizeListener();
-
-        //add orbit controls
-        this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
 
         //creating helpers
         this.helper = {};
@@ -58,13 +57,13 @@ export default class Viewport {
 
     add(object){
         this.scene.add(object);
-        object.setTransformControls(new TransformControls(this.camera, this.renderer.domElement));
+        object.setTransformControls(new TransformControls(this.cameraHelper.getCurrentCamera(), this.renderer.domElement));
         object.transformControls.attach(object);
         object.transformControls.addEventListener('mouseDown',(event)=>{
-            this.orbitControls.enabled = false;
+            this.cameraHelper.getCurrentOrbitControls().enabled = false;
         });
         object.transformControls.addEventListener('mouseUp',(event)=>{
-            this.orbitControls.enabled = true;
+            this.cameraHelper.getCurrentOrbitControls().enabled = true;
         });
         window.addEventListener('keypress', (event)=>{
             switch(event.code){
@@ -82,6 +81,11 @@ export default class Viewport {
         this.scene.add(object.transformControls);
     }
 
+    switchCamera(){
+        this.scene.remove(this.cameraHelper.getCurrentCamera());
+        this.cameraHelper.switchCamera();
+        this.scene.add(this.cameraHelper.getCurrentCamera());
+    }
 
     addResizeListener(){
         window.addEventListener('resize', this.onResizeEvent);

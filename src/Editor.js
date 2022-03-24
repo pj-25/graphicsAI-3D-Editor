@@ -5,7 +5,7 @@ export default class Editor{
     constructor(viewportCanvas, propertiesPaneContainer){
         //create viewport
         this.viewport = new Viewport(viewportCanvas, viewportCanvas.getBoundingClientRect().width, viewportCanvas.getBoundingClientRect().height); 
-
+        
         //add toolbar
 
 
