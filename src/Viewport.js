@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {TransformControls} from "three/examples/jsm/controls/TransformControls"
-import CameraHelper from './CameraHelper';
+import ControlledCamera from './ControlledCamera';
 
 
 export default class Viewport {
@@ -20,7 +20,7 @@ export default class Viewport {
         this.scene = new THREE.Scene();
 
         //creating camera
-        this.cameraHelper = new CameraHelper(width, height, cameraPosition, domElement);
+        this.cameraHelper = new ControlledCamera(width, height, cameraPosition, domElement);
         this.scene.add(this.cameraHelper.getCurrentCamera());
 
         //creating renderer

@@ -24,6 +24,7 @@ const pcameraFolder = editor.propertiesPane.addFolder('Camera(Perspective)');
 pcameraFolder.add(editor.viewport.cameraHelper.perspectiveCamera.position, 'x').min(-10).max(10).listen();
 pcameraFolder.add(editor.viewport.cameraHelper.perspectiveCamera.position, 'y').min(-10).max(10).listen();
 pcameraFolder.add(editor.viewport.cameraHelper.perspectiveCamera.position, 'z').min(-10).max(10).listen();
+pcameraFolder.add(editor.viewport.cameraHelper.perspectiveCamera, 'fov').min(-180).max(180).listen();
 
 
 const ocameraFolder = editor.propertiesPane.addFolder('Camera(Orthograhpic)');
