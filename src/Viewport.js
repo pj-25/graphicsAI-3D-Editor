@@ -53,6 +53,11 @@ export default class Viewport {
         this.helper.axesGroup.add(negativeAxes);
         this.helper.group.add(this.helper.axesGroup);
         this.scene.add(this.helper.group);
+
+        window.addEventListener('keypress', (event)=>{
+            console.log(event.key)
+            this.cameraHelper.performOperation(event.key)
+        })
     }
 
     add(object){
