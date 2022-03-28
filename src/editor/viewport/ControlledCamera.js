@@ -110,20 +110,22 @@ export default class ControlledCamera {
     }
 
     moveLeft(){
-        this.angle+=(Math.PI / 16)
+        this.angle-=(Math.PI / 16)
         let camPos = new THREE.Vector3(this.activeCamera.position.x, this.activeCamera.position.y, this.activeCamera.position.z)
         console.log(camPos.normalize());
         if(this.activeCamera.type === 'OrthographicCamera' && camPos.equals(new THREE.Vector3(0, 1, 0)) || camPos.equals(new THREE.Vector3(0, -1, 0))){
             // Gimbal lock
-            this.activeCamera.rotation.z = this.angle
+            this.activeCamera.rotation.z += Math.PI / 16
         }else {
             let rotVec = this.getHorizontalCoordinates();
             this.setCamPosition(rotVec);
         }
+
+        // TODO Fix for after orbital contro panning; getting wierd results
     }
 
     moveRight(){
-        this.angle-=(Math.PI / 16)
+        this.angle+=(Math.PI / 16)
 
         let camPos = new THREE.Vector3(this.activeCamera.position.x, this.activeCamera.position.y, this.activeCamera.position.z)
         console.log(camPos.normalize());
@@ -164,6 +166,8 @@ export default class ControlledCamera {
     setCamPosition(position){
         this.activeCamera.position.set(position.x, position.y, position.z)
         this.activeCamera.lookAt(this.orbitControls.target)
+
+        // TODO update orbitalControls
     }
 
     getVerticalCoordinates(){
@@ -174,7 +178,6 @@ export default class ControlledCamera {
         coord[1] = radius * Math.sin(this.orbitControls.getAzimuthalAngle() / (Math.PI * 2) + this.angle)
         coord[2] = radius * Math.cos(this.orbitControls.getAzimuthalAngle() / (Math.PI * 2) + this.angle) * Math.sin(this.orbitControls.getPolarAngle());
 
-        console.log(coord);
         return new THREE.Vector3(coord[0], coord[1], coord[2]);
     }
 
