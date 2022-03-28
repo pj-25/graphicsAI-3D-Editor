@@ -1,17 +1,17 @@
 import PropertyController from "./propertyController";
 
 export default class PlaneProperty extends PropertyController{
-    constructor(interactiveMesh){
-        super(interactiveMesh);
+    constructor(interactiveMesh, propertiesPane){
+        super(interactiveMesh, propertiesPane);
         this.geometryData = this.interactiveMesh.geometry.parameters;
-        this.planeFolder = this.propertiesPane.addFolder('Add Plane');
+        this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
     }
 
-    initPlaneProperties(){
-        this.planeFolder.add(this.geometryData,'width').min(1).max(10).onChange(this.regenerate);
-        this.planeFolder.add(this.geometryData,'height').min(1).max(10).onChange(this.regenerate);
-        this.planeFolder.add(this.geometryData,'widthSegments').min(1).max(10).onChange(this.regenerate);
-        this.planeFolder.add(this.geometryData,'heightSegments').min(1).max(10).onChange(this.regenerate);
+    initProperties(){
+        this.geometryPropertyFolder.add(this.geometryData,'width').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'height').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'widthSegments').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'heightSegments').min(1).max(10).onChange(this.regenerate);
     }
     
     regenerate(){

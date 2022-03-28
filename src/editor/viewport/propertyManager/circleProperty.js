@@ -1,17 +1,17 @@
 import PropertyController from "./propertyController";
 
 export default class CircleProperty extends PropertyController{
-    constructor(interactiveMesh){
-        super(interactiveMesh);
+    constructor(interactiveMesh, propertiesPane){
+        super(interactiveMesh, propertiesPane);
         this.geometryData = this.interactiveMesh.geometry.parameters;
-        this.circleFolder = this.propertiesPane.addFolder('Add Circle');
+        this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
     }
 
-    initCircleProperties(){
-        this.circleFolder.add(this.geometryData,'radius').min(1).max(10).onChangs(this.regenerate);
-        this.circleFolder.add(this.geometryData,'segments').min(1).max(10).onChange(this.regenerate);
-        this.circleFolder.add(this.geometryData,'thetaStart').min(1).max(10).onChange(this.regenerate);
-        this.circleFolder.add(this.geometryData,'thetaLength').min(1).max(10).onChange(this.regenerate);
+    initProperties(){
+        this.geometryPropertyFolder.add(this.geometryData,'radius').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'segments').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'thetaStart').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'thetaLength').min(1).max(10).onChange(this.regenerate);
 
     }
     

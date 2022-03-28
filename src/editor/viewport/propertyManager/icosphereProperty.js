@@ -1,15 +1,15 @@
 import PropertyController from "./propertyController";
 
 export default class IcosahedronProperty extends PropertyController{
-    constructor(interactiveMesh){
-        super(interactiveMesh);
+    constructor(interactiveMesh, propertiesPane){
+        super(interactiveMesh, propertiesPane);
         this.geometryData = this.interactiveMesh.geometry.parameters;
-        this.icosahedronFolder = this.propertiesPane.addFolder('Add Icosphere');
+        this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
     }
 
-    initIcosahedronProperties(){
-        this.icosahedronFolder.add(this.geometryData,'radius').min(1).max(10).onChange(this.regenerate);
-        this.icosahedronFolder.add(this.geometryData,'detail').min(1).max(10).onChange(this.regenerate);
+    initProperties(){
+        this.geometryPropertyFolder.add(this.geometryData,'radius').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'detail').min(1).max(10).onChange(this.regenerate);
     }
     
     regenerate(){

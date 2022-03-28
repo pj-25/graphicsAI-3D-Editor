@@ -3,7 +3,7 @@ import { TransformControls } from "three/examples/jsm/controls/TransformControls
 
 
 export default class InteractiveMesh extends THREE.Mesh{
-    constructor(viewport, geometry, material, propertiesPane, selectionColor=0xf49a34){
+    constructor(viewport, geometry, material, selectionColor=0xf49a34){
         super(geometry, material);
         this.type = "InteractiveMesh";
         this.viewport = viewport;
@@ -35,7 +35,6 @@ export default class InteractiveMesh extends THREE.Mesh{
         this.selected = false;
         this.hasTransformControl = false;
         this.color = material.color.getHex();
-        this.initPropertiesPane(propertiesPane);
 
         this.edges = new THREE.EdgesGeometry(geometry);
         this.line = new THREE.LineSegments(this.edges, new THREE.LineBasicMaterial({color:selectionColor}));
@@ -45,24 +44,6 @@ export default class InteractiveMesh extends THREE.Mesh{
 
     setTransformControls(transformControls){
         this.transformControls = transformControls;
-    }
-
-    initPropertiesPane(propertiesPane){
-        this.propertiesFolder = propertiesPane.addFolder('Cube(Mesh)-'+this.id);
-        this.propertiesFolder.add(this.position, 'x').min(-10).max(10).step(0.01).listen();
-        this.propertiesFolder.add(this.position, 'y').min(-10).max(10).step(0.01).listen();
-        this.propertiesFolder.add(this.position, 'z').min(-10).max(10).step(0.01).listen();
-        this.propertiesFolder.add(this, 'visible').onChange(()=>{
-            
-        });
-        this.propertiesFolder.addColor(this, 'color').onChange(()=>{
-            this.material.color.set(this.color);
-        });
-        this.propertiesFolder.add(this, 'hasTransformControl').name('Transform control').listen().onChange(()=>{
-            this.onTransformControlsChange();
-        });
-        this.propertiesFolder.add(this.material, 'wireframe');
-        this.propertiesFolder.open();
     }
 
     onVisibleChange(){

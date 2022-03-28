@@ -1,18 +1,18 @@
 import PropertyController from "./propertyController";
 
 export default class ConeProperty extends PropertyController{
-    constructor(interactiveMesh){
-        super(interactiveMesh);
+    constructor(interactiveMesh, propertiesPane){
+        super(interactiveMesh, propertiesPane);
         this.geometryData = this.interactiveMesh.geometry.parameters;
-        this.coneFolder = this.propertiesPane.addFolder('Add Cone');
+        this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
     }
 
-    initConeProperties(){
-        this.coneFolder.add(this.geometryData,'radius').min(1).max(10).onChange(this.regenerate);
-        this.coneFolder.add(this.geometryData,'height').min(1).max(10).onChange(this.regenerate);
-        this.coneFolder.add(this.geometryData,'radialSegments').min(1).max(10).onChange(this.regenerate);
-        this.coneFolder.add(this.geometryData,'heightSegments').min(1).max(10).onChange(this.regenerate);
-        this.coneFolder.add(this.geometryData,'openEnded').onChange(onChange(()=>{
+    initProperties(){
+        this.geometryPropertyFolder.add(this.geometryData,'radius').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'height').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'radialSegments').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'heightSegments').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'openEnded').onChange(onChange(()=>{
             if(!this.geometryData.visible){
                 this.transformControls.detach();
             }else{
@@ -21,8 +21,8 @@ export default class ConeProperty extends PropertyController{
                 }
             }
         }));        
-        this.coneFolder.add(this.geometryData,'thetaStart').min(1).max(10).onChange(this.regenerate);
-        this.coneFolder.add(this.geometryData,'thetaLength').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'thetaStart').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'thetaLength').min(1).max(10).onChange(this.regenerate);
 
     }
     

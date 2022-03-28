@@ -1,14 +1,14 @@
 import Viewport from './viewport/Viewport';
 import * as dat from 'dat.gui';
 import ToolBox from './tools/ToolBox';
+import MeshGenerator from './viewport/menu/MeshGenerator';
 
 export default class Editor{
     constructor(viewportCanvas, toolBarElement, propertiesPaneContainer){
         //add menubar
 
         //create viewport
-        this.viewport = new Viewport(viewportCanvas, viewportCanvas.getBoundingClientRect().width, viewportCanvas.getBoundingClientRect().height); 
-        
+        this.viewport = new Viewport(viewportCanvas, viewportCanvas.getBoundingClientRect().width, viewportCanvas.getBoundingClientRect().height);
         
         //creating properties pane 
         this.propertiesPane = new dat.GUI();
@@ -21,11 +21,26 @@ export default class Editor{
         this.toolBox = new ToolBox(this.viewport);
         this.bindToolBox();
 
+        //create addMesh menu
+        this.meshGenerator = new MeshGenerator(this.viewport, this.propertiesPane);
+        const addMeshFolder = this.propertiesPane.addFolder('Add mesh');
+        addMeshFolder.add(this.meshGenerator, 'createPlane').name('Plane');
+        addMeshFolder.add(this.meshGenerator, 'createCube').name('Cube');
+        addMeshFolder.add(this.meshGenerator, 'createCircle').name('Circle');
+        addMeshFolder.add(this.meshGenerator, 'createUVSphere').name('UVSphere');
+        addMeshFolder.add(this.meshGenerator, 'createIcoSphere').name('IcoSphere');
+        addMeshFolder.add(this.meshGenerator, 'createCylinder').name('Cylinder');
+        addMeshFolder.add(this.meshGenerator, 'createCone').name('Cone');
+        addMeshFolder.add(this.meshGenerator, 'createTorus').name('Torus');
+        addMeshFolder.add(this.meshGenerator, 'createCamera').name('Camera');
+        addMeshFolder.add(this.meshGenerator, 'createLight').name('Light');
+
         let getSceneBtn = {get:()=>{
             console.log(this.viewport.toJSON());
         }};
         this.propertiesPane.add(getSceneBtn, 'get').name('GET(Scene)');
     }
+
 
     bindToolBox(){
         this.toolBox.toolBar = this.propertiesPane.addFolder('Tool Bar');
