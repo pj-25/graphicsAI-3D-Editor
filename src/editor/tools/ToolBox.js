@@ -49,6 +49,7 @@ export default class ToolBox{
                 switch(event.code){
                     case 'KeyB':
                         this.activate(ToolBox.TOOLTYPE.SELECTBOX);
+                        break;
                     case 'KeyG':
                         this.activate(ToolBox.TOOLTYPE.MOVE);
                         break;
