@@ -4,7 +4,7 @@ export default class IcosahedronProperty extends PropertyController{
     constructor(propertyPane, geometry){
         super(propertyPane);
         this.geometry = geometry;
-        this.this.geometryData = this.geometry.parameters
+        this.geometryData = this.geometry.parameters
         this.icosahedronFolder = this.propertiesPane.addFolder('Add Icosphere')
     }
 

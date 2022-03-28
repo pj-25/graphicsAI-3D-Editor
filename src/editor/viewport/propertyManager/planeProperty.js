@@ -4,7 +4,7 @@ export default class PlaneProperty extends PropertyController{
     constructor(propertyPane, geometry){
         super(propertyPane);
         this.geometry = geometry;
-        this.this.geometryData = this.geometry.parameters
+        this.geometryData = this.geometry.parameters
         this.planeFolder = this.propertiesPane.addFolder('Add Plane')
     }
 

@@ -4,7 +4,7 @@ export default class SphereProperty extends PropertyController{
     constructor(propertyPane, geometry){
         super(propertyPane);
         this.geometry = geometry;
-        this.this.geometryData = this.geometry.parameters
+        this.geometryData = this.geometry.parameters
         this.sphereFolder = this.propertiesPane.addFolder('Add Sphere')
     }
 

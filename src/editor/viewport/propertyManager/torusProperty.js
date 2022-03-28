@@ -4,7 +4,7 @@ export default class TorusProperty extends PropertyController{
     constructor(propertyPane, geometry){
         super(propertyPane);
         this.geometry = geometry;
-        this.this.geometryData = this.geometry.parameters
+        this.geometryData = this.geometry.parameters
         this.torusFolder = this.propertiesPane.addFolder('Add Torus')
     }
 
