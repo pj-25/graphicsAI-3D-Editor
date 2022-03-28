@@ -34,10 +34,7 @@ export default class PropertyController{
 
         // selection
         this.propertiesFolder.add(this.interactiveMesh, 'selected').onChange(()=>{
-            if(!this.interactiveMesh.selected)
-                this.interactiveMesh.activateSelection()
-            else
-                this.interactiveMesh.deactivateSelection()
+            this.interactiveMesh.onClick();
         })
 
         // enable/disable transform controller
@@ -45,48 +42,6 @@ export default class PropertyController{
             this.interactiveMesh.onTransformControlsChange();
         });
 
-        // function onVisibleChange(){
-        //     detachTransformControls();
-        // }
-    
-        // function onTransformControlsChange(){
-        //     if(this.interactiveMesh.hasTransformControl){
-        //         attachTransformControls();
-        //     }else{
-        //         detachTransformControls();
-        //     }
-        // }
-    
-        // function attachTransformControls(){
-        //     this.interactiveMesh.hasTransformControl = true;
-        //     this.interactiveMesh.transformControls.attach(this);
-        //     this.interactiveMesh.transformControls.addEventListener('mouseDown',this.viewport.disableOrbitControls);
-        //     this.interactiveMesh.transformControls.addEventListener('mouseUp',this.viewport.enableOrbitControls);
-        // }
-    
-        // function detachTransformControls(){
-        //     this.interactiveMesh.hasTransformControl = false;
-        //     this.interactiveMesh.transformControls.detach();
-        //     this.interactiveMesh.transformControls.removeEventListener('mouseDown', this.viewport.disableOrbitControls);
-        //     this.interactiveMesh.transformControls.removeEventListener('mouseUp', this.viewport.enableOrbitControls);
-        // }
-    
-        // function activateSelection(attach=true){
-        //     this.interactiveMesh.selected = true;
-        //     this.interactiveMesh.add(this.interactiveMesh.selectionHelper);
-        //     if(attach){
-        //         attachTransformControls();
-        //     }
-        // }
-    
-        // function deactivateSelection(detach=true){
-        //     this.interactiveMesh.selected = false;
-        //     this.interactiveMesh.remove(this.interactiveMesh.selectionHelper);
-        //     if(detach){
-        //         detachTransformControls();
-        //     }
-        // }
-    
     }
 
     updateMesh(newGeometry){

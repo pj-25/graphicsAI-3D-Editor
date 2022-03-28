@@ -30,6 +30,7 @@ export default class InteractiveMesh extends THREE.Mesh{
 
         //define and show properties
         //TODO : remove this & add propertyController here
+        this.properties;
         this.selectable = true;
         this.selected = false;
         this.hasTransformControl = false;
