@@ -119,7 +119,7 @@ export default class MeshGenerator{
                 case OBJECT_TYPE.LIGHT:
                     break; 
             }
-            mesh.properties = properties();
+            mesh.properties = properties;
         }
         return mesh; 
     }
