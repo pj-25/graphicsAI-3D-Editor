@@ -6,14 +6,32 @@ export default class InteractiveMesh extends THREE.Mesh{
     constructor(viewport, geometry, material, propertiesPane, selectionColor=0xf49a34){
         super(geometry, material);
         this.type = "InteractiveMesh";
+        this.viewport = viewport;
 
         this.transformControls = new TransformControls(viewport.controlledCamera.activeCamera, viewport.domElement);
         this.transformControls.visible = false;
-        viewport.scene.add(this.transformControls);
+        window.addEventListener('keypress', event=>{
+            if(this.transformControls.visible){
+                switch(event.code){
+                    case 'KeyG':
+                        this.transformControls.setMode('translate');
+                        break;
+                    case 'KeyR':
+                        this.transformControls.setMode('rotate');
+                        break;
+                    case 'KeyS':
+                        this.transformControls.setMode('scale');
+                        break;
+                }
+            }
+        });
+        viewport.add(this.transformControls);
 
         //define and show properties
+        //TODO : remove this & add propertyController here
         this.selectable = true;
         this.selected = false;
+        this.hasTransformControl = false;
         this.color = material.color.getHex();
         this.initPropertiesPane(propertiesPane);
 
@@ -21,7 +39,6 @@ export default class InteractiveMesh extends THREE.Mesh{
         this.line = new THREE.LineSegments(this.edges, new THREE.LineBasicMaterial({color:selectionColor}));
         this.selectionHelper = new THREE.Group();
         this.selectionHelper.add(this, this.line);
-
     }
 
     setTransformControls(transformControls){
@@ -29,39 +46,62 @@ export default class InteractiveMesh extends THREE.Mesh{
     }
 
     initPropertiesPane(propertiesPane){
-        this.propertiesFolder = propertiesPane.addFolder('Cube(Mesh)');
-        this.propertiesFolder.add(this, 'id').domElement.style.pointerEvents = "none";
+        this.propertiesFolder = propertiesPane.addFolder('Cube(Mesh)-'+this.id);
         this.propertiesFolder.add(this.position, 'x').min(-10).max(10).step(0.01).listen();
         this.propertiesFolder.add(this.position, 'y').min(-10).max(10).step(0.01).listen();
         this.propertiesFolder.add(this.position, 'z').min(-10).max(10).step(0.01).listen();
         this.propertiesFolder.add(this, 'visible').onChange(()=>{
-            if(!this.visible){
-                this.transformControls.detach();
-            }else{
-                if(!this.transformControls.visible && this.selected){
-                    this.transformControls.attach(this);
-                }
-            }
+            
         });
         this.propertiesFolder.addColor(this, 'color').onChange(()=>{
             this.material.color.set(this.color);
         });
+        this.propertiesFolder.add(this, 'hasTransformControl').name('Transform control').listen().onChange(()=>{
+            this.onTransformControlsChange();
+        });
+        this.propertiesFolder.add(this.material, 'wireframe');
         this.propertiesFolder.open();
     }
 
-    activateSelection(attachTransformControls=true){
-        this.selected = true;
-        this.add(this.selectionHelper);
-        if(attachTransformControls){
-            this.transformControls.attach(this);
+    onVisibleChange(){
+        this.detachTransformControls();
+    }
+
+    onTransformControlsChange(){
+        if(this.hasTransformControl){
+            this.attachTransformControls();
+        }else{
+            this.detachTransformControls();
         }
     }
 
-    deactivateSelection(detachTransformControls=true){
+    attachTransformControls(){
+        this.hasTransformControl = true;
+        this.transformControls.attach(this);
+        this.transformControls.addEventListener('mouseDown',this.viewport.disableOrbitControls);
+        this.transformControls.addEventListener('mouseUp',this.viewport.enableOrbitControls);
+    }
+
+    detachTransformControls(){
+        this.hasTransformControl = false;
+        this.transformControls.detach();
+        this.transformControls.removeEventListener('mouseDown', this.viewport.disableOrbitControls);
+        this.transformControls.removeEventListener('mouseUp', this.viewport.enableOrbitControls);
+    }
+
+    activateSelection(attach=true){
+        this.selected = true;
+        this.add(this.selectionHelper);
+        if(attach){
+            this.attachTransformControls();
+        }
+    }
+
+    deactivateSelection(detach=true){
         this.selected = false;
         this.remove(this.selectionHelper);
-        if(detachTransformControls){
-            this.transformControls.detach();
+        if(detach){
+            this.detachTransformControls();
         }
     }
 
