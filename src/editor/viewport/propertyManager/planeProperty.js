@@ -1,9 +1,10 @@
 import PropertyController from "./propertyController";
 
 export default class PlaneProperty extends PropertyController{
-    constructor(propertyPane, geometry){
+    constructor(propertyPane, geometry, material){
         super(propertyPane);
         this.geometry = geometry;
+        this.material = material;
         this.geometryData = this.geometry.parameters
         this.planeFolder = this.propertiesPane.addFolder('Add Plane')
     }

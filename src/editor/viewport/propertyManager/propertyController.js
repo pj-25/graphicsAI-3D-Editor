@@ -37,7 +37,7 @@ export default class PropertyController{
 
     color(){
         this.propertiesFolder.addColor(this, 'color').onChange(()=>{
-            this.material.color.set(this.color);
+            this.material.color.set(this.material.color.getHex());
         });
     }
 }

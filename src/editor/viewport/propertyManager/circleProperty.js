@@ -1,9 +1,10 @@
 import PropertyController from "./propertyController";
 
-export default class ConeProperty extends PropertyController{
-    constructor(propertyPane, geometry){
+export default class CircleProperty extends PropertyController{
+    constructor(propertyPane, geometry, material){
         super(propertyPane);
         this.geometry = geometry;
+        this.material = material;
         this.geometryData = this.geometry.parameters
         this.circleFolder = this.propertiesPane.addFolder('Add Circle')
     }
