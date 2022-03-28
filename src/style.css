@@ -52,8 +52,6 @@ body{
 }
 
 #sidepane{
-    overflow: auto;
-    padding: 5px 5px 5px 5px;
     flex-grow: 1;
-    background-color: #161616;
+    margin:0%;
 }

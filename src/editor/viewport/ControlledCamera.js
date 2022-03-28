@@ -13,6 +13,11 @@ export default class ControlledCamera {
         this.perspectiveCamera.lookAt(new THREE.Vector3(0,0,0));
         this.activeCamera = this.perspectiveCamera;
         this.orbitControls = new OrbitControls(this.activeCamera, domElement);
+        window.addEventListener('keypress', (event)=>{
+            if ((event.key >= 0 && event.key <=9) || event.key == '/') {   //numpad
+                this.performOperation(event.key)
+            } 
+        });
 
         this.orthographicCamera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 0.1, 1000 );
         this.orthographicCamera.position.set(...cameraPosition);
@@ -39,7 +44,7 @@ export default class ControlledCamera {
         if(this.otherCamera.type === 'OrthographicCamera'){
             this.setZoom();
         }else{
-            //TODO: update zooming of perspective camera
+            //FIXME: update zooming of perspective camera
         }
         this.otherCamera.updateProjectionMatrix();
         this.orbitControls.object = this.otherCamera;
@@ -110,7 +115,7 @@ export default class ControlledCamera {
     }
 
     moveLeft(){
-        this.angle+=(Math.PI / 16)
+        this.angle-=(Math.PI / 16)
         let camPos = new THREE.Vector3(this.activeCamera.position.x, this.activeCamera.position.y, this.activeCamera.position.z)
         console.log(camPos.normalize());
         if(this.activeCamera.type === 'OrthographicCamera' && camPos.equals(new THREE.Vector3(0, 1, 0)) || camPos.equals(new THREE.Vector3(0, -1, 0))){
@@ -123,7 +128,7 @@ export default class ControlledCamera {
     }
 
     moveRight(){
-        this.angle-=(Math.PI / 16)
+        this.angle+=(Math.PI / 16)
 
         let camPos = new THREE.Vector3(this.activeCamera.position.x, this.activeCamera.position.y, this.activeCamera.position.z)
         console.log(camPos.normalize());
@@ -164,6 +169,7 @@ export default class ControlledCamera {
     setCamPosition(position){
         this.activeCamera.position.set(position.x, position.y, position.z)
         this.activeCamera.lookAt(this.orbitControls.target)
+        // this.orbitControls.update();
     }
 
     getVerticalCoordinates(){

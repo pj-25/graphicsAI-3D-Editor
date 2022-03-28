@@ -1,20 +1,33 @@
 import * as THREE from 'three';
 import ControlledCamera from './ControlledCamera';
 
-export default class Viewport {
+export default class Viewport extends THREE.Scene {
 
-    constructor(mouse, domElement, width=window.innerWidth*0.75, height=window.innerHeight, cameraPosition = [1,2,3], clearColor=0x3a3a3a){
-        this.mouse = mouse;
+    constructor(domElement, width=window.innerWidth, height=window.innerHeight, cameraPosition = [1,2,3], clearColor=0x3a3a3a){
+        super();
+
+        this.mouse = {
+            pointer: new THREE.Vector2(),
+            clicked:false
+        };
+        let onMouseClick = (event)=>{
+            this.mouse.clicked = true;
+            this.mouse.pointer.x = ( event.clientX / this.width ) * 2 - 1;
+            this.mouse.pointer.y = - ( event.clientY / this.height ) * 2 + 1;
+        };
+        domElement.addEventListener('click', onMouseClick);
+        domElement.addEventListener('touchstart', (event)=>{
+            onMouseClick(event);
+            event.preventDefault();
+        });
+
         this.domElement = domElement;
         this.width = width;
         this.height = height;
         
-        //creating scene
-        this.scene = new THREE.Scene();
-
         //creating camera
         this.controlledCamera = new ControlledCamera(width, height, cameraPosition, domElement);
-        this.scene.add(this.controlledCamera.getActiveCamera());
+        this.add(this.controlledCamera.getActiveCamera());
 
         //creating renderer
         this.renderer = new THREE.WebGLRenderer({canvas:domElement, antialias: true});
@@ -45,62 +58,44 @@ export default class Viewport {
         const negativeAxes = new THREE.AxesHelper(-100);
         this.helper.axesGroup.add(negativeAxes);
         this.helper.group.add(this.helper.axesGroup);
-        this.scene.add(this.helper.group);
+        this.add(this.helper.group);
 
         //create raycaster
         this.raycaster = new THREE.Raycaster();
+        
         
         //perform rendering
         this.render = ()=>{
             //perform raycasting to detect selection
             if(this.mouse.clicked){
+                console.log(this.mouse);
                 this.raycaster.setFromCamera(this.mouse.pointer, this.controlledCamera.activeCamera);
-                const intersects = this.raycaster.intersectObjects(this.scene.children);
+                const intersects = this.raycaster.intersectObjects(this.children);
                 for ( let i = 0; i < intersects.length; i ++ ) {
-                    if(intersects[i].object.type = 'InteractiveMesh'){
-                        intersects[i].object.onClick();
-                    }        
+                    this.onIntersectedObject(intersects[i].object);
                 }
                 this.mouse.clicked = false;
             }
 
-            this.renderer.render(this.scene, this.controlledCamera.activeCamera);
+            this.renderer.render(this, this.controlledCamera.activeCamera);
             requestAnimationFrame(this.render);
         }
 
+        this.enableOrbitControls = (event)=>{
+            this.controlledCamera.orbitControls.enabled = true;
+        };
+        this.disableOrbitControls = (event) => {
+            this.controlledCamera.orbitControls.enabled = false;
+        };
 
-        //TODO: use loader manager :(
+        //FIXME: use loader manager :(
         //create obj loader
         // this.objLoader = new OBJLoader();
     }
 
-    add(object){
-        object.transformControls.addEventListener('mouseDown',(event)=>{
-            this.controlledCamera.getOrbitControls().enabled = false;
-        });
-        object.transformControls.addEventListener('mouseUp',(event)=>{
-            this.controlledCamera.getOrbitControls().enabled = true;
-        });
-        window.addEventListener('keypress', (event)=>{
-            console.log(event.key);
-            
-            if ((event.key >= 0 && event.key <=9) || event.key == '/') {   //numpad
-                this.controlledCamera.performOperation(event.key)
-            }else{
-                switch(event.code){
-                    case 'KeyG':
-                        object.transformControls.setMode('translate');
-                        break;
-                    case 'KeyR':
-                        object.transformControls.setMode('rotate');
-                        break;
-                    case 'KeyS':
-                        object.transformControls.setMode('scale');
-                        break;
-                }
-            } 
-        });
-        this.scene.add(object);
+    // override this method to handle intersected object
+    onIntersectedObject(object){
+        console.log(object);
     }
 
     //******under construction 
@@ -120,9 +115,9 @@ export default class Viewport {
     }
 
     switchCamera(){
-        this.scene.remove(this.controlledCamera.getActiveCamera());
+        this.remove(this.controlledCamera.getActiveCamera());
         this.controlledCamera.switchCamera();
-        this.scene.add(this.controlledCamera.getActiveCamera());
+        this.add(this.controlledCamera.getActiveCamera());
     }
 
     addResizeListener(){

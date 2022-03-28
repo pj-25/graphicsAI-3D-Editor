@@ -7,29 +7,22 @@ import InteractiveMesh from './editor/viewport/InteractiveMesh';
 const viewportCanvas = document.getElementById('webgl');
 const sidePane = document.getElementById('sidepane');
 
-const mouse = {
-    pointer: new THREE.Vector2(),
-    clicked:false
-};
-let onMouseClick = (event)=>{
-    mouse.clicked = true;
-    mouse.pointer.x = ( event.clientX / editor.viewport.width ) * 2 - 1;
-    mouse.pointer.y = - ( event.clientY / editor.viewport.height ) * 2 + 1;
-};
-window.addEventListener('click', onMouseClick);
-window.addEventListener('touchstart', (event)=>{
-    onMouseClick(event);
-    event.preventDefault();
-});
 
 //create editor
-const editor = new Editor(mouse, viewportCanvas,null, sidePane);
+const editor = new Editor(viewportCanvas,null, sidePane);
 
 //creating cube
 const geometry = new THREE.BoxBufferGeometry();
 const material = new THREE.MeshBasicMaterial({color:0x8e9091});
 const cube = new InteractiveMesh(editor.viewport, geometry, material, editor.propertiesPane);
 editor.viewport.add(cube);
+
+const geometry2 = new THREE.BoxBufferGeometry();
+const material2 = new THREE.MeshBasicMaterial({color:0x8e9091});
+const cube2 = new InteractiveMesh(editor.viewport, geometry2, material2, editor.propertiesPane);
+cube2.position.set(-3,0,0);
+editor.viewport.add(cube2);
+
 
 const cameraProperties = {perspective:true};
 editor.propertiesPane.add(cameraProperties, 'perspective').onChange(()=>{
