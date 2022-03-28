@@ -17,9 +17,9 @@ export default class MeshGenerator{
         LIGHT: 9
     };
 
-    constructor(viewport){
+    constructor(viewport, cursorPoint = new Vector3(0, 0, 0)){
         this.viewport = viewport;
-        this.cursorPoint = new Vector3(0, 0, 0);
+        this.cursorPoint = cursorPoint;
     }
 
     create(objectType){
@@ -58,6 +58,7 @@ export default class MeshGenerator{
                 geometry = new THREE.Light();
                 break; 
         }
+        geometry.position.set(this.cursorPoint);
         return new InteractiveMesh(this.viewport, geometry, material);
     }
 }
