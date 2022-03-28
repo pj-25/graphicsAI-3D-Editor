@@ -1,4 +1,5 @@
 import { Vector3 } from "three";
+import PlaneProperty from "../propertyManager/planeProperty";
 
 
 export default class MeshGenerator{
@@ -22,13 +23,15 @@ export default class MeshGenerator{
         this.cursorPoint = cursorPoint;
     }
 
-    create(objectType){
-        var geometry, material;
+    create(objectType, attachProperties=true){
+        var geometry, material, properties;
         material = new THREE.MeshBasicMaterial({color:0x8e9091});
         switch(objectType){
             case OBJECT_TYPE.MESH.PLANE:
                 geometry = new THREE.PlaneGeometry(1, 1);
                 material = new THREE.MeshBasicMaterial({color:0x8e9091 , side: THREE.DoubleSide});
+                if(attachProperties)
+                    properties = new PlaneProperty()
                 break;
             case OBJECT_TYPE.MESH.CUBE:
                 geometry = new THREE.BoxGeometry(1, 1, 1);
