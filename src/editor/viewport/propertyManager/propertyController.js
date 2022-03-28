@@ -3,9 +3,6 @@ export default class PropertyController{
 
     constructor(interactiveMesh){
         this.interactiveMesh = interactiveMesh;
-        // this.propertiesPane = propertiesPane;
-        // this.transformControls = transformControls;
-        // this.material = material;
     }
 
     initPropertiesPane(){
@@ -26,20 +23,74 @@ export default class PropertyController{
         this.propertiesFolder.add(this.interactiveMesh.scale, 'z').min(-100).max(100).step(0.01).listen();
         
         // visibility
-        this.propertiesFolder.add(this, 'visible').onChange(()=>{
-            if(!this.visible){
-                this.transformControls.detach();
-            }else{
-                if(!this.transformControls.visible && this.selected){
-                    this.transformControls.attach(this);
-                }
-            }
+        this.propertiesFolder.add(this.interactiveMesh, 'visible').onChange(()=>{
+            onVisibleChange();
         });
 
         // color
-        this.propertiesFolder.addColor(this, 'color').onChange(()=>{
-            this.material.color.set(this.material.color.getHex());
+        this.propertiesFolder.addColor(this.interactiveMesh, 'color').onChange(()=>{
+            this.interactiveMesh.material.color.set(this.material.color.getHex());
         });
 
+        // selection
+        this.propertiesFolder.add(this.interactiveMesh, 'selected').onChange(()=>{
+            if(!this.interactiveMesh.selected)
+                this.interactiveMesh.activateSelection()
+            else
+                this.interactiveMesh.deactivateSelection()
+        })
+
+        // enable/disable transform controller
+        this.propertiesFolder.add(this.interactiveMesh, 'hasTransformControl').name('Transform control').listen().onChange(()=>{
+            this.interactiveMesh.onTransformControlsChange();
+        });
+
+        // function onVisibleChange(){
+        //     detachTransformControls();
+        // }
+    
+        // function onTransformControlsChange(){
+        //     if(this.interactiveMesh.hasTransformControl){
+        //         attachTransformControls();
+        //     }else{
+        //         detachTransformControls();
+        //     }
+        // }
+    
+        // function attachTransformControls(){
+        //     this.interactiveMesh.hasTransformControl = true;
+        //     this.interactiveMesh.transformControls.attach(this);
+        //     this.interactiveMesh.transformControls.addEventListener('mouseDown',this.viewport.disableOrbitControls);
+        //     this.interactiveMesh.transformControls.addEventListener('mouseUp',this.viewport.enableOrbitControls);
+        // }
+    
+        // function detachTransformControls(){
+        //     this.interactiveMesh.hasTransformControl = false;
+        //     this.interactiveMesh.transformControls.detach();
+        //     this.interactiveMesh.transformControls.removeEventListener('mouseDown', this.viewport.disableOrbitControls);
+        //     this.interactiveMesh.transformControls.removeEventListener('mouseUp', this.viewport.enableOrbitControls);
+        // }
+    
+        // function activateSelection(attach=true){
+        //     this.interactiveMesh.selected = true;
+        //     this.interactiveMesh.add(this.interactiveMesh.selectionHelper);
+        //     if(attach){
+        //         attachTransformControls();
+        //     }
+        // }
+    
+        // function deactivateSelection(detach=true){
+        //     this.interactiveMesh.selected = false;
+        //     this.interactiveMesh.remove(this.interactiveMesh.selectionHelper);
+        //     if(detach){
+        //         detachTransformControls();
+        //     }
+        // }
+    
+    }
+
+    updateMesh(newGeometry){
+        this.interactiveMesh.geometry.dispose();
+        this.interactiveMesh.geometry = newGeometry;
     }
 }

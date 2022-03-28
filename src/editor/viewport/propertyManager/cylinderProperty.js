@@ -1,12 +1,10 @@
 import PropertyController from "./propertyController";
 
 export default class CylinderProperty extends PropertyController{
-    constructor(propertyPane, geometry, material){
-        super(propertyPane);
-        this.geometry = geometry;
-        this.material = material;
-        this.geometryData = this.geometry.parameters
-        this.cylinderFolder = this.propertiesPane.addFolder('Add Cylinder')
+    constructor(interactiveMesh){
+        super(interactiveMesh);
+        this.geometryData = this.interactiveMesh.geometry.parameters;
+        this.cylinderFolder = this.propertiesPane.addFolder('Add Cylinder');
     }
 
     initCylinderProperties(){
@@ -29,9 +27,15 @@ export default class CylinderProperty extends PropertyController{
     }
     
     regenerate(){
-        let newGeometry = new THREE.CylinderGeometry(this.geometryData.radiusTop, this.geometryData.radiusBottom, this.geometryData.height, this.geometryData.radialSegments, this.geometryData.heightSegments, this.geometryData.openEnded, this.geometryData.thetaStart, this.geometryData.thetaLength);
-        // TODO update mesh
-        // mesh.geometry.dispose();
-        // mesh.geometry = newGeometry;
+        let newGeometry = new THREE.CylinderGeometry(this.geometryData.radiusTop,
+                                                    this.geometryData.radiusBottom, 
+                                                    this.geometryData.height, 
+                                                    this.geometryData.radialSegments, 
+                                                    this.geometryData.heightSegments, 
+                                                    this.geometryData.openEnded,
+                                                    this.geometryData.thetaStart, 
+                                                    this.geometryData.thetaLength);
+
+        this.updateMesh(newGeometry);
     }
 }
