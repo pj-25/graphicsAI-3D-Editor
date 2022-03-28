@@ -7,6 +7,7 @@ export default class InteractiveMesh extends THREE.Mesh{
         super(geometry, material);
         this.type = "InteractiveMesh";
         this.viewport = viewport;
+        this.geometry = geometry;
 
         this.transformControls = new TransformControls(viewport.controlledCamera.activeCamera, viewport.domElement);
         this.transformControls.visible = false;
@@ -29,6 +30,7 @@ export default class InteractiveMesh extends THREE.Mesh{
 
         //define and show properties
         //TODO : remove this & add propertyController here
+        this.properties;
         this.selectable = true;
         this.selected = false;
         this.hasTransformControl = false;
