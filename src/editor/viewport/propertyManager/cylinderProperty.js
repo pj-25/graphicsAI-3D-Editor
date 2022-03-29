@@ -1,5 +1,7 @@
 import PropertyController from "./propertyController";
 
+import * as THREE from 'three';
+
 export default class CylinderProperty extends PropertyController{
     constructor(interactiveMesh, propertiesPane){
         super(interactiveMesh, propertiesPane);
@@ -8,6 +10,8 @@ export default class CylinderProperty extends PropertyController{
     }
 
     initProperties(){
+        super.initProperties();
+        
         this.geometryPropertyFolder.add(this.geometryData,'radiusTop').min(1).max(10).onChange(this.regenerate);
         this.geometryPropertyFolder.add(this.geometryData,'radiusBottom').min(1).max(10).onChange(this.regenerate);
         this.geometryPropertyFolder.add(this.geometryData,'radialSegments').min(1).max(10).onChange(this.regenerate);

@@ -47,7 +47,9 @@ export default class InteractiveMesh extends THREE.Mesh{
     }
 
     onVisibleChange(){
-        this.detachTransformControls();
+        if(this.hasTransformControl){
+            this.detachTransformControls();
+        }
     }
 
     onTransformControlsChange(){
@@ -88,7 +90,15 @@ export default class InteractiveMesh extends THREE.Mesh{
         }
     }
 
-    onClick(includeTransformControls){
+    onSelectionChange(includeTransformControls=false){
+        if(this.selected){
+            this.activateSelection(includeTransformControls);
+        }else{
+            this.deactivateSelection(includeTransformControls);
+        }
+    }
+
+    onClick(includeTransformControls=true){
         if(!this.selected){
             this.activateSelection(includeTransformControls);
         }else{

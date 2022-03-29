@@ -1,13 +1,17 @@
 import PropertyController from "./propertyController";
+import * as THREE from 'three';
 
 export default class BoxProperty extends PropertyController{
     constructor(interactiveMesh, propertiesPane){
         super(interactiveMesh, propertiesPane);
-        this.geometryData = this.interactiveMesh.geometry.parameters;
+        this.geometryData = Object.assign({},this.interactiveMesh.geometry.parameters);
+        console.log(this.geometryData);
         this.geometryPropertyFolder = this.propertiesFolder.addFolder('Geometry');
     }
 
     initProperties(){
+        super.initProperties();
+        
         this.geometryPropertyFolder.add(this.geometryData,'width').min(1).max(10).onChange(this.regenerate);
         this.geometryPropertyFolder.add(this.geometryData,'height').min(1).max(10).onChange(this.regenerate);
         this.geometryPropertyFolder.add(this.geometryData,'depth').min(1).max(10).onChange(this.regenerate);

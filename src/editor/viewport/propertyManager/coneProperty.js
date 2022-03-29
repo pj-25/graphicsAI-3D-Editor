@@ -1,5 +1,7 @@
 import PropertyController from "./propertyController";
 
+import * as THREE from 'three';
+
 export default class ConeProperty extends PropertyController{
     constructor(interactiveMesh, propertiesPane){
         super(interactiveMesh, propertiesPane);
@@ -8,6 +10,8 @@ export default class ConeProperty extends PropertyController{
     }
 
     initProperties(){
+        super.initProperties();
+        
         this.geometryPropertyFolder.add(this.geometryData,'radius').min(1).max(10).onChange(this.regenerate);
         this.geometryPropertyFolder.add(this.geometryData,'height').min(1).max(10).onChange(this.regenerate);
         this.geometryPropertyFolder.add(this.geometryData,'radialSegments').min(1).max(10).onChange(this.regenerate);

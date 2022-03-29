@@ -10,9 +10,9 @@ import TorusProperty from "../propertyManager/torusProperty";
 
 import InteractiveMesh from "../InteractiveMesh";
 
-export default class MeshGenerator{
+export default class MeshGenerator {
     static OBJECT_TYPE = {
-        MESH:{
+        MESH: {
             PLANE: 0,
             CUBE: 1,
             CIRCLE: 2,
@@ -26,173 +26,181 @@ export default class MeshGenerator{
         LIGHT: 9
     };
 
-    constructor(viewport,propertiesPane, cursorPoint = new THREE.Vector3(0, 0, 0)){
+    constructor(viewport, propertiesPane, cursorPoint = new THREE.Vector3(0, 0, 0)) {
         this.viewport = viewport;
         this.cursorPoint = cursorPoint;
         this.propertiesPane = propertiesPane;
     }
 
-    createPlane(attachProperties=true){
+    createPlane(attachProperties = true) {
         let properties;
-		let geometry = new THREE.PlaneGeometry(1, 1);
-        let material = new THREE.MeshBasicMaterial({color:0x8e9091 , side: THREE.DoubleSide});
+        let geometry = new THREE.PlaneGeometry(1, 1);
+        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091, side: THREE.DoubleSide });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        if(attachProperties){
+        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        if (attachProperties) {
             properties = new PlaneProperty(mesh, this.propertiesPane);
             properties.initProperties();
         }
         mesh.properties = properties;
-        mesh.position.set(this.cursorPoint);
+        
         return mesh;
     }
 
-    createCube(attachProperties=true){
+    createCube(attachProperties = true) {
         let properties;
-		let geometry = new THREE.BoxGeometry(1, 1, 1);
-        let material = new THREE.MeshBasicMaterial({color:0x8e9091});
+        let geometry = new THREE.BoxGeometry(1, 1, 1);
+        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        if(attachProperties){
+        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        if (attachProperties) {
             properties = new BoxProperty(mesh, this.propertiesPane);
             properties.initProperties();
         }
         mesh.properties = properties;
-        mesh.position.set(this.cursorPoint);
+        
         return mesh;
     }
 
-    createCircle(attachProperties=true){
+    createCircle(attachProperties = true) {
         let properties;
-		let geometry = new THREE.CircleGeometry(1, 10);
-        let material = new THREE.MeshBasicMaterial({color:0x8e9091});
+        let geometry = new THREE.CircleGeometry(1, 10);
+        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        if(attachProperties){
+        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        if (attachProperties) {
             properties = new CircleProperty(mesh, this.propertiesPane);
             properties.initProperties();
         }
         mesh.properties = properties;
-        mesh.position.set(this.cursorPoint);
+        
         return mesh;
     }
 
-    createUVSphere(attachProperties=true){
+    createUVSphere(attachProperties = true) {
         let properties;
-		let geometry = new THREE.SphereGeometry(1, 30, 30);
-        let material = new THREE.MeshBasicMaterial({color:0x8e9091});
+        let geometry = new THREE.SphereGeometry(1, 30, 30);
+        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        if(attachProperties){
+        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        if (attachProperties) {
             properties = new SphereProperty(mesh, this.propertiesPane);
             properties.initProperties();
         }
-        mesh.position.set(this.cursorPoint);
+        
         mesh.properties = properties;
         return mesh;
     }
 
-    createIcoSphere(attachProperties=true){
+    createIcoSphere(attachProperties = true) {
         let properties;
-		let geometry = new THREE.IcosahedronGeometry(1, 2);
-        let material = new THREE.MeshBasicMaterial({color:0x8e9091});
+        let geometry = new THREE.IcosahedronGeometry(1, 2);
+        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        if(attachProperties){
+        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        if (attachProperties) {
             properties = new IcosahedronProperty(mesh, this.propertiesPane);
             properties.initProperties();
         }
-        mesh.position.set(this.cursorPoint);
+        
         mesh.properties = properties;
-        return mesh; 
+        return mesh;
     }
 
-    createCylinder(attachProperties=true){
+    createCylinder(attachProperties = true) {
         let properties;
-		let geometry = new THREE.CylinderGeometry(1, 1, 5, 10, 10);
-        let material = new THREE.MeshBasicMaterial({color:0x8e9091});
+        let geometry = new THREE.CylinderGeometry(1, 1, 5, 10, 10);
+        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        if(attachProperties){
+        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        if (attachProperties) {
             properties = new CylinderProperty(mesh, this.propertiesPane);
             properties.initProperties();
         }
-        mesh.position.set(this.cursorPoint);
+        
         mesh.properties = properties;
-        return mesh; 
+        return mesh;
     }
 
-    createCone(attachProperties=true){
+    createCone(attachProperties = true) {
         let properties;
-		let geometry = new THREE.ConeGeometry(1, 5, 10, 10);
-        let material = new THREE.MeshBasicMaterial({color:0x8e9091});
+        let geometry = new THREE.ConeGeometry(1, 5, 10, 10);
+        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        if(attachProperties){
+        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        if (attachProperties) {
             properties = new ConeProperty(mesh, this.propertiesPane);
             properties.initProperties();
         }
-        mesh.position.set(this.cursorPoint);
+        
         mesh.properties = properties;
         return mesh;
     }
 
-    createTorus(attachProperties=true){
+    createTorus(attachProperties = true) {
         let properties;
-		let geometry = new THREE.TorusGeometry(10, 5, 10, 30);
-        let material = new THREE.MeshBasicMaterial({color:0x8e9091});
+        let geometry = new THREE.TorusGeometry(10, 5, 10, 30);
+        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        if(attachProperties){
+        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        if (attachProperties) {
             properties = new TorusProperty(mesh, this.propertiesPane);
             properties.initProperties();
         }
-        mesh.position.set(this.cursorPoint);
+        
         mesh.properties = properties;
         return mesh;
     }
 
-    createCamera(){
-        let properties;
-		let geometry = new THREE.PerspectiveCamera(75, 1920/1200, 0.1, 1000);
-        let material = new THREE.MeshBasicMaterial({color:0x8e9091});
+    createCamera() {
+        let geometry = new THREE.PerspectiveCamera(75, 1920 / 1200, 0.1, 1000);
+        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        mesh.position.set(this.cursorPoint);
+        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        
         return mesh;
     }
-    
-    createLight(){
-        let properties;
-		let geometry = new THREE.Light();
-        mesh.position.set(this.cursorPoint);
-        let material = new THREE.MeshBasicMaterial({color:0x8e9091});
+
+    createLight() {
+        let geometry = new THREE.Light();
+        
+        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        mesh.position.set(this.cursorPoint);
-        return mesh; 
+        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        
+        return mesh;
     }
 
-    create(objectType, attachProperties=true){
-        switch(objectType){
-            
+    create(objectType, attachProperties = true) {
+        switch (objectType) {
+
             case OBJECT_TYPE.MESH.PLANE:
                 return this.createPlane(attachProperties);
-            
+
             case OBJECT_TYPE.MESH.CUBE:
                 return this.createCube(attachProperties);
-            
+
             case OBJECT_TYPE.MESH.CIRCLE:
                 return this.createCircle(attachProperties);
-            
+
             case OBJECT_TYPE.MESH.UVSPHERE:
                 return this.createUVSphere(attachProperties);
-            
+
             case OBJECT_TYPE.MESH.ICOSPHERE:
                 return this.createIcoSphere(attachProperties);
-            
+
             case OBJECT_TYPE.MESH.CYLINDER:
                 return this.createCylinder(attachProperties);
-            
+
             case OBJECT_TYPE.MESH.CONE:
-                return this.createCone(attachProperties); 
-            
+                return this.createCone(attachProperties);
+
             case OBJECT_TYPE.MESH.TORUS:
-                return this.createTorus(attachProperties); 
-            
+                return this.createTorus(attachProperties);
+
             case OBJECT_TYPE.CAMERA:
-                return this.createCamera(attachProperties);    
-            
+                return this.createCamera(attachProperties);
+
             case OBJECT_TYPE.LIGHT:
                 return this.createLight(attachProperties);
         }

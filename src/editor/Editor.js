@@ -23,7 +23,18 @@ export default class Editor{
 
         //create addMesh menu
         this.meshGenerator = new MeshGenerator(this.viewport, this.propertiesPane);
-        const addMeshFolder = this.propertiesPane.addFolder('Add mesh');
+        this.bindAddMeshOption();
+        const defaultCube = this.meshGenerator.createCube();
+        this.viewport.add(defaultCube);
+        
+        let getSceneBtn = {get:()=>{
+            console.log(this.viewport.toJSON());
+        }};
+        this.propertiesPane.add(getSceneBtn, 'get').name('GET(Scene)');
+    }
+
+    bindAddMeshOption(){
+        const addMeshFolder = this.propertiesPane.addFolder('Add Mesh');
         addMeshFolder.add(this.meshGenerator, 'createPlane').name('Plane');
         addMeshFolder.add(this.meshGenerator, 'createCube').name('Cube');
         addMeshFolder.add(this.meshGenerator, 'createCircle').name('Circle');
@@ -34,11 +45,6 @@ export default class Editor{
         addMeshFolder.add(this.meshGenerator, 'createTorus').name('Torus');
         addMeshFolder.add(this.meshGenerator, 'createCamera').name('Camera');
         addMeshFolder.add(this.meshGenerator, 'createLight').name('Light');
-
-        let getSceneBtn = {get:()=>{
-            console.log(this.viewport.toJSON());
-        }};
-        this.propertiesPane.add(getSceneBtn, 'get').name('GET(Scene)');
     }
 
 
