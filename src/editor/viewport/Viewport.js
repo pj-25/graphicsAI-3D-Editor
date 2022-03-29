@@ -68,9 +68,9 @@ export default class Viewport extends THREE.Scene {
         this.render = ()=>{
             //perform raycasting to detect selection
             if(this.mouse.clicked){
-                console.log(this.mouse);
                 this.raycaster.setFromCamera(this.mouse.pointer, this.controlledCamera.activeCamera);
                 const intersects = this.raycaster.intersectObjects(this.children);
+                console.log(intersects);
                 for ( let i = 0; i < intersects.length; i ++ ) {
                     this.onIntersectedObject(intersects[i].object);
                 }

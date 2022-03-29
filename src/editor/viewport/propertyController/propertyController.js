@@ -34,7 +34,7 @@ export default class PropertyController{
         });
 
         // selection
-        this.propertiesFolder.add(this.interactiveMesh, 'selected').onChange(()=>{
+        this.propertiesFolder.add(this.interactiveMesh, 'selected').listen().onChange(()=>{
             this.interactiveMesh.onSelectionChange();
         })
 

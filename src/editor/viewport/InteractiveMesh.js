@@ -7,7 +7,6 @@ export default class InteractiveMesh extends THREE.Mesh{
         super(geometry, material);
         this.type = "InteractiveMesh";
         this.viewport = viewport;
-        this.geometry = geometry;
 
         this.transformControls = new TransformControls(viewport.controlledCamera.activeCamera, viewport.domElement);
         this.transformControls.visible = false;
@@ -26,7 +25,6 @@ export default class InteractiveMesh extends THREE.Mesh{
                 }
             }
         });
-        viewport.add(this.transformControls);
 
         //define and show properties
         //TODO : remove this & add propertyController here
@@ -65,6 +63,7 @@ export default class InteractiveMesh extends THREE.Mesh{
         this.transformControls.attach(this);
         this.transformControls.addEventListener('mouseDown',this.viewport.disableOrbitControls);
         this.transformControls.addEventListener('mouseUp',this.viewport.enableOrbitControls);
+        this.viewport.add(this.transformControls);
     }
 
     detachTransformControls(){
@@ -72,6 +71,7 @@ export default class InteractiveMesh extends THREE.Mesh{
         this.transformControls.detach();
         this.transformControls.removeEventListener('mouseDown', this.viewport.disableOrbitControls);
         this.transformControls.removeEventListener('mouseUp', this.viewport.enableOrbitControls);
+        this.viewport.remove(this.transformControls);
     }
 
     activateSelection(attach=true){
