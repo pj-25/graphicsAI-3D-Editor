@@ -189,9 +189,9 @@ export default class MeshGenerator {
     }
 
     createCamera() {
-        let geometry = new THREE.PerspectiveCamera(75, 1920 / 1200, 0.1, 1000);
+        let camera = new THREE.PerspectiveCamera(75, 1920 / 1200, 0.1, 1000);
         let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
-        let mesh = new InteractiveMesh(this.viewport, geometry, material);
+        let mesh = new InteractiveMesh(this.viewport, camera, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         
         return mesh;
@@ -202,10 +202,10 @@ export default class MeshGenerator {
     }
 
     createLight() {
-        let geometry = new THREE.Light();
+        let light = new THREE.Light();
         
         let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
-        let mesh = new InteractiveMesh(this.viewport, geometry, material);
+        let mesh = new InteractiveMesh(this.viewport, light, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         
         return mesh;
