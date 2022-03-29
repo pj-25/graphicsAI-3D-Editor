@@ -19,3 +19,13 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: npm run build
+  
+    - name: Update dist
+      uses: test-room-7/action-update-file@v1.6.0
+      with:
+        # Commit message
+        commit-msg: update bundle
+        # Path to file(s) or glob pattern
+        file-path: dist/*
+        # GitHub token
+        github-token: ${{ secrets.GITHUB_TOKEN }}
