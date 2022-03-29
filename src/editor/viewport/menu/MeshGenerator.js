@@ -1,12 +1,12 @@
 import * as THREE from "three";
-import BoxProperty from "../propertyManager/boxProperty";
-import CircleProperty from "../propertyManager/circleProperty";
-import ConeProperty from "../propertyManager/coneProperty";
-import CylinderProperty from "../propertyManager/cylinderProperty";
-import IcosahedronProperty from "../propertyManager/icosphereProperty";
-import PlaneProperty from "../propertyManager/planeProperty";
-import SphereProperty from "../propertyManager/sphereProperty";
-import TorusProperty from "../propertyManager/torusProperty";
+import BoxProperty from "../propertyController/boxProperty";
+import CircleProperty from "../propertyController/circleProperty";
+import ConeProperty from "../propertyController/coneProperty";
+import CylinderProperty from "../propertyController/cylinderProperty";
+import IcosahedronProperty from "../propertyController/icosphereProperty";
+import PlaneProperty from "../propertyController/planeProperty";
+import SphereProperty from "../propertyController/sphereProperty";
+import TorusProperty from "../propertyController/torusProperty";
 
 import InteractiveMesh from "../InteractiveMesh";
 
@@ -32,6 +32,10 @@ export default class MeshGenerator {
         this.propertiesPane = propertiesPane;
     }
 
+    addPlane(attachProperties = true){
+        this.viewport.add(this.createPlane(attachProperties));
+    }
+
     createPlane(attachProperties = true) {
         let properties;
         let geometry = new THREE.PlaneGeometry(1, 1);
@@ -45,6 +49,10 @@ export default class MeshGenerator {
         mesh.properties = properties;
         
         return mesh;
+    }
+
+    addCube(attachProperties = true){
+        this.viewport.add(this.createCube(attachProperties));
     }
 
     createCube(attachProperties = true) {
@@ -62,6 +70,10 @@ export default class MeshGenerator {
         return mesh;
     }
 
+    addCircle(attachProperties = true){
+        this.viewport.add(this.createCircle(attachProperties));
+    }
+
     createCircle(attachProperties = true) {
         let properties;
         let geometry = new THREE.CircleGeometry(1, 10);
@@ -75,6 +87,10 @@ export default class MeshGenerator {
         mesh.properties = properties;
         
         return mesh;
+    }
+
+    addUVSphere(attachProperties = true){
+        this.viewport.add(this.createUVSphere(attachProperties));
     }
 
     createUVSphere(attachProperties = true) {
@@ -92,6 +108,10 @@ export default class MeshGenerator {
         return mesh;
     }
 
+    addIcoSphere(attachProperties = true){
+        this.viewport.add(this.createIcoSphere(attachProperties));
+    }
+
     createIcoSphere(attachProperties = true) {
         let properties;
         let geometry = new THREE.IcosahedronGeometry(1, 2);
@@ -105,6 +125,10 @@ export default class MeshGenerator {
         
         mesh.properties = properties;
         return mesh;
+    }
+
+    addCylinder(attachProperties = true){
+        this.viewport.add(this.createCylinder(attachProperties));
     }
 
     createCylinder(attachProperties = true) {
@@ -122,6 +146,10 @@ export default class MeshGenerator {
         return mesh;
     }
 
+    addCone(attachProperties = true){
+        this.viewport.add(this.createCone(attachProperties));
+    }
+
     createCone(attachProperties = true) {
         let properties;
         let geometry = new THREE.ConeGeometry(1, 5, 10, 10);
@@ -135,6 +163,10 @@ export default class MeshGenerator {
         
         mesh.properties = properties;
         return mesh;
+    }
+
+    addTorus(attachProperties = true){
+        this.viewport.add(this.createTorus(attachProperties));
     }
 
     createTorus(attachProperties = true) {
@@ -152,6 +184,10 @@ export default class MeshGenerator {
         return mesh;
     }
 
+    addCamera(attachProperties = true){
+        this.viewport.add(this.createCamera(attachProperties));
+    }
+
     createCamera() {
         let geometry = new THREE.PerspectiveCamera(75, 1920 / 1200, 0.1, 1000);
         let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
@@ -159,6 +195,10 @@ export default class MeshGenerator {
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         
         return mesh;
+    }
+
+    addLight(attachProperties = true){
+        this.viewport.add(this.createLight(attachProperties));
     }
 
     createLight() {

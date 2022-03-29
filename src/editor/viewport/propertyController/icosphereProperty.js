@@ -5,8 +5,14 @@ import * as THREE from 'three';
 export default class IcosahedronProperty extends PropertyController{
     constructor(interactiveMesh, propertiesPane){
         super(interactiveMesh, propertiesPane);
-        this.geometryData = this.interactiveMesh.geometry.parameters;
+        
         this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
+        this.regenerate = ()=>{
+            let newGeometry = new THREE.IcosahedronGeometry(this.geometryData.radius, 
+                                                            this.geometryData.detail);
+    
+            this.updateMesh(newGeometry);
+        }
     }
 
     initProperties(){
@@ -16,10 +22,5 @@ export default class IcosahedronProperty extends PropertyController{
         this.geometryPropertyFolder.add(this.geometryData,'detail').min(1).max(10).onChange(this.regenerate);
     }
     
-    regenerate(){
-        let newGeometry = new THREE.IcosahedronGeometry(this.geometryData.radius, 
-                                                        this.geometryData.detail);
-
-        this.updateMesh(newGeometry);
-    }
+    
 }

@@ -7,7 +7,7 @@ export default class Editor{
     constructor(viewportCanvas, toolBarElement, propertiesPaneContainer){
         //add menubar
 
-        //create viewport
+        //add viewport
         this.viewport = new Viewport(viewportCanvas, viewportCanvas.getBoundingClientRect().width, viewportCanvas.getBoundingClientRect().height);
         
         //creating properties pane 
@@ -21,11 +21,11 @@ export default class Editor{
         this.toolBox = new ToolBox(this.viewport);
         this.bindToolBox();
 
-        //create addMesh menu
-        this.meshGenerator = new MeshGenerator(this.viewport, this.propertiesPane);
+        //add addMesh menu
+        this.sceneOutliner = this.propertiesPane.addFolder('Scene Outliner');
+        this.meshGenerator = new MeshGenerator(this.viewport, this.sceneOutliner);
         this.bindAddMeshOption();
-        const defaultCube = this.meshGenerator.createCube();
-        this.viewport.add(defaultCube);
+        this.meshGenerator.addCube();
         
         let getSceneBtn = {get:()=>{
             console.log(this.viewport.toJSON());
@@ -34,17 +34,18 @@ export default class Editor{
     }
 
     bindAddMeshOption(){
+        
         const addMeshFolder = this.propertiesPane.addFolder('Add Mesh');
-        addMeshFolder.add(this.meshGenerator, 'createPlane').name('Plane');
-        addMeshFolder.add(this.meshGenerator, 'createCube').name('Cube');
-        addMeshFolder.add(this.meshGenerator, 'createCircle').name('Circle');
-        addMeshFolder.add(this.meshGenerator, 'createUVSphere').name('UVSphere');
-        addMeshFolder.add(this.meshGenerator, 'createIcoSphere').name('IcoSphere');
-        addMeshFolder.add(this.meshGenerator, 'createCylinder').name('Cylinder');
-        addMeshFolder.add(this.meshGenerator, 'createCone').name('Cone');
-        addMeshFolder.add(this.meshGenerator, 'createTorus').name('Torus');
-        addMeshFolder.add(this.meshGenerator, 'createCamera').name('Camera');
-        addMeshFolder.add(this.meshGenerator, 'createLight').name('Light');
+        addMeshFolder.add(this.meshGenerator, 'addPlane').name('Plane');
+        addMeshFolder.add(this.meshGenerator, 'addCube').name('Cube');
+        addMeshFolder.add(this.meshGenerator, 'addCircle').name('Circle');
+        addMeshFolder.add(this.meshGenerator, 'addUVSphere').name('UVSphere');
+        addMeshFolder.add(this.meshGenerator, 'addIcoSphere').name('IcoSphere');
+        addMeshFolder.add(this.meshGenerator, 'addCylinder').name('Cylinder');
+        addMeshFolder.add(this.meshGenerator, 'addCone').name('Cone');
+        addMeshFolder.add(this.meshGenerator, 'addTorus').name('Torus');
+        addMeshFolder.add(this.meshGenerator, 'addCamera').name('Camera');
+        addMeshFolder.add(this.meshGenerator, 'addLight').name('Light');
     }
 
 

@@ -5,8 +5,19 @@ import * as THREE from 'three';
 export default class SphereProperty extends PropertyController{
     constructor(interactiveMesh, propertiesPane){
         super(interactiveMesh, propertiesPane);
-        this.geometryData = this.interactiveMesh.geometry.parameters;
+        
         this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
+        this.regenerate = ()=>{
+            let newGeometry = new THREE.SphereGeometry(this.geometryData.radius, 
+                                                        this.geometryData.widthSegments, 
+                                                        this.geometryData.heightSegments, 
+                                                        this.geometryData.phiStart, 
+                                                        this.geometryData.phiLength, 
+                                                        this.geometryData.thetaStart, 
+                                                        this.geometryData.thetaLength);
+            
+            this.updateMesh(newGeometry);
+        }
     }
 
     initProperties(){
@@ -22,15 +33,5 @@ export default class SphereProperty extends PropertyController{
 
     }
     
-    regenerate(){
-        let newGeometry = new THREE.SphereGeometry(this.geometryData.radius, 
-                                                    this.geometryData.widthSegments, 
-                                                    this.geometryData.heightSegments, 
-                                                    this.geometryData.phiStart, 
-                                                    this.geometryData.phiLength, 
-                                                    this.geometryData.thetaStart, 
-                                                    this.geometryData.thetaLength);
-        
-        this.updateMesh(newGeometry);
-    }
+    
 }

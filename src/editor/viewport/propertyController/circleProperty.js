@@ -5,8 +5,16 @@ import * as THREE from 'three';
 export default class CircleProperty extends PropertyController{
     constructor(interactiveMesh, propertiesPane){
         super(interactiveMesh, propertiesPane);
-        this.geometryData = this.interactiveMesh.geometry.parameters;
+        
         this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
+        this.regenerate = ()=>{
+            let newGeometry = new THREE.CircleGeometry(this.geometryData.radius, 
+                                                        this.geometryData.segments, 
+                                                        this.geometryData.thetaStart, 
+                                                        this.geometryData.thetaLength);
+            
+            this.updateMesh(newGeometry);
+        };
     }
 
     initProperties(){
@@ -19,12 +27,5 @@ export default class CircleProperty extends PropertyController{
 
     }
     
-    regenerate(){
-        let newGeometry = new THREE.CircleGeometry(this.geometryData.radius, 
-                                                    this.geometryData.segments, 
-                                                    this.geometryData.thetaStart, 
-                                                    this.geometryData.thetaLength);
-        
-        this.updateMesh(newGeometry);
-    }
+    
 }

@@ -4,7 +4,7 @@ export default class PropertyController{
     constructor(interactiveMesh, propertiesPane){
         this.interactiveMesh = interactiveMesh;
         this.propertiesFolder= propertiesPane.addFolder(interactiveMesh.geometry.type.replace('BufferGeometry', "") + "-" + interactiveMesh.id);
-
+        this.geometryData = JSON.parse(JSON.stringify(this.interactiveMesh.geometry.parameters));
         this.color = interactiveMesh.material.color.getHex();
     }
 
