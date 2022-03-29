@@ -8,6 +8,7 @@ export default class CylinderProperty extends PropertyController{
         
         this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
         this.regenerate = ()=>{
+            console.log(this.geometryData.openEnded )
             let newGeometry = new THREE.CylinderGeometry(this.geometryData.radiusTop,
                                                         this.geometryData.radiusBottom, 
                                                         this.geometryData.height, 
@@ -24,14 +25,14 @@ export default class CylinderProperty extends PropertyController{
     initProperties(){
         super.initProperties();
         
-        this.geometryPropertyFolder.add(this.geometryData,'radiusTop').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'radiusBottom').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'radialSegments').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'heightSegments').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'radiusTop').min(1).max(50).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'radiusBottom').min(1).max(50).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'radialSegments').min(6).max(50).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'heightSegments').min(1).max(50).onChange(this.regenerate);
         this.geometryPropertyFolder.add(this.geometryData,'height').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'openEnded').onChange(()=>this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'thetaStart').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'thetaLength').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'openEnded').onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'thetaStart').min(0).max(6.28).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'thetaLength').min(0).max(6.28).onChange(this.regenerate);
     }
     
     
