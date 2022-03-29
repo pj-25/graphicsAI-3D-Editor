@@ -27,10 +27,7 @@ export default class Editor{
         this.bindAddMeshOption();
         this.meshGenerator.addCube();
         
-        let getSceneBtn = {get:()=>{
-            console.log(this.viewport.toJSON());
-        }};
-        this.propertiesPane.add(getSceneBtn, 'get').name('GET(Scene)');
+        
     }
 
     bindAddMeshOption(){
