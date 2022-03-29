@@ -18,8 +18,8 @@ export default class IcosahedronProperty extends PropertyController{
     initProperties(){
         super.initProperties();
         
-        this.geometryPropertyFolder.add(this.geometryData,'radius').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'detail').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'radius').min(1).max(50).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'detail').min(1).max(50).step(1).onChange(this.regenerate);
     }
     
     

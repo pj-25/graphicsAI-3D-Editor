@@ -133,7 +133,7 @@ export default class MeshGenerator {
 
     createCylinder(attachProperties = true) {
         let properties;
-        let geometry = new THREE.CylinderBufferGeometry(1, 1, 5, 10, 10);
+        let geometry = new THREE.CylinderBufferGeometry(1, 1, 1, 20, 20);
         let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
@@ -152,7 +152,7 @@ export default class MeshGenerator {
 
     createCone(attachProperties = true) {
         let properties;
-        let geometry = new THREE.ConeBufferGeometry(1, 5, 10, 10);
+        let geometry = new THREE.ConeBufferGeometry(1, 2, 10, 10);
         let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
@@ -171,7 +171,7 @@ export default class MeshGenerator {
 
     createTorus(attachProperties = true) {
         let properties;
-        let geometry = new THREE.TorusBufferGeometry(10, 5, 10, 30);
+        let geometry = new THREE.TorusBufferGeometry(.5, 0.1, 10, 50);
         let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
