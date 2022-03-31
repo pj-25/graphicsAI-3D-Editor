@@ -9,14 +9,14 @@ export default class PropertyController{
     initProperties(){  
         // transform
         this.transformPropertyFolder = this.propertiesFolder.addFolder('Transform');
-        this.transformPropertyFolder.add(this.interactiveMesh.position, 'x').name('PositionX').min(-50).max(50).step(0.01).listen();
-        this.transformPropertyFolder.add(this.interactiveMesh.position, 'y').name('PositionY').min(-50).max(50).step(0.01).listen();
-        this.transformPropertyFolder.add(this.interactiveMesh.position, 'z').name('PositionZ').min(-50).max(50).step(0.01).listen();
+        this.transformPropertyFolder.add(this.interactiveObject.position, 'x').name('PositionX').min(-50).max(50).step(0.01).listen();
+        this.transformPropertyFolder.add(this.interactiveObject.position, 'y').name('PositionY').min(-50).max(50).step(0.01).listen();
+        this.transformPropertyFolder.add(this.interactiveObject.position, 'z').name('PositionZ').min(-50).max(50).step(0.01).listen();
     
-        this.transformPropertyFolder.add(this.interactiveMesh.rotation, 'x').name('RotateX').min(-3.14).max(3.14).step(0.01).listen();
-        this.transformPropertyFolder.add(this.interactiveMesh.rotation, 'y').name('RotateY').min(-3.14).max(3.14).step(0.01).listen();
-        this.transformPropertyFolder.add(this.interactiveMesh.rotation, 'z').name('RotateZ').min(-3.14).max(3.14).step(0.01).listen();
-        
+        this.transformPropertyFolder.add(this.interactiveObject.rotation, 'x').name('RotateX').min(-3.14).max(3.14).step(0.01).listen();
+        this.transformPropertyFolder.add(this.interactiveObject.rotation, 'y').name('RotateY').min(-3.14).max(3.14).step(0.01).listen();
+        this.transformPropertyFolder.add(this.interactiveObject.rotation, 'z').name('RotateZ').min(-3.14).max(3.14).step(0.01).listen();
+
         this.transformPropertyFolder.add(this.interactiveObject.rotation, 'x').name('RotateX').min(-360).max(360).step(0.01).listen();
         this.transformPropertyFolder.add(this.interactiveObject.rotation, 'y').name('RotateY').min(-360).max(360).step(0.01).listen();
         this.transformPropertyFolder.add(this.interactiveObject.rotation, 'z').name('RotateZ').min(-360).max(360).step(0.01).listen();
