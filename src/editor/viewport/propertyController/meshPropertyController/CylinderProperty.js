@@ -1,14 +1,13 @@
-import PropertyController from "./propertyController";
+import MeshPropertyController from "./MeshPropertyController";
 
 import * as THREE from 'three';
 
-export default class CylinderProperty extends PropertyController{
+export default class CylinderProperty extends MeshPropertyController{
     constructor(interactiveMesh, propertiesPane){
         super(interactiveMesh, propertiesPane);
         
         this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
         this.regenerate = ()=>{
-            console.log(this.geometryData.openEnded )
             let newGeometry = new THREE.CylinderGeometry(this.geometryData.radiusTop,
                                                         this.geometryData.radiusBottom, 
                                                         this.geometryData.height, 
@@ -18,7 +17,7 @@ export default class CylinderProperty extends PropertyController{
                                                         this.geometryData.thetaStart, 
                                                         this.geometryData.thetaLength);
     
-            this.updateMesh(newGeometry);
+            this.interactiveObject.updateGeometry(newGeometry);
         }
     }
 

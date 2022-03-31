@@ -72,7 +72,12 @@ export default class ToolBox{
     }
 
     activate(toolType){
-        if(this.activeTool == toolType)return;
+        if(this.activeTool == toolType){
+            if(toolType == ToolBox.TOOLTYPE.SELECTBOX){
+                this.selectTool.deactivate();
+            }
+            return;
+        }
         this.activeTool = toolType;
         switch(toolType){
             case ToolBox.TOOLTYPE.SELECTBOX:
@@ -92,16 +97,16 @@ export default class ToolBox{
     }
 
     activateTransformTool(type){
-        this.viewport.disableOrbitControls();
         this.setMode(type);
         this.transformTool.setMode(type);
         if(this.selectTool.selected.length > 0){
             this.transformTool.activate(this.selectTool.selected);
+        }else if(this.transformTool.singleTransformObject){
+            this.transformTool.singleTransformObject.helper.detachTranformControls();
         }
     }
 
     deactivate(){
-        this.viewport.enableOrbitControls();
         if(this.activeTool !== ToolBox.TOOLTYPE.TransformTool){
             this.activeTool = ToolBox.TOOLTYPE.SELECTBOX;
             this.transformTool.deactivate();

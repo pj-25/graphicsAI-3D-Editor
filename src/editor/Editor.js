@@ -24,15 +24,16 @@ export default class Editor{
         //add addMesh menu
         this.sceneOutliner = this.propertiesPane.addFolder('Scene Outliner');
         this.meshGenerator = new MeshGenerator(this.viewport, this.sceneOutliner);
-        this.bindAddMeshOption();
+        this.bindAddOption();
         this.meshGenerator.addCube();
         
         
     }
 
-    bindAddMeshOption(){
+    bindAddOption(){
+        const addOptionFolder = this.propertiesPane.addFolder('Add');
         
-        const addMeshFolder = this.propertiesPane.addFolder('Add Mesh');
+        const addMeshFolder = addOptionFolder.addFolder('Mesh');
         addMeshFolder.add(this.meshGenerator, 'addPlane').name('Plane');
         addMeshFolder.add(this.meshGenerator, 'addCube').name('Cube');
         addMeshFolder.add(this.meshGenerator, 'addCircle').name('Circle');
@@ -41,8 +42,9 @@ export default class Editor{
         addMeshFolder.add(this.meshGenerator, 'addCylinder').name('Cylinder');
         addMeshFolder.add(this.meshGenerator, 'addCone').name('Cone');
         addMeshFolder.add(this.meshGenerator, 'addTorus').name('Torus');
-        addMeshFolder.add(this.meshGenerator, 'addCamera').name('Camera');
-        addMeshFolder.add(this.meshGenerator, 'addLight').name('Light');
+
+        addOptionFolder.add(this.meshGenerator, 'addCamera').name('Camera');
+        addOptionFolder.add(this.meshGenerator, 'addLight').name('Light');
     }
 
 
@@ -57,7 +59,6 @@ export default class Editor{
         });
         this.toolBox.toolBar.add(this.toolBox.toolProperties, 'rotate').name('Rotate (R)').listen().onChange(()=>{
             this.toolBox.activate(ToolBox.TOOLTYPE.ROTATE);
-
         });
         this.toolBox.toolBar.add(this.toolBox.toolProperties, 'scale').name('Scale (S)').listen().onChange(()=>{
             this.toolBox.activate(ToolBox.TOOLTYPE.SCALE);

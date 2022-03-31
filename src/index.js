@@ -1,7 +1,5 @@
 import './style.css';
 import Editor from './editor/Editor';
-import * as THREE from 'three';
-import InteractiveMesh from './editor/viewport/InteractiveMesh';
 
 
 const viewportCanvas = document.getElementById('webgl');

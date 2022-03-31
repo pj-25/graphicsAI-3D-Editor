@@ -1,8 +1,8 @@
-import PropertyController from "./propertyController";
+import MeshPropertyController from "./MeshPropertyController";
 
 import * as THREE from 'three';
 
-export default class PlaneProperty extends PropertyController{
+export default class PlaneProperty extends MeshPropertyController{
     constructor(interactiveMesh, propertiesPane){
         super(interactiveMesh, propertiesPane);
         
@@ -13,7 +13,7 @@ export default class PlaneProperty extends PropertyController{
                                                     this.geometryData.widthSegments, 
                                                     this.geometryData.heightSegments);
             
-            this.updateMesh(newGeometry);
+            this.interactiveObject.updateGeometry(newGeometry);
         }
     }
 

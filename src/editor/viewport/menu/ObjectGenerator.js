@@ -1,14 +1,16 @@
 import * as THREE from "three";
-import BoxProperty from "../propertyController/boxProperty";
-import CircleProperty from "../propertyController/circleProperty";
-import ConeProperty from "../propertyController/coneProperty";
-import CylinderProperty from "../propertyController/cylinderProperty";
-import IcosahedronProperty from "../propertyController/icosphereProperty";
-import PlaneProperty from "../propertyController/planeProperty";
-import SphereProperty from "../propertyController/sphereProperty";
-import TorusProperty from "../propertyController/torusProperty";
+import BoxProperty from "../propertyController/meshPropertyController/BoxProperty";
+import CircleProperty from "../propertyController/meshPropertyController/CircleProperty";
+import ConeProperty from "../propertyController/meshPropertyController/ConeProperty";
+import CylinderProperty from "../propertyController/meshPropertyController/CylinderProperty";
+import IcosahedronProperty from "../propertyController/meshPropertyController/IcosphereProperty";
+import PlaneProperty from "../propertyController/meshPropertyController/PlaneProperty";
+import SphereProperty from "../propertyController/meshPropertyController/SphereProperty";
+import TorusProperty from "../propertyController/meshPropertyController/TorusProperty";
 
-import InteractiveMesh from "../InteractiveMesh";
+import InteractiveMesh from "../interactiveObjects/InteractiveMesh";
+import InteractiveCamera from "../interactiveObjects/InteractiveCamera";
+import CameraPropertyController from "../propertyController/CameraPropertyController";
 
 export default class MeshGenerator {
     static OBJECT_TYPE = {
@@ -188,6 +190,7 @@ export default class MeshGenerator {
         this.viewport.add(this.createCamera(attachProperties));
     }
 
+<<<<<<< HEAD:src/editor/viewport/menu/ObjectGenerator.js
     createCamera() {
         let camera = new THREE.PerspectiveCamera(75, 1920 / 1200, 0.1, 1000);
         let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
@@ -195,6 +198,19 @@ export default class MeshGenerator {
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         
         return mesh;
+=======
+    createCamera(attachProperties = true) {
+        let camera = new THREE.PerspectiveCamera(50, 1920 / 1200, 0.1, 1000);
+        let interactiveCamera = new InteractiveCamera(this.viewport, camera);
+        interactiveCamera.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        let properties;
+        if(attachProperties){
+            properties = new CameraPropertyController(interactiveCamera, this.propertiesPane);
+            properties.initProperties();
+        }
+        interactiveCamera.properties = properties;
+        return interactiveCamera;
+>>>>>>> f5fb0bf0b2dccd0fa5bce2aef4c43ac34ad0e1ca:src/editor/viewport/menu/MeshGenerator.js
     }
 
     addLight(attachProperties = true){

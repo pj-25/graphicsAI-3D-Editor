@@ -1,8 +1,8 @@
-import PropertyController from "./propertyController";
+import MeshPropertyController from "./MeshPropertyController";
 
 import * as THREE from 'three';
 
-export default class CircleProperty extends PropertyController{
+export default class CircleProperty extends MeshPropertyController{
     constructor(interactiveMesh, propertiesPane){
         super(interactiveMesh, propertiesPane);
         
@@ -13,7 +13,7 @@ export default class CircleProperty extends PropertyController{
                                                         this.geometryData.thetaStart, 
                                                         this.geometryData.thetaLength);
             
-            this.updateMesh(newGeometry);
+            this.interactiveObject.updateGeometry(newGeometry);
         };
     }
 

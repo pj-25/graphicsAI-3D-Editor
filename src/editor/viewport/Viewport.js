@@ -70,7 +70,6 @@ export default class Viewport extends THREE.Scene {
             if(this.mouse.clicked){
                 this.raycaster.setFromCamera(this.mouse.pointer, this.controlledCamera.activeCamera);
                 const intersects = this.raycaster.intersectObjects(this.children);
-                console.log(intersects);
                 for ( let i = 0; i < intersects.length; i ++ ) {
                     this.onIntersectedObject(intersects[i].object);
                 }
