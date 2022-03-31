@@ -1,14 +1,14 @@
-import PropertyController from "./propertyController";
+import MeshPropertyController from "./MeshPropertyController";
 import * as THREE from 'three';
 
-export default class BoxProperty extends PropertyController{
+export default class BoxProperty extends MeshPropertyController{
     constructor(interactiveMesh, propertiesPane){
         super(interactiveMesh, propertiesPane);
- 
+        
         this.geometryPropertyFolder = this.propertiesFolder.addFolder('Geometry');
         this.regenerate = ()=>{
             let newGeometry = new THREE.BoxGeometry(this.geometryData.width, this.geometryData.height, this.geometryData.depth, this.geometryData.widthSegments, this.geometryData.heightSegments, this.geometryData.depthSegments);  
-            this.updateMesh(newGeometry);
+            this.interactiveObject.updateGeometry(newGeometry);
         }
     }
 

@@ -1,16 +1,20 @@
 import * as THREE from 'three';
-import { TransformControls } from "three/examples/jsm/controls/TransformControls";
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
 
-
-export default class InteractiveMesh extends THREE.Mesh{
-    constructor(viewport, geometry, material, selectionColor=0xf49a34){
-        super(geometry, material);
-        this.type = "InteractiveMesh";
+export default class InteractiveObjectHelper{
+    constructor(viewport, interactiveObject, selectionColor=0xf49a34){
         this.viewport = viewport;
-
+        this.interactiveObject = interactiveObject;
+        this.selectionColor = selectionColor;
+        this.selectable = true;
+        this.selected = false;
+        this.hasTransformControl = false;
+        
         this.transformControls = new TransformControls(viewport.controlledCamera.activeCamera, viewport.domElement);
-        this.transformControls.visible = false;
-        window.addEventListener('keypress', event=>{
+        this.edges = new THREE.EdgesGeometry(this.interactiveObject.geometry);
+        this.selectionHelper = new THREE.LineSegments(this.edges, new THREE.LineBasicMaterial({color:this.selectionColor}));
+    
+        this.onKeypress = (event)=>{
             if(this.transformControls.visible){
                 switch(event.code){
                     case 'KeyG':
@@ -24,24 +28,13 @@ export default class InteractiveMesh extends THREE.Mesh{
                         break;
                 }
             }
-        });
-
-        //define and show properties
-        //TODO : remove this & add propertyController here
-        this.properties;
-        this.selectable = true;
-        this.selected = false;
-        this.hasTransformControl = false;
-        this.color = material.color.getHex();
-
-        this.edges = new THREE.EdgesGeometry(geometry);
-        this.line = new THREE.LineSegments(this.edges, new THREE.LineBasicMaterial({color:selectionColor}));
-        this.selectionHelper = new THREE.Group();
-        this.selectionHelper.add(this, this.line);
+        }
     }
 
-    setTransformControls(transformControls){
-        this.transformControls = transformControls;
+
+    updateSelectionHelper(){
+        this.edges.copy(new THREE.EdgesGeometry(this.interactiveObject.geometry));
+        this.selectionHelper.geometry = this.edges;
     }
 
     onVisibleChange(){
@@ -60,9 +53,10 @@ export default class InteractiveMesh extends THREE.Mesh{
 
     attachTransformControls(){
         this.hasTransformControl = true;
-        this.transformControls.attach(this);
+        this.transformControls.attach(this.interactiveObject);
         this.transformControls.addEventListener('mouseDown',this.viewport.disableOrbitControls);
-        this.transformControls.addEventListener('mouseUp',this.viewport.enableOrbitControls);
+        this.transformControls.addEventListener('mouseUp' ,this.viewport.enableOrbitControls);
+        window.addEventListener('keypress', this.onKeypress);
         this.viewport.add(this.transformControls);
     }
 
@@ -71,12 +65,13 @@ export default class InteractiveMesh extends THREE.Mesh{
         this.transformControls.detach();
         this.transformControls.removeEventListener('mouseDown', this.viewport.disableOrbitControls);
         this.transformControls.removeEventListener('mouseUp', this.viewport.enableOrbitControls);
+        window.removeEventListener('keypress', this.onKeypress);
         this.viewport.remove(this.transformControls);
     }
 
     activateSelection(attach=true){
         this.selected = true;
-        this.add(this.selectionHelper);
+        this.interactiveObject.add(this.selectionHelper);
         if(attach){
             this.attachTransformControls();
         }
@@ -84,7 +79,7 @@ export default class InteractiveMesh extends THREE.Mesh{
 
     deactivateSelection(detach=true){
         this.selected = false;
-        this.remove(this.selectionHelper);
+        this.interactiveObject.remove(this.selectionHelper);
         if(detach){
             this.detachTransformControls();
         }

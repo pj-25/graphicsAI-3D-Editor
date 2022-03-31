@@ -1,8 +1,8 @@
-import PropertyController from "./propertyController";
+import MeshPropertyController from "./MeshPropertyController";
 
 import * as THREE from 'three';
 
-export default class IcosahedronProperty extends PropertyController{
+export default class IcosahedronProperty extends MeshPropertyController{
     constructor(interactiveMesh, propertiesPane){
         super(interactiveMesh, propertiesPane);
         
@@ -11,7 +11,7 @@ export default class IcosahedronProperty extends PropertyController{
             let newGeometry = new THREE.IcosahedronGeometry(this.geometryData.radius, 
                                                             this.geometryData.detail);
     
-            this.updateMesh(newGeometry);
+            this.interactiveObject.updateGeometry(newGeometry);
         }
     }
 

@@ -10,11 +10,11 @@ export default class SelectTool{
 
     add(...objects){
         for(let obj of objects){
-            if(obj.selected){
-                obj.deactivateSelection(false);
+            if(obj.helper.selected){
+                obj.helper.deactivateSelection(false);
                 this.selected.splice(this.selected.indexOf(obj));
             }else{
-                obj.activateSelection(false);
+                obj.helper.activateSelection(false);
                 this.selected.push(obj);
             }
         }
@@ -22,7 +22,7 @@ export default class SelectTool{
 
     deactivate(){
         for(let obj of this.selected){
-            obj.deactivateSelection(false);
+            obj.helper.deactivateSelection(false);
         }
         this.selected = [];
     }

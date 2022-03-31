@@ -13,6 +13,7 @@ export default class TransformTool{
         this.viewport.add(this.selectedObjectGroup);
         this.active = false;
 
+        this.singleTransformObject;
     }
 
     //set mode type: translate(default), rotate, scale
@@ -25,8 +26,13 @@ export default class TransformTool{
     }
 
     activate(objects){
-        if(this.active && objects.length == 0)return;
+        if(this.active || objects.length === 0)return;
         this.active = true;
+        if(objects.length === 1){
+            this.singleTransformObject = objects[0];
+            objects[0].helper.attachTransformControls();
+            return;    
+        }
         for(let obj of objects){
             this.selectedObjectGroup.add(obj);
         }
@@ -39,6 +45,11 @@ export default class TransformTool{
     deactivate(){
         if(this.active){
             this.active = false;
+            if(this.singleTransformObject){
+                this.singleTransformObject.helper.detachTransformControls();
+                this.singleTransformObject = undefined;
+                return;
+            }
             this.transformControl.detach();
             //FIXME : only remove group not childrens
             // this.selectedObjectGroup.removeFromParent();

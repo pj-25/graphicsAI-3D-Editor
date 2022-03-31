@@ -1,8 +1,8 @@
-import PropertyController from "./propertyController";
+import MeshPropertyController from "./MeshPropertyController";
 
 import * as THREE from 'three';
 
-export default class SphereProperty extends PropertyController{
+export default class SphereProperty extends MeshPropertyController{
     constructor(interactiveMesh, propertiesPane){
         super(interactiveMesh, propertiesPane);
         
@@ -16,7 +16,7 @@ export default class SphereProperty extends PropertyController{
                                                         this.geometryData.thetaStart, 
                                                         this.geometryData.thetaLength);
             
-            this.updateMesh(newGeometry);
+            this.interactiveObject.updateGeometry(newGeometry);
         }
     }
 

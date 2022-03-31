@@ -1,8 +1,8 @@
-import PropertyController from "./propertyController";
+import MeshPropertyController from "./MeshPropertyController";
 
 import * as THREE from 'three';
 
-export default class ConeProperty extends PropertyController{
+export default class ConeProperty extends MeshPropertyController{
     constructor(interactiveMesh, propertiesPane){
         super(interactiveMesh, propertiesPane);
         
@@ -16,7 +16,7 @@ export default class ConeProperty extends PropertyController{
                                                     this.geometryData.thetaStart, 
                                                     this.geometryDatathetaLength);
             
-            this.updateMesh(newGeometry);
+            this.interactiveObject.updateGeometry(newGeometry);
     
         };
     }
