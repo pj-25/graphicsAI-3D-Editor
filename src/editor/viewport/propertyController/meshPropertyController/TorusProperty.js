@@ -21,11 +21,11 @@ export default class TorusProperty extends MeshPropertyController{
     initProperties(){
         super.initProperties();
         
-        this.geometryPropertyFolder.add(this.geometryData,'radius').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'tube').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'radialSegments').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'tubularSegments').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'arc').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'radius').min(1).max(50).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'tube').min(0.1).max(25).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'radialSegments').min(2).max(50).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'tubularSegments').min(3).max(300).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'arc').min(0).max(6.28).step(0.01).onChange(this.regenerate);
     }
     
     

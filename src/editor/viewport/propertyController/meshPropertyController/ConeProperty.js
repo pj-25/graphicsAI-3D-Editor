@@ -24,13 +24,13 @@ export default class ConeProperty extends MeshPropertyController{
     initProperties(){
         super.initProperties();
         
-        this.geometryPropertyFolder.add(this.geometryData,'radius').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'height').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'radialSegments').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'heightSegments').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'openEnded').onChange(()=>this.regenerate);        
-        this.geometryPropertyFolder.add(this.geometryData,'thetaStart').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'thetaLength').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'radius').min(1).max(50).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'height').min(1).max(50).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'radialSegments').min(1).max(50).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'heightSegments').min(1).max(50).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'openEnded').onChange(this.regenerate);        
+        this.geometryPropertyFolder.add(this.geometryData,'thetaStart').min(0).max(6.48).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'thetaLength').min(0).max(6.48).onChange(this.regenerate);
 
     }
     

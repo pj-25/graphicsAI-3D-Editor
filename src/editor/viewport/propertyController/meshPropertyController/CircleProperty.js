@@ -22,8 +22,8 @@ export default class CircleProperty extends MeshPropertyController{
         
         this.geometryPropertyFolder.add(this.geometryData,'radius').min(1).max(10).onChange(this.regenerate);
         this.geometryPropertyFolder.add(this.geometryData,'segments').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'thetaStart').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'thetaLength').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'thetaStart').min(0).max(6.28).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'thetaLength').min(0).max(6.28).onChange(this.regenerate);
 
     }
     

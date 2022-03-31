@@ -23,13 +23,13 @@ export default class SphereProperty extends MeshPropertyController{
     initProperties(){
         super.initProperties();
         
-        this.geometryPropertyFolder.add(this.geometryData,'radius').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'widthSegments').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'heightSegments').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'phiStart').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'phiLength').min(1).max(10).onChange(this.regenerate);       
-        this.geometryPropertyFolder.add(this.geometryData,'thetaStart').min(1).max(10).onChange(this.regenerate);
-        this.geometryPropertyFolder.add(this.geometryData,'thetaLength').min(1).max(10).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'radius').min(1).max(50).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'widthSegments').min(1).max(50).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'heightSegments').min(1).max(50).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'phiStart').min(0).max(6.28).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'phiLength').min(0).max(6.28).onChange(this.regenerate);       
+        this.geometryPropertyFolder.add(this.geometryData,'thetaStart').min(0).max(6.28).onChange(this.regenerate);
+        this.geometryPropertyFolder.add(this.geometryData,'thetaLength').min(0).max(6.28).onChange(this.regenerate);
 
     }
     
