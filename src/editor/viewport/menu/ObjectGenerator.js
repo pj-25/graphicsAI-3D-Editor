@@ -41,7 +41,7 @@ export default class MeshGenerator {
     createPlane(attachProperties = true) {
         let properties;
         let geometry = new THREE.PlaneBufferGeometry(1, 1);
-        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091, side: THREE.DoubleSide });
+        let material = new THREE.MeshStandardMaterial({ color: 0x8e9091, side: THREE.DoubleSide });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         if (attachProperties) {
@@ -60,7 +60,7 @@ export default class MeshGenerator {
     createCube(attachProperties = true) {
         let properties;
         let geometry = new THREE.BoxBufferGeometry(1, 1, 1);
-        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
+        let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         if (attachProperties) {
@@ -79,7 +79,7 @@ export default class MeshGenerator {
     createCircle(attachProperties = true) {
         let properties;
         let geometry = new THREE.CircleBufferGeometry(1, 10);
-        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
+        let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         if (attachProperties) {
@@ -98,7 +98,7 @@ export default class MeshGenerator {
     createUVSphere(attachProperties = true) {
         let properties;
         let geometry = new THREE.SphereBufferGeometry(1, 30, 30);
-        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
+        let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         if (attachProperties) {
@@ -117,7 +117,7 @@ export default class MeshGenerator {
     createIcoSphere(attachProperties = true) {
         let properties;
         let geometry = new THREE.IcosahedronBufferGeometry(1, 2);
-        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
+        let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         if (attachProperties) {
@@ -136,7 +136,7 @@ export default class MeshGenerator {
     createCylinder(attachProperties = true) {
         let properties;
         let geometry = new THREE.CylinderBufferGeometry(1, 1, 1, 20, 20);
-        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
+        let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         if (attachProperties) {
@@ -155,7 +155,7 @@ export default class MeshGenerator {
     createCone(attachProperties = true) {
         let properties;
         let geometry = new THREE.ConeBufferGeometry(1, 2, 10, 10);
-        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
+        let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         if (attachProperties) {
@@ -174,7 +174,7 @@ export default class MeshGenerator {
     createTorus(attachProperties = true) {
         let properties;
         let geometry = new THREE.TorusBufferGeometry(.5, 0.1, 10, 50);
-        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
+        let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         if (attachProperties) {
@@ -190,15 +190,6 @@ export default class MeshGenerator {
         this.viewport.add(this.createCamera(attachProperties));
     }
 
-<<<<<<< HEAD:src/editor/viewport/menu/ObjectGenerator.js
-    createCamera() {
-        let camera = new THREE.PerspectiveCamera(75, 1920 / 1200, 0.1, 1000);
-        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
-        let mesh = new InteractiveMesh(this.viewport, camera, material);
-        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
-        
-        return mesh;
-=======
     createCamera(attachProperties = true) {
         let camera = new THREE.PerspectiveCamera(50, 1920 / 1200, 0.1, 1000);
         let interactiveCamera = new InteractiveCamera(this.viewport, camera);
@@ -210,7 +201,6 @@ export default class MeshGenerator {
         }
         interactiveCamera.properties = properties;
         return interactiveCamera;
->>>>>>> f5fb0bf0b2dccd0fa5bce2aef4c43ac34ad0e1ca:src/editor/viewport/menu/MeshGenerator.js
     }
 
     addLight(attachProperties = true){
@@ -220,7 +210,7 @@ export default class MeshGenerator {
     createLight() {
         let light = new THREE.Light();
         
-        let material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
+        let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, light, material);
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         
