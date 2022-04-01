@@ -1,7 +1,7 @@
 import Viewport from './viewport/Viewport';
 import * as dat from 'dat.gui';
 import ToolBox from './tools/ToolBox';
-import MeshGenerator from './viewport/menu/MeshGenerator';
+import MeshGenerator from './viewport/menu/ObjectGenerator';
 
 export default class Editor{
     constructor(viewportCanvas, toolBarElement, propertiesPaneContainer){

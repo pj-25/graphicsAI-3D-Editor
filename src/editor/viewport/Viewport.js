@@ -34,6 +34,14 @@ export default class Viewport extends THREE.Scene {
         this.renderer.setSize(this.width, this.height);
         this.renderer.setClearColor(clearColor);
 
+        //creating light
+        this.directionalLight = new THREE.DirectionalLight(0xffffff, 1)
+        this.directionalLight.position.copy(this.controlledCamera.activeCamera.position)
+        this.add(this.directionalLight)
+
+        this.ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+        this.add(this.ambientLight)
+
         //handling screen resize
         this.onResizeEvent = (event)=>{
             this.width = window.innerWidth;
