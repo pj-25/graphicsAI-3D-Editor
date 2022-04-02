@@ -18,8 +18,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
+    - run: rm dist/*
     - run: npm run build
-  
+
     - name: Update dist
       uses: test-room-7/action-update-file@v1.6.0
       with:
