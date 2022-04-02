@@ -19,7 +19,7 @@ jobs:
     - name: Clean build folder
       run: |
         rm dist/*
-        git rm dist/*
+        git rm dist/* -f
 
     - name: Build dist
       uses: actions/setup-node@v3
@@ -32,7 +32,7 @@ jobs:
     - name: Commit Changes
       run: |
           git config --local user.name "github-bot"
-          git add dist/*
+          git add dist/* -f
           git commit -m "Update build files"
     
     - name: Push Changes
