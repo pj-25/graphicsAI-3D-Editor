@@ -1,4 +1,4 @@
-name: NodeJS with Webpack
+name: Clean, Build, Commit, Push
 
 on: [push]
 
@@ -13,20 +13,27 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Clean build folder
+    - run: |
+        rm dist/*
+        git rm dist/*
+
+    - name: Build dist
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: rm dist/*
-    - run: npm run build
+    - run: | 
+        npm ci
+        npm run build
 
-    - name: Update dist
-      uses: test-room-7/action-update-file@v1.6.0
+    - name: Commit Changes
+      run: |
+          git config --local user.name "github-bot"
+          git add dist/*
+          git commit -m "Update build files"
+    
+    - name: Push Changes
+      uses: ad-m/github-push-action@master
       with:
-        # Commit message
-        commit-msg: update bundle
-        # Path to file(s) or glob pattern
-        file-path: dist/*
-        # GitHub token
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        force: true
