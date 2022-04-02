@@ -38,6 +38,12 @@ export default class ControlledCamera {
         return this.orbitControls;
     }
 
+
+    //override this method to perform actions on camera switch event
+    onCameraSwitch(){
+        
+    }
+
     switchCamera(){
         this.otherCamera.position.copy(this.activeCamera.position);
         this.otherCamera.lookAt(this.orbitControls.target);
@@ -53,6 +59,8 @@ export default class ControlledCamera {
         const tmpCamera = this.activeCamera;
         this.activeCamera = this.otherCamera;
         this.otherCamera = tmpCamera;
+
+        this.onCameraSwitch();
     }
 
     performOperation(operation){

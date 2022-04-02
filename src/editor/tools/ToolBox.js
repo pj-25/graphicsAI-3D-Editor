@@ -21,7 +21,7 @@ export default class ToolBox{
 
         this.toolProperties = {
             select:true,
-            move: false,
+            translate: false,
             rotate: false,
             scale: false
         };
@@ -30,7 +30,7 @@ export default class ToolBox{
         this.transformTool = new TransformTool(viewport, viewport.controlledCamera, viewport.domElement);
 
         this.viewport.onIntersectedObject = (object)=>{
-            if(object.type == 'InteractiveMesh'){
+            if(object.type === 'InteractiveMesh'){
                 switch(this.activeTool){
                     case ToolBox.TOOLTYPE.SELECTBOX:
                         this.selectTool.add(object);
@@ -72,8 +72,8 @@ export default class ToolBox{
     }
 
     activate(toolType){
-        if(this.activeTool == toolType){
-            if(toolType == ToolBox.TOOLTYPE.SELECTBOX){
+        if(this.activeTool === toolType){
+            if(toolType === ToolBox.TOOLTYPE.SELECTBOX){
                 this.selectTool.deactivate();
             }
             return;
@@ -98,16 +98,19 @@ export default class ToolBox{
 
     activateTransformTool(type){
         this.setMode(type);
-        this.transformTool.setMode(type);
+        if(this.transformTool.active){
+            this.transformTool.setMode(type);
+            return;
+        }
         if(this.selectTool.selected.length > 0){
-            this.transformTool.activate(this.selectTool.selected);
+            this.transformTool.activate(this.selectTool.selected, type);
         }else if(this.transformTool.singleTransformObject){
             this.transformTool.singleTransformObject.helper.detachTranformControls();
         }
     }
 
     deactivate(){
-        if(this.activeTool !== ToolBox.TOOLTYPE.TransformTool){
+        if(this.transformTool.active){
             this.activeTool = ToolBox.TOOLTYPE.SELECTBOX;
             this.transformTool.deactivate();
         }

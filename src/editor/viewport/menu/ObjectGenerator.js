@@ -35,7 +35,9 @@ export default class MeshGenerator {
     }
 
     addPlane(attachProperties = true){
-        this.viewport.add(this.createPlane(attachProperties));
+        let object = this.createPlane(attachProperties);
+        this.viewport.add(object);
+        return object;
     }
 
     createPlane(attachProperties = true) {
@@ -54,7 +56,9 @@ export default class MeshGenerator {
     }
 
     addCube(attachProperties = true){
-        this.viewport.add(this.createCube(attachProperties));
+        let object = this.createCube(attachProperties);
+        this.viewport.add(object);
+        return object;
     }
 
     createCube(attachProperties = true) {
@@ -73,7 +77,9 @@ export default class MeshGenerator {
     }
 
     addCircle(attachProperties = true){
-        this.viewport.add(this.createCircle(attachProperties));
+        let object = this.createCircle(attachProperties);
+        this.viewport.add(object);
+        return object;
     }
 
     createCircle(attachProperties = true) {
@@ -92,7 +98,9 @@ export default class MeshGenerator {
     }
 
     addUVSphere(attachProperties = true){
-        this.viewport.add(this.createUVSphere(attachProperties));
+        let object = this.createUVSphere(attachProperties);
+        this.viewport.add(object);
+        return object;
     }
 
     createUVSphere(attachProperties = true) {
@@ -111,7 +119,9 @@ export default class MeshGenerator {
     }
 
     addIcoSphere(attachProperties = true){
-        this.viewport.add(this.createIcoSphere(attachProperties));
+        let object = this.createIcoSphere(attachProperties);
+        this.viewport.add(object);
+        return object;
     }
 
     createIcoSphere(attachProperties = true) {
@@ -130,7 +140,9 @@ export default class MeshGenerator {
     }
 
     addCylinder(attachProperties = true){
-        this.viewport.add(this.createCylinder(attachProperties));
+        let object = this.createCylinder(attachProperties);
+        this.viewport.add(object);
+        return object;
     }
 
     createCylinder(attachProperties = true) {
@@ -149,7 +161,9 @@ export default class MeshGenerator {
     }
 
     addCone(attachProperties = true){
-        this.viewport.add(this.createCone(attachProperties));
+        let object = this.createCone(attachProperties);
+        this.viewport.add(object);
+        return object;
     }
 
     createCone(attachProperties = true) {
@@ -168,7 +182,9 @@ export default class MeshGenerator {
     }
 
     addTorus(attachProperties = true){
-        this.viewport.add(this.createTorus(attachProperties));
+        let object = this.createTorus(attachProperties);
+        this.viewport.add(object);
+        return object;
     }
 
     createTorus(attachProperties = true) {
@@ -187,7 +203,9 @@ export default class MeshGenerator {
     }
 
     addCamera(attachProperties = true){
-        this.viewport.add(this.createCamera(attachProperties));
+        let object = this.createCamera(attachProperties);
+        this.viewport.add(object);
+        return object;
     }
 
     createCamera(attachProperties = true) {
@@ -204,7 +222,9 @@ export default class MeshGenerator {
     }
 
     addLight(attachProperties = true){
-        this.viewport.add(this.createLight(attachProperties));
+        let object = this.createLight(attachProperties);
+        this.viewport.add(object);
+        return object;
     }
 
     createLight() {

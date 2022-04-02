@@ -8,12 +8,9 @@ export default class TransformTool{
         this.viewport = viewport;
         this.type = ToolBox.TOOLTYPE.TRANSFORM;
         this.transformControl = new TransformControls(viewport.controlledCamera.activeCamera, viewport.domElement);
-        //TODO: add transform controls on centroid of group
         this.selectedObjectGroup = new THREE.Group();
         this.viewport.add(this.selectedObjectGroup);
         this.active = false;
-
-        this.singleTransformObject;
     }
 
     //set mode type: translate(default), rotate, scale
@@ -25,37 +22,49 @@ export default class TransformTool{
         this.selectedObjectGroup.add(object);
     }
 
-    activate(objects){
-        if(this.active || objects.length === 0)return;
+    activate(objects, mode='translate'){
+        if(this.active || objects.length == 0)return;
         this.active = true;
-        if(objects.length === 1){
-            this.singleTransformObject = objects[0];
-            objects[0].helper.attachTransformControls();
-            return;    
-        }
         for(let obj of objects){
-            this.selectedObjectGroup.add(obj);
+            this.selectedObjectGroup.attach(obj);
         }
+        this.transformControl.setMode(mode);
+        let center = TransformTool.computeGroupCenter(this.selectedObjectGroup);
+        this.transformControl.position.copy(center);
+        this.transformControl.updateMatrixWorld();
+        this.viewport.add(this.selectedObjectGroup);
         this.transformControl.attach(this.selectedObjectGroup);
         this.viewport.add(this.transformControl);
         this.transformControl.addEventListener('mouseDown', this.viewport.disableOrbitControls);
         this.transformControl.addEventListener('mouseUp', this.viewport.enableOrbitControls);        
     }
 
+    static computeGroupCenter(group) {
+        let center = new THREE.Vector3();
+        let children = group.children;
+        let count = children.length;
+        for (var i = 0; i < count; i++) {
+            center.add(children[i].position);
+        }
+        center.divideScalar(count);
+        return center;
+    }
+
     deactivate(){
         if(this.active){
             this.active = false;
-            if(this.singleTransformObject){
-                this.singleTransformObject.helper.detachTransformControls();
-                this.singleTransformObject = undefined;
-                return;
-            }
             this.transformControl.detach();
-            //FIXME : only remove group not childrens
-            // this.selectedObjectGroup.removeFromParent();
+            let childrens = [...this.selectedObjectGroup.children];
+            for(let obj of childrens){
+                this.viewport.add(obj);
+                obj.matrixWorld.decompose(obj.position, obj.quaternion, obj.scale); 
+            }
+            this.selectedObjectGroup.clear();
+            this.viewport.remove(this.selectedObjectGroup);
             this.viewport.remove(this.transformControl);
             this.transformControl.removeEventListener('mouseDown', this.viewport.disableOrbitControls);
             this.transformControl.removeEventListener('mouseUp', this.viewport.enableOrbitControls);
+            this.selectedObjectGroup = new THREE.Group();
         }
     }
 }

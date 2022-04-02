@@ -12,9 +12,10 @@ export default class InteractiveObjectHelper{
         
         this.transformControls = new TransformControls(viewport.controlledCamera.activeCamera, viewport.domElement);
         this.edges = new THREE.EdgesGeometry(this.interactiveObject.geometry);
-        this.selectionHelper = new THREE.LineSegments(this.edges, new THREE.LineBasicMaterial({color:this.selectionColor}));
+        this.selectionMaterial = new THREE.LineBasicMaterial({color:this.selectionColor});
+        this.selectionHelper = new THREE.LineSegments(this.edges, this.selectionMaterial);
     
-        this.onKeypress = (event)=>{
+        this.onKeypressTransformAction = (event)=>{
             if(this.transformControls.visible){
                 switch(event.code){
                     case 'KeyG':
@@ -27,6 +28,12 @@ export default class InteractiveObjectHelper{
                         this.transformControls.setMode('scale');
                         break;
                 }
+            }
+        };
+
+        this.onKeypressDeleteAction = (event)=>{
+            if(this.selected && event.code === 'Delete'){
+                this.interactiveObject.dispose();
             }
         }
     }
@@ -51,12 +58,13 @@ export default class InteractiveObjectHelper{
         }
     }
 
-    attachTransformControls(){
+    attachTransformControls(mode='translate'){
         this.hasTransformControl = true;
+        this.transformControls.setMode(mode);
         this.transformControls.attach(this.interactiveObject);
         this.transformControls.addEventListener('mouseDown',this.viewport.disableOrbitControls);
         this.transformControls.addEventListener('mouseUp' ,this.viewport.enableOrbitControls);
-        window.addEventListener('keypress', this.onKeypress);
+        window.addEventListener('keypress', this.onKeypressTransformAction);
         this.viewport.add(this.transformControls);
     }
 
@@ -65,13 +73,15 @@ export default class InteractiveObjectHelper{
         this.transformControls.detach();
         this.transformControls.removeEventListener('mouseDown', this.viewport.disableOrbitControls);
         this.transformControls.removeEventListener('mouseUp', this.viewport.enableOrbitControls);
-        window.removeEventListener('keypress', this.onKeypress);
+        window.removeEventListener('keypress', this.onKeypressTransformAction);
         this.viewport.remove(this.transformControls);
     }
 
-    activateSelection(attach=true){
+    activateSelection(attach=true, bindDeleteAction = true){
         this.selected = true;
         this.interactiveObject.add(this.selectionHelper);
+        if(bindDeleteAction)
+            window.addEventListener('keydown', this.onKeypressDeleteAction);
         if(attach){
             this.attachTransformControls();
         }
@@ -80,6 +90,7 @@ export default class InteractiveObjectHelper{
     deactivateSelection(detach=true){
         this.selected = false;
         this.interactiveObject.remove(this.selectionHelper);
+        window.removeEventListener('keydown', this.onKeypressDeleteAction);
         if(detach){
             this.detachTransformControls();
         }
@@ -99,5 +110,18 @@ export default class InteractiveObjectHelper{
         }else{
             this.deactivateSelection(includeTransformControls);
         }
+    }
+
+    dispose(){
+        if(this.selected){
+            this.deactivateSelection();
+        }
+        this.edges.dispose();
+        this.selectionMaterial.dispose();
+        this.transformControls.dispose();
+        if(this.hasTransformControl){
+            this.detachTransformControls();
+        }
+        
     }
 }

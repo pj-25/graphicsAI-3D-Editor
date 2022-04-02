@@ -19,4 +19,13 @@ export default class InteractiveMesh extends Mesh{
         this.geometry = newGeometry;
         this.helper.updateSelectionHelper();
     }
+
+    dispose(){
+        if(this.properties)
+            this.properties.dispose();
+        this.geometry.dispose();
+        this.material.dispose();
+        this.helper.dispose();
+        this.parent.remove(this);
+    }
 }

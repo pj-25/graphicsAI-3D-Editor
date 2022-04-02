@@ -14,7 +14,7 @@ export default class SelectTool{
                 obj.helper.deactivateSelection(false);
                 this.selected.splice(this.selected.indexOf(obj));
             }else{
-                obj.helper.activateSelection(false);
+                obj.helper.activateSelection(false, false);
                 this.selected.push(obj);
             }
         }
