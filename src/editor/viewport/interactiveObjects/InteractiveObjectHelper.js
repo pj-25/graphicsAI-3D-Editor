@@ -2,19 +2,22 @@ import * as THREE from 'three';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
 
 export default class InteractiveObjectHelper{
-    constructor(viewport, interactiveObject, selectionColor=0xf49a34){
+    constructor(viewport, interactiveObject, selectable = true, selectionColor=0xf49a34){
         this.viewport = viewport;
         this.interactiveObject = interactiveObject;
-        this.selectionColor = selectionColor;
-        this.selectable = true;
-        this.selected = false;
         this.hasTransformControl = false;
         
         this.transformControls = new TransformControls(viewport.controlledCamera.activeCamera, viewport.domElement);
-        this.edges = new THREE.EdgesGeometry(this.interactiveObject.geometry);
-        this.selectionMaterial = new THREE.LineBasicMaterial({color:this.selectionColor});
-        this.selectionHelper = new THREE.LineSegments(this.edges, this.selectionMaterial);
-    
+        
+        if(selectable){
+            this.selectionColor = selectionColor;
+            this.selectable = true;
+            this.selected = false;
+            this.edges = new THREE.EdgesGeometry(this.interactiveObject.geometry);
+            this.selectionMaterial = new THREE.LineBasicMaterial({color:this.selectionColor});
+            this.selectionHelper = new THREE.LineSegments(this.edges, this.selectionMaterial);
+        }
+
         this.onKeypressTransformAction = (event)=>{
             if(this.transformControls.visible){
                 switch(event.code){
@@ -64,7 +67,7 @@ export default class InteractiveObjectHelper{
         this.transformControls.attach(this.interactiveObject);
         this.transformControls.addEventListener('mouseDown',this.viewport.disableOrbitControls);
         this.transformControls.addEventListener('mouseUp' ,this.viewport.enableOrbitControls);
-        window.addEventListener('keypress', this.onKeypressTransformAction);
+        this.viewport.domElement.addEventListener('keypress', this.onKeypressTransformAction);
         this.viewport.add(this.transformControls);
     }
 
@@ -73,7 +76,7 @@ export default class InteractiveObjectHelper{
         this.transformControls.detach();
         this.transformControls.removeEventListener('mouseDown', this.viewport.disableOrbitControls);
         this.transformControls.removeEventListener('mouseUp', this.viewport.enableOrbitControls);
-        window.removeEventListener('keypress', this.onKeypressTransformAction);
+        this.viewport.domElement.removeEventListener('keypress', this.onKeypressTransformAction);
         this.viewport.remove(this.transformControls);
     }
 
@@ -81,7 +84,7 @@ export default class InteractiveObjectHelper{
         this.selected = true;
         this.interactiveObject.add(this.selectionHelper);
         if(bindDeleteAction)
-            window.addEventListener('keydown', this.onKeypressDeleteAction);
+            this.viewport.domElement.addEventListener('keydown', this.onKeypressDeleteAction);
         if(attach){
             this.attachTransformControls();
         }
@@ -90,7 +93,7 @@ export default class InteractiveObjectHelper{
     deactivateSelection(detach=true){
         this.selected = false;
         this.interactiveObject.remove(this.selectionHelper);
-        window.removeEventListener('keydown', this.onKeypressDeleteAction);
+        this.viewport.domElement.removeEventListener('keydown', this.onKeypressDeleteAction);
         if(detach){
             this.detachTransformControls();
         }

@@ -1,7 +1,7 @@
 import Viewport from './viewport/Viewport';
 import * as dat from 'dat.gui';
 import ToolBox from './tools/ToolBox';
-import MeshGenerator from './viewport/menu/ObjectGenerator';
+import ObjectGenerator from './viewport/menu/ObjectGenerator';
 
 export default class Editor{
     constructor(viewportCanvas, toolBarElement, propertiesPaneContainer){
@@ -12,6 +12,9 @@ export default class Editor{
 
         //creating properties pane 
         this.propertiesPane = new dat.GUI();
+        this.propertiesPane.domElement.draggable = true;
+        
+
         if(this.propertiesPaneContainer){
             this.propertiesPane.domElement.style.marginTop = "5px";
             propertiesPaneContainer.appendChild(this.propertiesPane.domElement);
@@ -26,9 +29,9 @@ export default class Editor{
 
         //add addMesh menu
         this.sceneOutliner = this.propertiesPane.addFolder('Scene Outliner');
-        this.meshGenerator = new MeshGenerator(this.viewport, this.sceneOutliner);
+        this.objectGenerator = new ObjectGenerator(this.viewport, this.sceneOutliner);
         this.bindAddOption();
-        this.meshGenerator.addCube();
+        this.objectGenerator.addCube();
         
         //add render option
         this.renderMode = false;
@@ -68,17 +71,20 @@ export default class Editor{
         const addOptionFolder = this.propertiesPane.addFolder('Add');
         
         const addMeshFolder = addOptionFolder.addFolder('Mesh');
-        addMeshFolder.add(this.meshGenerator, 'addPlane').name('Plane');
-        addMeshFolder.add(this.meshGenerator, 'addCube').name('Cube');
-        addMeshFolder.add(this.meshGenerator, 'addCircle').name('Circle');
-        addMeshFolder.add(this.meshGenerator, 'addUVSphere').name('UVSphere');
-        addMeshFolder.add(this.meshGenerator, 'addIcoSphere').name('IcoSphere');
-        addMeshFolder.add(this.meshGenerator, 'addCylinder').name('Cylinder');
-        addMeshFolder.add(this.meshGenerator, 'addCone').name('Cone');
-        addMeshFolder.add(this.meshGenerator, 'addTorus').name('Torus');
-
-        addOptionFolder.add(this.meshGenerator, 'addCamera').name('Camera');
-        addOptionFolder.add(this.meshGenerator, 'addLight').name('Light');
+        addMeshFolder.add(this.objectGenerator, 'addPlane').name('Plane');
+        addMeshFolder.add(this.objectGenerator, 'addCube').name('Cube');
+        addMeshFolder.add(this.objectGenerator, 'addCircle').name('Circle');
+        addMeshFolder.add(this.objectGenerator, 'addUVSphere').name('UVSphere');
+        addMeshFolder.add(this.objectGenerator, 'addIcoSphere').name('IcoSphere');
+        addMeshFolder.add(this.objectGenerator, 'addCylinder').name('Cylinder');
+        addMeshFolder.add(this.objectGenerator, 'addCone').name('Cone');
+        addMeshFolder.add(this.objectGenerator, 'addTorus').name('Torus');
+        this.loadHelicopter = ()=>{
+            this.objectGenerator.addObj('/models/Seahawk.obj');
+        };
+        addOptionFolder.add(this, 'loadHelicopter').name('Helicopter');
+        addOptionFolder.add(this.objectGenerator, 'addCamera').name('Camera');
+        addOptionFolder.add(this.objectGenerator, 'addLight').name('Light');
     }
 
 

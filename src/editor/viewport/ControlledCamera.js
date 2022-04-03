@@ -13,8 +13,7 @@ export default class ControlledCamera {
         this.perspectiveCamera.lookAt(new THREE.Vector3(0,0,0));
         this.activeCamera = this.perspectiveCamera;
         this.orbitControls = new OrbitControls(this.activeCamera, domElement);
-        //FIXME: add this event on domElement
-        window.addEventListener('keypress', (event)=>{
+        domElement.addEventListener('keypress', (event)=>{
             if ((event.key >= 0 && event.key <=9) || event.key == '/') {   //numpad
                 this.performOperation(event.key)
             } 

@@ -11,6 +11,9 @@ import TorusProperty from "../propertyController/meshPropertyController/TorusPro
 import InteractiveMesh from "../interactiveObjects/InteractiveMesh";
 import InteractiveCamera from "../interactiveObjects/InteractiveCamera";
 import CameraPropertyController from "../propertyController/CameraPropertyController";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import PropertyController from "../propertyController/PropertyController";
+import InteractiveObjectHelper from "../interactiveObjects/InteractiveObjectHelper";
 
 export default class MeshGenerator {
     static OBJECT_TYPE = {
@@ -25,13 +28,17 @@ export default class MeshGenerator {
             TORUS: 7
         },
         CAMERA: 8,
-        LIGHT: 9
+        LIGHT: 9,
+        OBJ: 10
     };
 
     constructor(viewport, propertiesPane, cursorPoint = new THREE.Vector3(0, 0, 0)) {
         this.viewport = viewport;
         this.cursorPoint = cursorPoint;
         this.propertiesPane = propertiesPane;
+
+        this.loadingManager = new THREE.LoadingManager();
+        this.objLoader = new OBJLoader(this.loadingManager);
     }
 
     addPlane(attachProperties = true){
@@ -235,6 +242,32 @@ export default class MeshGenerator {
         mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         
         return mesh;
+    }
+
+    addObj(objFile, attachProperties = true){
+        this.objLoader.load(
+            objFile,
+            (object)=>{
+                if(attachProperties){
+                    object.helper = new InteractiveObjectHelper(this.viewport, object, false);
+                    object.onVisibleChange = ()=>{};
+                    let properties = new PropertyController(object, this.propertiesPane, objFile);
+                    properties.initProperties();
+                    object.properties = properties;
+                }
+                object.scale.x /= 16;
+                object.scale.y /= 16;
+                object.scale.z /= 16;
+                this.viewport.add(object);
+            },
+            (xhr)=>{
+                console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+            },
+            (error)=>{
+                console.log('Enable to load from'+objFile);
+                console.log(error);
+            }
+        );
     }
 
     create(objectType, attachProperties = true) {

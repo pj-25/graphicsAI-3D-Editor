@@ -1,9 +1,9 @@
 
 export default class PropertyController{
 
-    constructor(interactiveObject, propertiesPane){
+    constructor(interactiveObject, propertiesPane, name=interactiveObject.geometry.type.replace('BufferGeometry', "")){
         this.interactiveObject = interactiveObject;
-        this.propertiesFolder= propertiesPane.addFolder(interactiveObject.geometry.type.replace('BufferGeometry', "") + "-" + interactiveObject.id);
+        this.propertiesFolder= propertiesPane.addFolder(name + "-" + interactiveObject.id);
         this.dispose = ()=>{propertiesPane.removeFolder(this.propertiesFolder)};
     }
 
@@ -13,10 +13,12 @@ export default class PropertyController{
             this.interactiveObject.onVisibleChange();
         });
         
-        // selection
-        this.propertiesFolder.add(this.interactiveObject.helper, 'selected').listen().onChange(()=>{
-            this.interactiveObject.helper.onSelectionChange();
-        });
+        if(this.interactiveObject.helper.selectable){
+            // selection
+            this.propertiesFolder.add(this.interactiveObject.helper, 'selected').listen().onChange(()=>{
+                this.interactiveObject.helper.onSelectionChange();
+            });
+        }
 
         // enable/disable transform controller
         this.propertiesFolder.add(this.interactiveObject.helper, 'hasTransformControl').name('Transform control').listen().onChange(()=>{

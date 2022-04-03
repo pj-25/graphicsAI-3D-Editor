@@ -6,7 +6,8 @@ export default class InteractiveMesh extends Mesh{
     constructor(viewport, geometry, material, selectionColor=0xf49a34){
         super(geometry, material);
         this.type = "InteractiveMesh";
-
+        this.isInteractive = true;
+        
         this.helper = new InteractiveObjectHelper(viewport, this, selectionColor);
     }
 

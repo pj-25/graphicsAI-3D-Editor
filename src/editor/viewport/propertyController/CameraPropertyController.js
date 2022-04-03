@@ -25,8 +25,8 @@ class MinMaxPropertyHelper {
 
 
 export default class CameraPropertyController extends PropertyController{
-    constructor(interactiveMesh, propertiesPane){
-        super(interactiveMesh, propertiesPane);
+    constructor(interactiveMesh, propertiesPane, name){
+        super(interactiveMesh, propertiesPane, name);
     
         this.updateCamera = ()=>{
             this.interactiveObject.camera.updateProjectionMatrix();

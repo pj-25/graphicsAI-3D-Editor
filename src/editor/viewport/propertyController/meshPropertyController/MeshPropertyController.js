@@ -2,7 +2,7 @@ import PropertyController from "../PropertyController";
 
 
 export default class MeshPropertyController extends PropertyController{
-    constructor(interactiveMesh, propertiesPane){
+    constructor(interactiveMesh, propertiesPane, name){
         super(interactiveMesh, propertiesPane);
         this.geometryData = JSON.parse(JSON.stringify(interactiveMesh.geometry));
         this.color = interactiveMesh.material.color.getHex();

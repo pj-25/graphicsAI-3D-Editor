@@ -98,30 +98,11 @@ export default class Viewport extends THREE.Scene {
             this.controlledCamera.orbitControls.enabled = false;
         };
 
-        //FIXME: use loader manager :(
-        //create obj loader
-        // this.objLoader = new OBJLoader();
     }
 
     // override this method to handle intersected object
     onIntersectedObject(object){
         console.log(object);
-    }
-
-    //******under construction 
-    loadFromObj(objFile){
-        this.objLoader.load(
-            objFile,
-            (object)=>{
-                this.add(object);
-            },
-            (xhr)=>{
-                console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-            },
-            (error)=>{
-                console.log('Enable to load from'+objFile);
-            }
-        );
     }
 
     switchCamera(){
