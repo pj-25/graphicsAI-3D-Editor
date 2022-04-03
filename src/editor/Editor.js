@@ -9,7 +9,7 @@ export default class Editor{
 
         //add viewport
         this.viewport = new Viewport(viewportCanvas, viewportCanvas.getBoundingClientRect().width, viewportCanvas.getBoundingClientRect().height);
-        
+
         //creating properties pane 
         this.propertiesPane = new dat.GUI();
         if(this.propertiesPaneContainer){
@@ -30,7 +30,13 @@ export default class Editor{
         this.bindAddOption();
         this.meshGenerator.addCube();
         
-        
+        //add render option
+        this.renderMode = false;
+        this.propertiesPane.add(this, 'renderMode').name('Render').onChange(()=>{
+            this.viewport.toggleHelpers()
+            if(this.renderMode)
+                this.propertiesPane.close();
+        });
     }
 
     bindCameraProperties(){

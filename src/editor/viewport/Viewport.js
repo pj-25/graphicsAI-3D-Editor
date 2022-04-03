@@ -34,14 +34,6 @@ export default class Viewport extends THREE.Scene {
         this.renderer.setSize(this.width, this.height);
         this.renderer.setClearColor(clearColor);
 
-        //creating light
-        this.directionalLight = new THREE.DirectionalLight(0xffffff, 1)
-        this.directionalLight.position.copy(this.controlledCamera.activeCamera.position)
-        this.add(this.directionalLight)
-
-        this.ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
-        this.add(this.ambientLight)
-
         //handling screen resize
         this.onResizeEvent = (event)=>{
             this.width = window.innerWidth;
@@ -66,6 +58,17 @@ export default class Viewport extends THREE.Scene {
         const negativeAxes = new THREE.AxesHelper(-100);
         this.helper.axesGroup.add(negativeAxes);
         this.helper.group.add(this.helper.axesGroup);
+
+        //creating light
+        this.directionalLight = new THREE.DirectionalLight(0xffffff, 1)
+        this.directionalLight.position.copy(this.controlledCamera.activeCamera.position)
+        //this.helper.group.add(this.directionalLight)
+        this.add(this.directionalLight);
+
+        this.ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+        // this.helper.group.add(this.ambientLight)
+        this.add(this.ambientLight);
+
         this.add(this.helper.group);
 
         //create raycaster
@@ -141,5 +144,9 @@ export default class Viewport extends THREE.Scene {
 
     showHelpers(){
         this.helper.group.visible = true;
+    }
+
+    toggleHelpers(){
+        this.helper.group.visible = !this.helper.group.visible;
     }
 }

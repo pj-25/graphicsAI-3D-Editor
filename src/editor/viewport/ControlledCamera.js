@@ -13,6 +13,7 @@ export default class ControlledCamera {
         this.perspectiveCamera.lookAt(new THREE.Vector3(0,0,0));
         this.activeCamera = this.perspectiveCamera;
         this.orbitControls = new OrbitControls(this.activeCamera, domElement);
+        //FIXME: add this event on domElement
         window.addEventListener('keypress', (event)=>{
             if ((event.key >= 0 && event.key <=9) || event.key == '/') {   //numpad
                 this.performOperation(event.key)
@@ -125,7 +126,6 @@ export default class ControlledCamera {
     moveLeft(){
         this.angle-=(Math.PI / 16)
         let camPos = new THREE.Vector3(this.activeCamera.position.x, this.activeCamera.position.y, this.activeCamera.position.z)
-        console.log(camPos.normalize());
         if(this.activeCamera.type === 'OrthographicCamera' && camPos.equals(new THREE.Vector3(0, 1, 0)) || camPos.equals(new THREE.Vector3(0, -1, 0))){
             // Gimbal lock
             this.activeCamera.rotation.z += Math.PI / 16
@@ -141,7 +141,6 @@ export default class ControlledCamera {
         this.angle+=(Math.PI / 16)
 
         let camPos = new THREE.Vector3(this.activeCamera.position.x, this.activeCamera.position.y, this.activeCamera.position.z)
-        console.log(camPos.normalize());
         
         if(this.activeCamera.type === 'OrthographicCamera' && camPos.equals(new THREE.Vector3(0, 1, 0)) || camPos.equals(new THREE.Vector3(0, -1, 0))){
             this.activeCamera.rotation.z = this.angle
