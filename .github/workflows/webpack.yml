@@ -18,7 +18,7 @@ jobs:
 
     - name: Clean build folder
       run: |
-        rm dist/*
+        rm dist/* -f
         git rm dist/* -f
 
     - name: Build dist
