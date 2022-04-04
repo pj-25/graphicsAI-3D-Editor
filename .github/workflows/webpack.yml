@@ -19,8 +19,8 @@ jobs:
     - name: Clean build folder
       run: |
         find dist -maxdepth 1 -type f -delete
-        git rm dist/* -f
-
+        git add -u 
+    
     - name: Build dist
       uses: actions/setup-node@v3
       with:
