@@ -14,6 +14,7 @@ import CameraPropertyController from "../propertyController/CameraPropertyContro
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import PropertyController from "../propertyController/PropertyController";
 import InteractiveObjectHelper from "../interactiveObjects/InteractiveObjectHelper";
+import TextProperty from "../propertyController/meshPropertyController/TextProperty";
 
 export default class MeshGenerator {
     static OBJECT_TYPE = {
@@ -25,11 +26,12 @@ export default class MeshGenerator {
             ICOSPHERE: 4,
             CYLINDER: 5,
             CONE: 6,
-            TORUS: 7
+            TORUS: 7,
+            TEXT: 8
         },
-        CAMERA: 8,
-        LIGHT: 9,
-        OBJ: 10
+        CAMERA: 9,
+        LIGHT: 10,
+        OBJ: 11
     };
 
     constructor(viewport, propertiesPane, cursorPoint = new THREE.Vector3(0, 0, 0)) {
@@ -39,6 +41,8 @@ export default class MeshGenerator {
 
         this.loadingManager = new THREE.LoadingManager();
         this.objLoader = new OBJLoader(this.loadingManager);
+        this.fontLoader = new THREE.FontLoader(this.loadingManager);
+        
     }
 
     addPlane(attachProperties = true){
@@ -207,6 +211,38 @@ export default class MeshGenerator {
         
         mesh.properties = properties;
         return mesh;
+    }
+
+    createText(text='graphicsAI', font, attachProperties = true){
+        let geometry = new THREE.TextBufferGeometry(text, {
+            font,
+            size: 0.5,
+            height: 0.2,
+            curveSegments: 6,
+            bevelEnabled: true,
+            bevelThickness: 0.03,
+            bevelSize: 0.02,
+            bevelOffset: 0,
+            bevelSegments: 4
+        });
+        geometry.parameters.text = text;
+        geometry.center();
+        let material  = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
+        let mesh = new InteractiveMesh(this.viewport, geometry, material);
+        if(attachProperties){
+            mesh.properties = new TextProperty(mesh, this.propertiesPane);
+            mesh.properties.initProperties();
+        }
+        return mesh;
+    }
+
+    addText(text = 'graphicsAI',fontPath = '/fonts/helvetiker_regular.typeface.json', attachProperties = true){
+        this.fontLoader.load(
+            fontPath,
+            (font)=>{
+                this.viewport.add(this.createText(text, font, attachProperties));
+            }
+        );
     }
 
     addCamera(attachProperties = true){

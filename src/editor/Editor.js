@@ -79,6 +79,7 @@ export default class Editor{
         addMeshFolder.add(this.objectGenerator, 'addCylinder').name('Cylinder');
         addMeshFolder.add(this.objectGenerator, 'addCone').name('Cone');
         addMeshFolder.add(this.objectGenerator, 'addTorus').name('Torus');
+        addMeshFolder.add(this.objectGenerator, 'addText').name('Text');
         this.loadHelicopter = ()=>{
             this.objectGenerator.addObj('./models/Seahawk.obj');
         };
