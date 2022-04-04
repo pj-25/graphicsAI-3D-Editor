@@ -236,7 +236,7 @@ export default class MeshGenerator {
         return mesh;
     }
 
-    addText(text = 'graphicsAI',fontPath = '/fonts/helvetiker_regular.typeface.json', attachProperties = true){
+    addText(text = 'graphicsAI',fontPath = './fonts/helvetiker_regular.typeface.json', attachProperties = true){
         this.fontLoader.load(
             fontPath,
             (font)=>{
