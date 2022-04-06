@@ -1,4 +1,4 @@
-import { CameraHelper, PerspectiveCamera } from 'three';
+import { CameraHelper } from 'three';
 import InteractiveObjectHelper from './InteractiveObjectHelper';
 
 export default class InteractiveCamera extends CameraHelper{
@@ -7,6 +7,10 @@ export default class InteractiveCamera extends CameraHelper{
         this.type = "InteractiveCamera";
 
         this.helper = new InteractiveObjectHelper(viewport, this, selectionColor);
+        this.helper.transformControls.addEventListener('change', ()=>{
+            camera.updateProjectionMatrix();
+            this.update();
+        });
     }
 
     onVisibleChange(){

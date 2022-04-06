@@ -15,8 +15,10 @@ import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import PropertyController from "../propertyController/PropertyController";
 import InteractiveObjectHelper from "../interactiveObjects/InteractiveObjectHelper";
 import TextProperty from "../propertyController/meshPropertyController/TextProperty";
+import InteractiveDirectionalLight from "../interactiveObjects/interactiveLights/InteractiveDirectionalLight";
+import DirectionalLightProperty from "../propertyController/lightPropertyController/DirectionalLightProperty";
 
-export default class MeshGenerator {
+export default class ObjectGenerator {
     static OBJECT_TYPE = {
         MESH: {
             PLANE: 0,
@@ -30,8 +32,15 @@ export default class MeshGenerator {
             TEXT: 8
         },
         CAMERA: 9,
-        LIGHT: 10,
-        OBJ: 11
+        LIGHT: {
+            AMBIENT: 10,
+            DIRECTIONAL:11,
+            HEMISPHERE: 12,
+            POINT: 13,
+            RECTAREA: 14,
+            SPOT:15
+        },
+        OBJ: 16
     };
 
     constructor(viewport, propertiesPane, cursorPoint = new THREE.Vector3(0, 0, 0)) {
@@ -248,11 +257,12 @@ export default class MeshGenerator {
     addCamera(attachProperties = true){
         let object = this.createCamera(attachProperties);
         this.viewport.add(object);
+        this.viewport.add(object.camera);
         return object;
     }
 
     createCamera(attachProperties = true) {
-        let camera = new THREE.PerspectiveCamera(50, 1920 / 1200, 0.1, 1000);
+        let camera = new THREE.PerspectiveCamera(50, 1920 / 1200, 0.1, 50);
         let interactiveCamera = new InteractiveCamera(this.viewport, camera);
         interactiveCamera.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
         let properties;
@@ -264,36 +274,66 @@ export default class MeshGenerator {
         return interactiveCamera;
     }
 
-    addLight(attachProperties = true){
-        let object = this.createLight(attachProperties);
+    createAmbientLight(attachProperties = true) {
+        let light = new THREE.AmbientLight(0xffffff, 0.5);
+        if(attachProperties){
+            //TODO: add color and intensity property
+        }
+        return light;
+    }
+
+    addAmbientLight(attachProperties = true){
+        let object = this.createAmbientLight(attachProperties);
         this.viewport.add(object);
         return object;
     }
 
-    createLight() {
-        let light = new THREE.Light();
-        
-        let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
-        let mesh = new InteractiveMesh(this.viewport, light, material);
-        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
-        
-        return mesh;
+    createDirectionalLight(attachProperties=true){
+        let light = new THREE.DirectionalLight(0xffffff, 0.5);
+        let lightObject = new InteractiveDirectionalLight(this.viewport, light);
+        if(attachProperties){
+            lightObject.properties = new DirectionalLightProperty(lightObject, this.propertiesPane);
+            lightObject.properties.initProperties();
+        }
+        return lightObject;
     }
 
-    addObj(objFile, attachProperties = true){
+    addDirectionalLight(attachProperties=true){
+        let object = this.createDirectionalLight(attachProperties);
+        this.viewport.add(object);
+        this.viewport.add(object.light);
+        return object;
+    }
+
+    createHemisphereLight(attachProperties=true){
+        let light = new THREE.HemisphereLight(0x99ccff, 0x663300, 0.5);
+        
+    }
+
+    attachPropertiesToObj(object, name='Obj'){
+        object.helper = new InteractiveObjectHelper(this.viewport, object, false);
+        object.onVisibleChange = ()=>{};
+        let properties = new PropertyController(object, this.propertiesPane, name);
+        properties.initProperties();
+        object.properties = properties;
+        return object;
+    }
+
+    parseAndAddObj(objectData, attachProperties=true, name='Obj'){
+        let object = this.objLoader.parse(objectData);
+        if(attachProperties){
+            this.attachPropertiesToObj(object);
+        }
+        this.viewport.add(object);
+    }
+
+    addObj(objFile, attachProperties = true, name='Obj'){
         this.objLoader.load(
             objFile,
             (object)=>{
                 if(attachProperties){
-                    object.helper = new InteractiveObjectHelper(this.viewport, object, false);
-                    object.onVisibleChange = ()=>{};
-                    let properties = new PropertyController(object, this.propertiesPane, objFile);
-                    properties.initProperties();
-                    object.properties = properties;
+                    this.attachPropertiesToObj(object, name);
                 }
-                object.scale.x /= 16;
-                object.scale.y /= 16;
-                object.scale.z /= 16;
                 this.viewport.add(object);
             },
             (xhr)=>{
@@ -305,39 +345,42 @@ export default class MeshGenerator {
             }
         );
     }
-
+    
     create(objectType, attachProperties = true) {
         switch (objectType) {
 
-            case OBJECT_TYPE.MESH.PLANE:
+            case ObjectGenerator.OBJECT_TYPE.MESH.PLANE:
                 return this.createPlane(attachProperties);
 
-            case OBJECT_TYPE.MESH.CUBE:
+            case ObjectGenerator.OBJECT_TYPE.MESH.CUBE:
                 return this.createCube(attachProperties);
 
-            case OBJECT_TYPE.MESH.CIRCLE:
+            case ObjectGenerator.OBJECT_TYPE.MESH.CIRCLE:
                 return this.createCircle(attachProperties);
 
-            case OBJECT_TYPE.MESH.UVSPHERE:
+            case ObjectGenerator.OBJECT_TYPE.MESH.UVSPHERE:
                 return this.createUVSphere(attachProperties);
 
-            case OBJECT_TYPE.MESH.ICOSPHERE:
+            case ObjectGenerator.OBJECT_TYPE.MESH.ICOSPHERE:
                 return this.createIcoSphere(attachProperties);
 
-            case OBJECT_TYPE.MESH.CYLINDER:
+            case ObjectGenerator.OBJECT_TYPE.MESH.CYLINDER:
                 return this.createCylinder(attachProperties);
 
-            case OBJECT_TYPE.MESH.CONE:
+            case ObjectGenerator.OBJECT_TYPE.MESH.CONE:
                 return this.createCone(attachProperties);
 
-            case OBJECT_TYPE.MESH.TORUS:
+            case ObjectGenerator.OBJECT_TYPE.MESH.TORUS:
                 return this.createTorus(attachProperties);
 
-            case OBJECT_TYPE.CAMERA:
+            case ObjectGenerator.OBJECT_TYPE.CAMERA:
                 return this.createCamera(attachProperties);
 
-            case OBJECT_TYPE.LIGHT:
+            case ObjectGenerator.OBJECT_TYPE.LIGHT:
                 return this.createLight(attachProperties);
+            
+            default:
+                break
         }
     }
 }

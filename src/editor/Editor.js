@@ -56,7 +56,7 @@ export default class Editor{
         ocameraFolder.add(this.viewport.controlledCamera.orthographicCamera, 'zoom').min(1).max(2000).listen().onChange(()=>this.viewport.controlledCamera.orthographicCamera.updateProjectionMatrix());
 
         this.viewport.controlledCamera.onCameraSwitch = ()=>{
-            if(this.viewport.controlledCamera.activeCamera.type == 'PerspectiveCamera'){
+            if(this.viewport.controlledCamera.activeCamera.type === 'PerspectiveCamera'){
                 pcameraFolder.domElement.hidden = false;
                 ocameraFolder.domElement.hidden = true;
             }else{
@@ -81,11 +81,35 @@ export default class Editor{
         addMeshFolder.add(this.objectGenerator, 'addTorus').name('Torus');
         addMeshFolder.add(this.objectGenerator, 'addText').name('Text');
         this.loadHelicopter = ()=>{
-            this.objectGenerator.addObj('./models/Seahawk.obj');
+            this.objectGenerator.addObj('./assets/editor/models/Seahawk.obj');
         };
         addOptionFolder.add(this, 'loadHelicopter').name('Helicopter');
         addOptionFolder.add(this.objectGenerator, 'addCamera').name('Camera');
-        addOptionFolder.add(this.objectGenerator, 'addLight').name('Light');
+        let addLightFolder = addOptionFolder.addFolder('Light');
+        addLightFolder.add(this.objectGenerator, 'addAmbientLight').name('Ambient');
+        addLightFolder.add(this.objectGenerator, 'addDirectionalLight').name('Directional');
+
+        //import option
+        const fileInputElement = document.createElement('input');
+        fileInputElement.setAttribute('type', 'file');
+        fileInputElement.setAttribute('accept', '.obj');
+        console.log(fileInputElement);
+        fileInputElement.onchange = ()=>{
+            let fileReader = new FileReader();
+            let file = fileInputElement.files[0];
+
+            fileReader.onload = ()=>{
+                this.objectGenerator.parseAndAddObj(fileReader.result);
+            };
+            if(file){
+                fileReader.readAsBinaryString(file);
+            }
+        };
+        this.importObj = ()=>{
+            fileInputElement.click();
+        }
+        addOptionFolder.add(this, 'importObj').name('Import Obj');
+
     }
 
 

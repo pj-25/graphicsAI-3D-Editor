@@ -8,7 +8,7 @@ export default class IcosahedronProperty extends MeshPropertyController{
         
         this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
         this.regenerate = ()=>{
-            let newGeometry = new THREE.IcosahedronGeometry(this.geometryData.radius, 
+            let newGeometry = new THREE.IcosahedronBufferGeometry(this.geometryData.radius, 
                                                             this.geometryData.detail);
     
             this.interactiveObject.updateGeometry(newGeometry);

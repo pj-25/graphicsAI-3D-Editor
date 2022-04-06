@@ -14,7 +14,7 @@ export default class ControlledCamera {
         this.activeCamera = this.perspectiveCamera;
         this.orbitControls = new OrbitControls(this.activeCamera, domElement);
         domElement.addEventListener('keypress', (event)=>{
-            if ((event.key >= 0 && event.key <=9) || event.key == '/') {   //numpad
+            if ((event.key >= 0 && event.key <=9) || event.key === '/') {   //numpad
                 this.performOperation(event.key)
             } 
         });
@@ -27,7 +27,7 @@ export default class ControlledCamera {
         this.orthographicCamera.updateProjectionMatrix();
 
         this.angle = 0
-        this.lastOperation;
+        this.lastOperation = null;
     }
 
     getActiveCamera(){

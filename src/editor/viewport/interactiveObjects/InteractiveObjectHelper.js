@@ -36,7 +36,7 @@ export default class InteractiveObjectHelper{
 
         this.onKeypressDeleteAction = (event)=>{
             if(this.selected && event.code === 'Delete'){
-                this.interactiveObject.dispose();
+                this.dispose();
             }
         }
     }
@@ -81,21 +81,25 @@ export default class InteractiveObjectHelper{
     }
 
     activateSelection(attach=true, bindDeleteAction = true){
-        this.selected = true;
-        this.interactiveObject.add(this.selectionHelper);
-        if(bindDeleteAction)
-            this.viewport.domElement.addEventListener('keydown', this.onKeypressDeleteAction);
-        if(attach){
-            this.attachTransformControls();
+        if(this.selectable){
+            this.selected = true;
+            this.interactiveObject.add(this.selectionHelper);
+            if(bindDeleteAction)
+                this.viewport.domElement.addEventListener('keydown', this.onKeypressDeleteAction);
+            if(attach){
+                this.attachTransformControls();
+            }
         }
     }
 
     deactivateSelection(detach=true){
-        this.selected = false;
-        this.interactiveObject.remove(this.selectionHelper);
-        this.viewport.domElement.removeEventListener('keydown', this.onKeypressDeleteAction);
-        if(detach){
-            this.detachTransformControls();
+        if(this.selectable){
+            this.selected = false;
+            this.interactiveObject.remove(this.selectionHelper);
+            this.viewport.domElement.removeEventListener('keydown', this.onKeypressDeleteAction);
+            if(detach){
+                this.detachTransformControls();
+            }
         }
     }
 
@@ -116,15 +120,17 @@ export default class InteractiveObjectHelper{
     }
 
     dispose(){
-        if(this.selected){
-            this.deactivateSelection();
+        if(this.selectable){
+            if(this.selected){
+                this.deactivateSelection();
+            }
+            this.edges.dispose();
+            this.selectionMaterial.dispose();
         }
-        this.edges.dispose();
-        this.selectionMaterial.dispose();
         this.transformControls.dispose();
         if(this.hasTransformControl){
             this.detachTransformControls();
         }
-        
+        this.interactiveObject.dispose();        
     }
 }

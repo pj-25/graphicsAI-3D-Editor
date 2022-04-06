@@ -30,15 +30,16 @@ export default class CameraPropertyController extends PropertyController{
     
         this.updateCamera = ()=>{
             this.interactiveObject.camera.updateProjectionMatrix();
+            this.interactiveObject.update();
         }
     }
 
     initProperties(){
+        //FIXME: transform controls not working
         super.initProperties();
         
-        //FIXME: controller not working 
         let minMaxHelper = new MinMaxPropertyHelper(this.interactiveObject.camera, 'near', 'far', 0.1);
-        this.propertiesFolder.add(this.interactiveObject.camera, 'fov').min(1).max(180);
+        this.propertiesFolder.add(this.interactiveObject.camera, 'fov').min(1).max(180).onChange(this.updateCamera);
         this.propertiesFolder.add(minMaxHelper, 'min', 0.1, 50, 0.1).name('near').onChange(this.updateCamera);
         this.propertiesFolder.add(minMaxHelper, 'max', 0.1, 50, 0.1).name('far').onChange(this.updateCamera);
     }

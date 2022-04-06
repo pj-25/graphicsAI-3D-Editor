@@ -8,7 +8,7 @@ export default class CircleProperty extends MeshPropertyController{
         
         this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
         this.regenerate = ()=>{
-            let newGeometry = new THREE.CircleGeometry(this.geometryData.radius, 
+            let newGeometry = new THREE.CircleBufferGeometry(this.geometryData.radius, 
                                                         this.geometryData.segments, 
                                                         this.geometryData.thetaStart, 
                                                         this.geometryData.thetaLength);

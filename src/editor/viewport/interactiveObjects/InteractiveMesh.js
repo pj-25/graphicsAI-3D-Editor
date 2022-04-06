@@ -26,7 +26,6 @@ export default class InteractiveMesh extends Mesh{
             this.properties.dispose();
         this.geometry.dispose();
         this.material.dispose();
-        this.helper.dispose();
         this.parent.remove(this);
     }
 }
