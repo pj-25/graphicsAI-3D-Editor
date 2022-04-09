@@ -2,7 +2,7 @@ import PropertyController from "../PropertyController";
 
 
 export default class MeshPropertyController extends PropertyController{
-    constructor(interactiveMesh, propertiesPane, name){
+    constructor(interactiveMesh, propertiesPane, name=interactiveMesh.geometry.type.replace('BufferGeometry', "")){
         super(interactiveMesh, propertiesPane, name);
         this.geometryData = JSON.parse(JSON.stringify(interactiveMesh.geometry));
         this.color = interactiveMesh.material.color.getHex();
@@ -21,6 +21,5 @@ export default class MeshPropertyController extends PropertyController{
         this.materialPropertyFolder.add(this.interactiveObject.material, 'roughness').min(0).max(1).step(0.0001);
         this.materialPropertyFolder.add(this.interactiveObject.material, 'flatShading');
 
-        this.propertiesFolder.add(this.interactiveObject, 'dispose').name('Delete');
     }
 }

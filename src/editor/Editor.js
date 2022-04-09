@@ -1,7 +1,7 @@
 import Viewport from './viewport/Viewport';
 import * as dat from 'dat.gui';
 import ToolBox from './tools/ToolBox';
-import ObjectGenerator from './viewport/menu/ObjectGenerator';
+import ObjectGenerator from './viewport/utils/ObjectGenerator';
 
 export default class Editor{
     constructor(viewportCanvas, toolBarElement, propertiesPaneContainer){
@@ -13,7 +13,7 @@ export default class Editor{
         //creating properties pane 
         this.propertiesPane = new dat.GUI();
         this.propertiesPane.domElement.draggable = true;
-        
+        this.propertiesPane.domElement.style.marginRight = "5px";
 
         if(this.propertiesPaneContainer){
             this.propertiesPane.domElement.style.marginTop = "5px";
@@ -29,6 +29,7 @@ export default class Editor{
 
         //add addMesh menu
         this.sceneOutliner = this.propertiesPane.addFolder('Scene Outliner');
+        this.sceneOutliner.open();
         this.objectGenerator = new ObjectGenerator(this.viewport, this.sceneOutliner);
         this.bindAddOption();
         this.objectGenerator.addCube();
@@ -65,6 +66,10 @@ export default class Editor{
             }
         };
         this.viewport.controlledCamera.onCameraSwitch();
+
+        //TODO: add camera change option
+        // this.cameraType = 'Primary';
+        // this.propertiesPane.add(this, 'cameraType', [ 'Primary', 'Orthographic']);
     }
 
     bindAddOption(){
@@ -81,51 +86,38 @@ export default class Editor{
         addMeshFolder.add(this.objectGenerator, 'addTorus').name('Torus');
         addMeshFolder.add(this.objectGenerator, 'addText').name('Text');
         this.loadHelicopter = ()=>{
-            this.objectGenerator.addObj('./assets/editor/models/Seahawk.obj');
+            this.objectGenerator.addObj('./models/Seahawk.obj', 'Helicopter');
         };
         addOptionFolder.add(this, 'loadHelicopter').name('Helicopter');
         addOptionFolder.add(this.objectGenerator, 'addCamera').name('Camera');
         let addLightFolder = addOptionFolder.addFolder('Light');
-        addLightFolder.add(this.objectGenerator, 'addAmbientLight').name('Ambient');
+        let ambientOption = addLightFolder.add(this.objectGenerator, 'addAmbientLight').name('Ambient').onChange(()=>{
+            addLightFolder.remove(ambientOption);
+        });
         addLightFolder.add(this.objectGenerator, 'addDirectionalLight').name('Directional');
+        addLightFolder.add(this.objectGenerator, 'addHemisphereLight').name('Hemisphere');
+        addLightFolder.add(this.objectGenerator, 'addPointLight').name('Point');
+        addLightFolder.add(this.objectGenerator, 'addRectAreaLight').name('RectArea')
+        addLightFolder.add(this.objectGenerator, 'addSpotLight').name('Spot');
 
-        //import option
-        const fileInputElement = document.createElement('input');
-        fileInputElement.setAttribute('type', 'file');
-        fileInputElement.setAttribute('accept', '.obj');
-        console.log(fileInputElement);
-        fileInputElement.onchange = ()=>{
-            let fileReader = new FileReader();
-            let file = fileInputElement.files[0];
-
-            fileReader.onload = ()=>{
-                this.objectGenerator.parseAndAddObj(fileReader.result);
-            };
-            if(file){
-                fileReader.readAsBinaryString(file);
-            }
-        };
-        this.importObj = ()=>{
-            fileInputElement.click();
-        }
-        addOptionFolder.add(this, 'importObj').name('Import Obj');
-
+        //import .obj option
+        addOptionFolder.add(this.objectGenerator, 'importObj').name('Import Obj');
+        
     }
 
 
     bindToolBox(){
         this.toolBox.toolBar = this.propertiesPane.addFolder('Tool Bar');
-        this.toolBox.toolBar.open();
-        this.toolBox.toolBar.add(this.toolBox.toolProperties, 'select').name('Select (B)').listen().onChange(()=>{
+        this.toolBox.toolBar.add(this.toolBox.toolMode, 'select').name('Select (B)').listen().onChange(()=>{
             this.toolBox.activate(ToolBox.TOOLTYPE.SELECTBOX);
         });
-        this.toolBox.toolBar.add(this.toolBox.toolProperties, 'translate').name('Move (G)').listen().onChange(()=>{
+        this.toolBox.toolBar.add(this.toolBox.toolMode, 'translate').name('Move (G)').listen().onChange(()=>{
             this.toolBox.activate(ToolBox.TOOLTYPE.MOVE);
         });
-        this.toolBox.toolBar.add(this.toolBox.toolProperties, 'rotate').name('Rotate (R)').listen().onChange(()=>{
+        this.toolBox.toolBar.add(this.toolBox.toolMode, 'rotate').name('Rotate (R)').listen().onChange(()=>{
             this.toolBox.activate(ToolBox.TOOLTYPE.ROTATE);
         });
-        this.toolBox.toolBar.add(this.toolBox.toolProperties, 'scale').name('Scale (S)').listen().onChange(()=>{
+        this.toolBox.toolBar.add(this.toolBox.toolMode, 'scale').name('Scale (S)').listen().onChange(()=>{
             this.toolBox.activate(ToolBox.TOOLTYPE.SCALE);
         });
     }

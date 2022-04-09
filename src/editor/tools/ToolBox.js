@@ -19,7 +19,7 @@ export default class ToolBox{
         this.activeTool = ToolBox.TOOLTYPE.SELECTBOX;
         this.viewport = viewport;
 
-        this.toolProperties = {
+        this.toolMode = {
             select:true,
             translate: false,
             rotate: false,
@@ -65,10 +65,10 @@ export default class ToolBox{
     }
 
     setMode(toolName){
-        for(let tool in this.toolProperties){
-            this.toolProperties[tool] = false;
+        for(let tool in this.toolMode){
+            this.toolMode[tool] = false;
         }
-        this.toolProperties[toolName] = true;
+        this.toolMode[toolName] = true;
     }
 
     activate(toolType){

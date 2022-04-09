@@ -25,23 +25,23 @@ class MinMaxPropertyHelper {
 
 
 export default class CameraPropertyController extends PropertyController{
-    constructor(interactiveMesh, propertiesPane, name){
-        super(interactiveMesh, propertiesPane, name);
-    
+    constructor(interactiveCamera, propertiesPane, name='Camera'){
+        super(interactiveCamera.camera, propertiesPane, name);
+        this.interactiveCamera = interactiveCamera;
+
         this.updateCamera = ()=>{
-            this.interactiveObject.camera.updateProjectionMatrix();
-            this.interactiveObject.update();
+            this.interactiveObject.updateProjectionMatrix();
+            this.interactiveCamera.update();
         }
     }
 
     initProperties(){
-        //FIXME: transform controls not working
         super.initProperties();
         
-        let minMaxHelper = new MinMaxPropertyHelper(this.interactiveObject.camera, 'near', 'far', 0.1);
-        this.propertiesFolder.add(this.interactiveObject.camera, 'fov').min(1).max(180).onChange(this.updateCamera);
-        this.propertiesFolder.add(minMaxHelper, 'min', 0.1, 50, 0.1).name('near').onChange(this.updateCamera);
-        this.propertiesFolder.add(minMaxHelper, 'max', 0.1, 50, 0.1).name('far').onChange(this.updateCamera);
+        let minMaxHelper = new MinMaxPropertyHelper(this.interactiveObject, 'near', 'far', 0.1);
+        this.propertiesFolder.add(this.interactiveObject, 'fov').min(1).max(180).listen().onChange(this.updateCamera);
+        this.propertiesFolder.add(minMaxHelper, 'min', 0.1, 50, 0.1).name('near').listen().onChange(this.updateCamera);
+        this.propertiesFolder.add(minMaxHelper, 'max', 0.1, 50, 0.1).name('far').listen().onChange(this.updateCamera);
     }
     
 }

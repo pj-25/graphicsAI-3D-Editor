@@ -124,13 +124,15 @@ export default class InteractiveObjectHelper{
             if(this.selected){
                 this.deactivateSelection();
             }
-            this.edges.dispose();
-            this.selectionMaterial.dispose();
+            if(this.edges){
+                this.edges.dispose();
+                this.selectionMaterial.dispose();
+            }
         }
         this.transformControls.dispose();
         if(this.hasTransformControl){
             this.detachTransformControls();
         }
-        this.interactiveObject.dispose();        
+        this.interactiveObject.dispose();
     }
 }

@@ -7,17 +7,13 @@ export default class ControlledCamera {
             const distance = this.orthographicCamera.position.distanceTo(this.orbitControls.target);
             this.orthographicCamera.zoom = (this.orthographicCamera.right - this.orthographicCamera.left) / (2 * distance * Math.tan(this.perspectiveCamera.fov * Math.PI/360));
         };
+        this.active = false;
 
         this.perspectiveCamera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
         this.perspectiveCamera.position.set(...cameraPosition);
         this.perspectiveCamera.lookAt(new THREE.Vector3(0,0,0));
+        this.orbitControls = new OrbitControls(this.perspectiveCamera, domElement);
         this.activeCamera = this.perspectiveCamera;
-        this.orbitControls = new OrbitControls(this.activeCamera, domElement);
-        domElement.addEventListener('keypress', (event)=>{
-            if ((event.key >= 0 && event.key <=9) || event.key === '/') {   //numpad
-                this.performOperation(event.key)
-            } 
-        });
 
         this.orthographicCamera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 0.1, 1000 );
         this.orthographicCamera.position.set(...cameraPosition);
@@ -30,6 +26,12 @@ export default class ControlledCamera {
         this.lastOperation = null;
     }
 
+    onKeyPress(event){
+        if ((event.key >= 0 && event.key <=9) || event.key === '/') {   //numpad
+            this.performOperation(event.key)
+        } 
+    }
+
     getActiveCamera(){
         return this.activeCamera;
     }
@@ -38,6 +40,15 @@ export default class ControlledCamera {
         return this.orbitControls;
     }
 
+    turnOn(){
+        this.active = true;
+        this.orbitControls.domElement.addEventListener('keypress', this.onKeyPress.bind(this));
+    }
+
+    turnOff(){
+        this.active = false;
+        this.orbitControls.removeEventListener('keypress', this.onKeyPress);
+    }
 
     //override this method to perform actions on camera switch event
     onCameraSwitch(){
