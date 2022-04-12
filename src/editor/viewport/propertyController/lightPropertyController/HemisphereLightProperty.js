@@ -8,7 +8,6 @@ export default class HemisphereLightProperty extends LightPropertyController{
 
     initProperties(){
         super.initProperties();
-        console.log(this.interactiveObject, this.interactiveLight);
         this.propertiesFolder.addColor(this, 'groundColor').onChange(()=>{
             this.interactiveObject.groundColor.setHex(this.groundColor);
         });

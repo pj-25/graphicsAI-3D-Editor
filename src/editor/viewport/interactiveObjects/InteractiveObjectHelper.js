@@ -22,13 +22,13 @@ export default class InteractiveObjectHelper{
             if(this.transformControls.visible){
                 switch(event.code){
                     case 'KeyG':
-                        this.transformControls.setMode('translate');
+                        this.setTransformMode('translate');
                         break;
                     case 'KeyR':
-                        this.transformControls.setMode('rotate');
+                        this.setTransformMode('rotate');
                         break;
                     case 'KeyS':
-                        this.transformControls.setMode('scale');
+                        this.setTransformMode('scale');
                         break;
                 }
             }
@@ -38,6 +38,23 @@ export default class InteractiveObjectHelper{
             if(this.selected && event.code === 'Delete'){
                 this.dispose();
             }
+        }
+    }
+
+    setTransformMode(mode){
+        this.transformControls.setMode(mode);
+        switch(mode){
+            case 'translate':
+                this.viewport.domElement.style.cursor = 'move';
+                break;
+            case 'rotate':
+                this.viewport.domElement.style.cursor = 'all-scroll';
+                break;
+            case 'scale':
+                this.viewport.domElement.style.cursor = 'nwse-resize';
+                break;
+            default:
+                break;
         }
     }
 
@@ -63,7 +80,7 @@ export default class InteractiveObjectHelper{
 
     attachTransformControls(mode='translate'){
         this.hasTransformControl = true;
-        this.transformControls.setMode(mode);
+        this.setTransformMode(mode);
         this.transformControls.attach(this.interactiveObject);
         this.transformControls.addEventListener('mouseDown',this.viewport.disableOrbitControls);
         this.transformControls.addEventListener('mouseUp' ,this.viewport.enableOrbitControls);
@@ -78,6 +95,7 @@ export default class InteractiveObjectHelper{
         this.transformControls.removeEventListener('mouseUp', this.viewport.enableOrbitControls);
         this.viewport.domElement.removeEventListener('keypress', this.onKeypressTransformAction);
         this.viewport.remove(this.transformControls);
+        this.viewport.domElement.style.cursor = 'default';
     }
 
     activateSelection(attach=true, bindDeleteAction = true){

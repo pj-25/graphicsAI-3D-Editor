@@ -8,7 +8,7 @@ export default class PlaneProperty extends MeshPropertyController{
         
         this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
         this.regenerate = ()=>{
-            let newGeometry = new THREE.PlaneBufferGeometry(this.geometryData.width,
+            let newGeometry = new THREE.PlaneGeometry(this.geometryData.width,
                                                     this.geometryData.height, 
                                                     this.geometryData.widthSegments, 
                                                     this.geometryData.heightSegments);

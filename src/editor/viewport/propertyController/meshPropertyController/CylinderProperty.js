@@ -8,7 +8,7 @@ export default class CylinderProperty extends MeshPropertyController{
         
         this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
         this.regenerate = ()=>{
-            let newGeometry = new THREE.CylinderBufferGeometry(this.geometryData.radiusTop,
+            let newGeometry = new THREE.CylinderGeometry(this.geometryData.radiusTop,
                                                         this.geometryData.radiusBottom, 
                                                         this.geometryData.height, 
                                                         this.geometryData.radialSegments, 

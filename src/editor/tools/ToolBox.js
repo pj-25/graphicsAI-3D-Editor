@@ -30,7 +30,9 @@ export default class ToolBox{
         this.transformTool = new TransformTool(viewport, viewport.controlledCamera, viewport.domElement);
 
         this.viewport.onIntersectedObject = (object)=>{
+             
             if(object.isInteractive){
+                 
                 switch(this.activeTool){
                     case ToolBox.TOOLTYPE.SELECTBOX:
                         this.selectTool.add(object);

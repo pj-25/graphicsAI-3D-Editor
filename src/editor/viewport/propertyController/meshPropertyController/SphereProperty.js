@@ -8,7 +8,7 @@ export default class SphereProperty extends MeshPropertyController{
         
         this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
         this.regenerate = ()=>{
-            let newGeometry = new THREE.SphereBufferGeometry(this.geometryData.radius, 
+            let newGeometry = new THREE.SphereGeometry(this.geometryData.radius, 
                                                         this.geometryData.widthSegments, 
                                                         this.geometryData.heightSegments, 
                                                         this.geometryData.phiStart, 

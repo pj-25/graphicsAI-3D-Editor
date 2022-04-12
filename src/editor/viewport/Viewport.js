@@ -92,7 +92,7 @@ export default class Viewport extends THREE.Scene {
 
     // override this method to handle intersected object
     onIntersectedObject(object){
-        console.log(object);
+         
     }
 
     switchCamera(){

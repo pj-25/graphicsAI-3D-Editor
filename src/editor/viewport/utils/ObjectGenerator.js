@@ -13,17 +13,18 @@ import InteractiveCamera from "../interactiveObjects/InteractiveCamera";
 import CameraPropertyController from "../propertyController/CameraPropertyController";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import PropertyController from "../propertyController/PropertyController";
-import InteractiveObjectHelper from "../interactiveObjects/InteractiveObjectHelper";
 import TextProperty from "../propertyController/meshPropertyController/TextProperty";
 import InteractiveLight from "../interactiveObjects/InteractiveLight";
 import DirectionalLightProperty from "../propertyController/lightPropertyController/DirectionalLightProperty";
-import { HemisphereLightHelper, PointLightHelper, SpotLightHelper } from "three";
+import { HemisphereLightHelper, PointLightHelper, SpotLightHelper, Vector3 } from "three";
 import HemisphereLightProperty from "../propertyController/lightPropertyController/HemisphereLightProperty";
 import {RectAreaLightHelper} from 'three/examples/jsm/helpers/RectAreaLightHelper';
 import RectAreaLightProperty from "../propertyController/lightPropertyController/RectAreaLightProperty";
 import SpotLightProperty from "../propertyController/lightPropertyController/SpotLightProperty";
 import PointLightProperty from "../propertyController/lightPropertyController/PointLightProperty";
 import InteractiveModel from "../interactiveObjects/InteractiveModel";
+import {FontLoader} from 'three/examples/jsm/loaders/FontLoader';
+import {TextGeometry} from 'three/examples/jsm/geometries/TextGeometry';
 
 export default class ObjectGenerator {
     static OBJECT_TYPE = {
@@ -50,14 +51,15 @@ export default class ObjectGenerator {
         OBJ: 16
     };
 
-    constructor(viewport, propertiesPane, cursorPoint = new THREE.Vector3(0, 0, 0)) {
+    constructor(viewport, propertiesPane, cameraSelector, cursorPoint = new THREE.Vector3(0, 0, 0)) {
         this.viewport = viewport;
         this.cursorPoint = cursorPoint;
         this.propertiesPane = propertiesPane;
+        this.cameraSelector = cameraSelector;
 
         this.loadingManager = new THREE.LoadingManager();
         this.objLoader = new OBJLoader(this.loadingManager);
-        this.fontLoader = new THREE.FontLoader(this.loadingManager);
+        this.fontLoader = new FontLoader(this.loadingManager);
         
     }
 
@@ -69,7 +71,7 @@ export default class ObjectGenerator {
 
     createPlane(attachProperties = true) {
         let properties;
-        let geometry = new THREE.PlaneBufferGeometry(1, 1);
+        let geometry = new THREE.PlaneGeometry(1, 1);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091, side: THREE.DoubleSide });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -90,7 +92,7 @@ export default class ObjectGenerator {
 
     createCube(attachProperties = true) {
         let properties;
-        let geometry = new THREE.BoxBufferGeometry(1, 1, 1);
+        let geometry = new THREE.BoxGeometry(1, 1, 1);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -111,7 +113,7 @@ export default class ObjectGenerator {
 
     createCircle(attachProperties = true) {
         let properties;
-        let geometry = new THREE.CircleBufferGeometry(1, 10);
+        let geometry = new THREE.CircleGeometry(1, 10);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -132,7 +134,7 @@ export default class ObjectGenerator {
 
     createUVSphere(attachProperties = true) {
         let properties;
-        let geometry = new THREE.SphereBufferGeometry(1, 30, 30);
+        let geometry = new THREE.SphereGeometry(1, 30, 30);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -153,7 +155,7 @@ export default class ObjectGenerator {
 
     createIcoSphere(attachProperties = true) {
         let properties;
-        let geometry = new THREE.IcosahedronBufferGeometry(1, 2);
+        let geometry = new THREE.IcosahedronGeometry(1, 2);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -174,7 +176,7 @@ export default class ObjectGenerator {
 
     createCylinder(attachProperties = true) {
         let properties;
-        let geometry = new THREE.CylinderBufferGeometry(1, 1, 1, 20, 20);
+        let geometry = new THREE.CylinderGeometry(1, 1, 1, 20, 20);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -195,7 +197,7 @@ export default class ObjectGenerator {
 
     createCone(attachProperties = true) {
         let properties;
-        let geometry = new THREE.ConeBufferGeometry(1, 2, 10, 10);
+        let geometry = new THREE.ConeGeometry(1, 2, 10, 10);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -216,7 +218,7 @@ export default class ObjectGenerator {
 
     createTorus(attachProperties = true) {
         let properties;
-        let geometry = new THREE.TorusBufferGeometry(.5, 0.1, 10, 50);
+        let geometry = new THREE.TorusGeometry(.5, 0.1, 10, 50);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -230,7 +232,7 @@ export default class ObjectGenerator {
     }
 
     createText(text='graphicsAI', font, attachProperties = true){
-        let geometry = new THREE.TextBufferGeometry(text, {
+        let geometry = new TextGeometry(text, {
             font,
             size: 0.5,
             height: 0.2,
@@ -265,6 +267,7 @@ export default class ObjectGenerator {
         let object = this.createCamera(attachProperties);
         this.viewport.add(object);
         this.viewport.add(object.camera);
+        this.cameraSelector.add(object.camera);
         return object;
     }
 
@@ -303,7 +306,7 @@ export default class ObjectGenerator {
     }
 
     createLight(lightHelper, LightPropertyController, attachProperties=true){
-        // lightHelper.light.position.copy(this.cursorPoint);
+        lightHelper.light.position.copy(this.cursorPoint);
         let interactiveLight = Object.assign(lightHelper, new InteractiveLight(this.viewport, lightHelper));
         if(attachProperties){
             lightHelper.properties = new LightPropertyController(interactiveLight, this.propertiesPane);

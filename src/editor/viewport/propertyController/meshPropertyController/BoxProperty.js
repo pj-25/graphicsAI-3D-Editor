@@ -7,7 +7,7 @@ export default class BoxProperty extends MeshPropertyController{
         
         this.geometryPropertyFolder = this.propertiesFolder.addFolder('Geometry');
         this.regenerate = ()=>{
-            let newGeometry = new THREE.BoxBufferGeometry(this.geometryData.width, this.geometryData.height, this.geometryData.depth, this.geometryData.widthSegments, this.geometryData.heightSegments, this.geometryData.depthSegments);  
+            let newGeometry = new THREE.BoxGeometry(this.geometryData.width, this.geometryData.height, this.geometryData.depth, this.geometryData.widthSegments, this.geometryData.heightSegments, this.geometryData.depthSegments);  
             this.interactiveObject.updateGeometry(newGeometry);
         }
     }

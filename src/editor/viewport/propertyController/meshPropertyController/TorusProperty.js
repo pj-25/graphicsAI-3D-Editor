@@ -9,7 +9,7 @@ export default class TorusProperty extends MeshPropertyController{
         this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
     
         this.regenerate = ()=>{
-            let newGeometry = new THREE.TorusBufferGeometry(this.geometryData.radius, 
+            let newGeometry = new THREE.TorusGeometry(this.geometryData.radius, 
                                                         this.geometryData.tube, 
                                                         this.geometryData.radialSegments, 
                                                         this.geometryData.tubularSegments, 

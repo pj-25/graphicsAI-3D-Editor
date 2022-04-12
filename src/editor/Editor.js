@@ -2,6 +2,8 @@ import Viewport from './viewport/Viewport';
 import * as dat from 'dat.gui';
 import ToolBox from './tools/ToolBox';
 import ObjectGenerator from './viewport/utils/ObjectGenerator';
+import CameraSelector from './viewport/CameraSelector';
+import { Vector3 } from 'three';
 
 export default class Editor{
     constructor(viewportCanvas, toolBarElement, propertiesPaneContainer){
@@ -27,13 +29,37 @@ export default class Editor{
         this.toolBox = new ToolBox(this.viewport);
         this.bindToolBox();
 
+        //add cameraSelector
+        this.cameraSelector = new CameraSelector(this.viewport.controlledCamera.activeCamera, 
+            (camera)=>{
+                this.viewport.controlledCamera.changeCamera(camera);
+            }
+        );
+        let cameraSwitchOption = this.propertiesPane.add(this.cameraSelector, 'currentCameraName', Array.from(this.cameraSelector.keys()))
+            .name('Camera')
+            .listen()
+            .onChange(()=>{ 
+               this.cameraSelector.switchCamera();
+            });
+        this.cameraSelector.onAddCamera = (camera)=>{
+            let option= document.createElement('option');
+            option.value = camera.name;
+            option.innerHTML = camera.name;
+            cameraSwitchOption.__select.appendChild(option);
+        };
+        this.cameraSelector.onDeleteCamera = (camera)=>{
+            cameraSwitchOption.__select.querySelector('option[value="'+camera.name+'"]').remove();
+        }
+
         //add addMesh menu
         this.sceneOutliner = this.propertiesPane.addFolder('Scene Outliner');
         this.sceneOutliner.open();
-        this.objectGenerator = new ObjectGenerator(this.viewport, this.sceneOutliner);
+        this.objectGenerator = new ObjectGenerator(this.viewport, this.sceneOutliner, this.cameraSelector);
         this.bindAddOption();
-        this.objectGenerator.addCube();
-        
+    
+        //add initial objects
+        this.initObjects();
+
         //add render option
         this.renderMode = false;
         this.propertiesPane.add(this, 'renderMode').name('Render').onChange(()=>{
@@ -41,6 +67,15 @@ export default class Editor{
             if(this.renderMode)
                 this.propertiesPane.close();
         });
+    }
+
+    initObjects(){
+        this.objectGenerator.addCube();
+        this.objectGenerator.addAmbientLight();
+        this.objectGenerator.cursorPoint = new Vector3(-4,3,2);
+        let directionalLight =  this.objectGenerator.addDirectionalLight();
+        this.objectGenerator.cursorPoint = new Vector3(0,0,0);
+        console.log(directionalLight);
     }
 
     bindCameraProperties(){
@@ -66,11 +101,8 @@ export default class Editor{
             }
         };
         this.viewport.controlledCamera.onCameraSwitch();
-
-        //TODO: add camera change option
-        // this.cameraType = 'Primary';
-        // this.propertiesPane.add(this, 'cameraType', [ 'Primary', 'Orthographic']);
     }
+
 
     bindAddOption(){
         const addOptionFolder = this.propertiesPane.addFolder('Add');
@@ -86,7 +118,7 @@ export default class Editor{
         addMeshFolder.add(this.objectGenerator, 'addTorus').name('Torus');
         addMeshFolder.add(this.objectGenerator, 'addText').name('Text');
         this.loadHelicopter = ()=>{
-            this.objectGenerator.addObj('./models/Seahawk.obj', 'Helicopter');
+            this.objectGenerator.addObj('./assets/editor/models/Seahawk.obj', 'Helicopter');
         };
         addOptionFolder.add(this, 'loadHelicopter').name('Helicopter');
         addOptionFolder.add(this.objectGenerator, 'addCamera').name('Camera');

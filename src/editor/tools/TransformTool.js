@@ -16,6 +16,17 @@ export default class TransformTool{
     //set mode type: translate(default), rotate, scale
     setMode(mode){
         this.transformControl.setMode(mode);
+        switch(mode){
+            case 'translate':
+                this.viewport.domElement.style.cursor = 'move';
+                break;
+            case 'rotate':
+                this.viewport.domElement.style.cursor = 'all-scroll';
+                break;
+            case 'scale':
+                this.viewport.domElement.style.cursor = 'nwse-resize';
+                break;
+        }
     }
 
     add(object){
@@ -28,7 +39,7 @@ export default class TransformTool{
         for(let obj of objects){
             this.selectedObjectGroup.attach(obj);
         }
-        this.transformControl.setMode(mode);
+        this.setMode(mode);
         let center = TransformTool.computeGroupCenter(this.selectedObjectGroup);
         this.transformControl.position.copy(center);
         this.transformControl.updateMatrixWorld();
@@ -36,7 +47,7 @@ export default class TransformTool{
         this.transformControl.attach(this.selectedObjectGroup);
         this.viewport.add(this.transformControl);
         this.transformControl.addEventListener('mouseDown', this.viewport.disableOrbitControls);
-        this.transformControl.addEventListener('mouseUp', this.viewport.enableOrbitControls);        
+        this.transformControl.addEventListener('mouseUp', this.viewport.enableOrbitControls);     
     }
 
     static computeGroupCenter(group) {
@@ -65,6 +76,7 @@ export default class TransformTool{
             this.transformControl.removeEventListener('mouseDown', this.viewport.disableOrbitControls);
             this.transformControl.removeEventListener('mouseUp', this.viewport.enableOrbitControls);
             this.selectedObjectGroup = new THREE.Group();
+            this.viewport.domElement.style.cursor = 'default';
         }
     }
 }

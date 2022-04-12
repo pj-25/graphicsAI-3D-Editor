@@ -14,6 +14,7 @@ export default class ControlledCamera {
         this.perspectiveCamera.lookAt(new THREE.Vector3(0,0,0));
         this.orbitControls = new OrbitControls(this.perspectiveCamera, domElement);
         this.activeCamera = this.perspectiveCamera;
+        this.activeCamera.name = 'Primary Camera';
 
         this.orthographicCamera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / - 2, 0.1, 1000 );
         this.orthographicCamera.position.set(...cameraPosition);
@@ -53,6 +54,19 @@ export default class ControlledCamera {
     //override this method to perform actions on camera switch event
     onCameraSwitch(){
         
+    }
+
+    changeCamera(newCamera){
+        if(this.activeCamera.type === 'PerspectiveCamera'){
+            newCamera.aspect = this.activeCamera.aspect;
+            newCamera.updateProjectionMatrix();
+            this.activeCamera = newCamera;
+            if(newCamera.name === 'Primary Camera'){
+                this.orbitControls.enabled = true;
+            }else{
+                this.orbitControls.enabled = false;
+            }
+        }
     }
 
     switchCamera(){
@@ -136,7 +150,7 @@ export default class ControlledCamera {
     moveLeft(){
         this.angle-=(Math.PI / 16)
         let camPos = new THREE.Vector3(this.activeCamera.position.x, this.activeCamera.position.y, this.activeCamera.position.z)
-        if(this.activeCamera.type === 'OrthographicCamera' && camPos.equals(new THREE.Vector3(0, 1, 0)) || camPos.equals(new THREE.Vector3(0, -1, 0))){
+        if(this.activeCamera.type === 'OrthographicCamera' && (camPos.equals(new THREE.Vector3(0, 1, 0)) || camPos.equals(new THREE.Vector3(0, -1, 0)))){
             // Gimbal lock
             this.activeCamera.rotation.z += Math.PI / 16
         }else {
@@ -152,7 +166,7 @@ export default class ControlledCamera {
 
         let camPos = new THREE.Vector3(this.activeCamera.position.x, this.activeCamera.position.y, this.activeCamera.position.z)
         
-        if(this.activeCamera.type === 'OrthographicCamera' && camPos.equals(new THREE.Vector3(0, 1, 0)) || camPos.equals(new THREE.Vector3(0, -1, 0))){
+        if(this.activeCamera.type === 'OrthographicCamera' && (camPos.equals(new THREE.Vector3(0, 1, 0)) || camPos.equals(new THREE.Vector3(0, -1, 0)))){
             this.activeCamera.rotation.z = this.angle
         } else {
             let rotVec = this.getHorizontalCoordinates();
@@ -204,7 +218,7 @@ export default class ControlledCamera {
 
     getHorizontalCoordinates(){
         let rotVec = new THREE.Vector3();
-        if(this.lastOperation == 3 || this.lastOperation == 7){
+        if(this.lastOperation === 3 || this.lastOperation === 7){
             if(this.activeCamera.type === 'OrthographicCamera')
                 this.switchCamera()
             rotVec.set( this.activeCamera.position.distanceTo(this.orbitControls.target) * Math.sin(this.angle / 2 * Math.PI), 
