@@ -115,7 +115,7 @@ let mesh = null;
 
 const gltfLoader = new GLTFLoader()
 gltfLoader.load(
-    '/ofiice/FullSceneTry/fullscene.gltf',
+    '/office/FullScene/fullscene.gltf',
     (object)=>{
         console.log(object);
         mesh = object
