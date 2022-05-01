@@ -16,7 +16,7 @@ import PropertyController from "../propertyController/PropertyController";
 import TextProperty from "../propertyController/meshPropertyController/TextProperty";
 import InteractiveLight from "../interactiveObjects/InteractiveLight";
 import DirectionalLightProperty from "../propertyController/lightPropertyController/DirectionalLightProperty";
-import { HemisphereLightHelper, PointLightHelper, SpotLightHelper, Vector3 } from "three";
+import { HemisphereLightHelper, PointLightHelper, SpotLightHelper } from "three";
 import HemisphereLightProperty from "../propertyController/lightPropertyController/HemisphereLightProperty";
 import {RectAreaLightHelper} from 'three/examples/jsm/helpers/RectAreaLightHelper';
 import RectAreaLightProperty from "../propertyController/lightPropertyController/RectAreaLightProperty";
@@ -396,7 +396,7 @@ export default class ObjectGenerator {
         this.viewport.add(object);
     }
 
-    addObj(objFile, attachProperties = true, name='Obj'){
+    addObj(objFile, attachProperties = true, name='Obj', onAfterAdd){
         this.objLoader.load(
             objFile,
             (object)=>{
@@ -404,6 +404,7 @@ export default class ObjectGenerator {
                     this.attachPropertiesToObj(object, name);
                 }
                 this.viewport.add(object);
+                onAfterAdd(object);
             },
             (xhr)=>{
                 console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );

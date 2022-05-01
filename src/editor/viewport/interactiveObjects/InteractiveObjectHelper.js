@@ -6,6 +6,7 @@ export default class InteractiveObjectHelper{
         this.viewport = viewport;
         this.interactiveObject = interactiveObject;
         this.hasTransformControl = false;
+        this.name = "InteractiveObjectHelper";
         
         this.transformControls = new TransformControls(viewport.controlledCamera.activeCamera, viewport.domElement);
         

@@ -8,7 +8,7 @@ export default class ConeProperty extends MeshPropertyController{
         
         this.geometryPropertyFolder= this.propertiesFolder.addFolder('Geometry');
         this.regenerate = ()=>{
-            let newGeometry = new THREE.ConeGeometry(this.geometryData.radius, 
+            let newGeometry = new  THREE.ConeGeometry(this.geometryData.radius, 
                                                     this.geometryData.height, 
                                                     this.geometryData.radidalSegments, 
                                                     this.geometryData.heightSegments, 

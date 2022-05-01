@@ -4,7 +4,7 @@ import InteractiveObjectHelper from "./InteractiveObjectHelper";
 export default class InteractiveModel {
     constructor(viewport, object, selectionColor=0xf49a34){
         this.object = object;
-        this.type = 'InteractiveModel';
+        this.name = 'InteractiveModel';
         this.object.isInteractive = true;
 
         this.object.helper = new InteractiveObjectHelper(viewport, object, false, selectionColor);

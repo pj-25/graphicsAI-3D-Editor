@@ -2,6 +2,7 @@ import Viewport from './viewport/Viewport';
 import * as dat from 'dat.gui';
 import ToolBox from './tools/ToolBox';
 import ObjectGenerator from './viewport/utils/ObjectGenerator';
+import {OBJExporter} from 'three/examples/jsm/exporters/OBJExporter';
 import CameraSelector from './viewport/CameraSelector';
 import { Vector3 } from 'three';
 
@@ -67,15 +68,31 @@ export default class Editor{
             if(this.renderMode)
                 this.propertiesPane.close();
         });
+
+        //add export to obj option
+        this.propertiesPane.add(this, 'exportToObj').name('Export(.obj)');
+    }
+
+    exportToObj(){
+        let objExporter = new OBJExporter();
+        //FIXME: export scene without helpers
+        const data = objExporter.parse(this.viewport);
+        this.downloadFile(data, "graphicsAI-exported.obj");
+    }
+
+    downloadFile(data, fileName){
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(new Blob([data], {'type':'text/plain'}));
+        downloadLink.download = fileName;
+        downloadLink.click();
     }
 
     initObjects(){
         this.objectGenerator.addCube();
         this.objectGenerator.addAmbientLight();
         this.objectGenerator.cursorPoint = new Vector3(-4,3,2);
-        let directionalLight =  this.objectGenerator.addDirectionalLight();
+        this.objectGenerator.addDirectionalLight();
         this.objectGenerator.cursorPoint = new Vector3(0,0,0);
-        console.log(directionalLight);
     }
 
     bindCameraProperties(){
@@ -117,8 +134,17 @@ export default class Editor{
         addMeshFolder.add(this.objectGenerator, 'addCone').name('Cone');
         addMeshFolder.add(this.objectGenerator, 'addTorus').name('Torus');
         addMeshFolder.add(this.objectGenerator, 'addText').name('Text');
-        this.loadHelicopter = ()=>{
-            this.objectGenerator.addObj('./assets/editor/models/Seahawk.obj', 'Helicopter');
+        this.loadHelicopter = () => {
+            this.objectGenerator.addObj(
+                './assets/editor/models/Seahawk.obj',
+                true,
+                'Helicopter',
+                (helicopter) => {
+                    helicopter.scale.x *= 0.1;
+                    helicopter.scale.y *= 0.1;
+                    helicopter.scale.z *= 0.1;
+                }
+            );
         };
         addOptionFolder.add(this, 'loadHelicopter').name('Helicopter');
         addOptionFolder.add(this.objectGenerator, 'addCamera').name('Camera');
