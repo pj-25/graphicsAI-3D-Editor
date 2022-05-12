@@ -1,27 +1,29 @@
 import * as THREE from 'three';
+import { EventDispatcher } from 'three';
 import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
 
-export default class InteractiveObjectHelper{
-    constructor(viewport, interactiveObject, selectable = true, selectionColor=0xf49a34){
+export default class InteractiveObjectHelper extends EventDispatcher {
+    constructor(viewport, interactiveObject, selectable = true, selectionColor = 0xf49a34) {
+        super();
         this.viewport = viewport;
         this.interactiveObject = interactiveObject;
         this.hasTransformControl = false;
         this.name = "InteractiveObjectHelper";
-        
+
         this.transformControls = new TransformControls(viewport.controlledCamera.activeCamera, viewport.domElement);
-        
-        if(selectable){
+
+        if (selectable) {
             this.selectionColor = selectionColor;
             this.selectable = true;
             this.selected = false;
             this.edges = new THREE.EdgesGeometry(this.interactiveObject.geometry);
-            this.selectionMaterial = new THREE.LineBasicMaterial({color:this.selectionColor});
+            this.selectionMaterial = new THREE.LineBasicMaterial({ color: this.selectionColor });
             this.selectionHelper = new THREE.LineSegments(this.edges, this.selectionMaterial);
         }
 
-        this.onKeypressTransformAction = (event)=>{
-            if(this.transformControls.visible){
-                switch(event.code){
+        this.onKeypressTransformAction = (event) => {
+            if (this.transformControls.visible) {
+                switch (event.code) {
                     case 'KeyG':
                         this.setTransformMode('translate');
                         break;
@@ -35,16 +37,16 @@ export default class InteractiveObjectHelper{
             }
         };
 
-        this.onKeypressDeleteAction = (event)=>{
-            if(this.selected && event.code === 'Delete'){
+        this.onKeypressDeleteAction = (event) => {
+            if (this.selected && (event.key === 'Delete' || event.keyCode === '8' || event.key == 'Backspace')) {
                 this.dispose();
             }
         }
     }
 
-    setTransformMode(mode){
+    setTransformMode(mode) {
         this.transformControls.setMode(mode);
-        switch(mode){
+        switch (mode) {
             case 'translate':
                 this.viewport.domElement.style.cursor = 'move';
                 break;
@@ -60,36 +62,36 @@ export default class InteractiveObjectHelper{
     }
 
 
-    updateSelectionHelper(){
+    updateSelectionHelper() {
         this.edges.copy(new THREE.EdgesGeometry(this.interactiveObject.geometry));
         this.selectionHelper.geometry = this.edges;
     }
 
-    onVisibleChange(){
-        if(this.hasTransformControl){
+    onVisibleChange() {
+        if (this.hasTransformControl) {
             this.detachTransformControls();
         }
     }
 
-    onTransformControlsChange(){
-        if(this.hasTransformControl){
+    onTransformControlsChange() {
+        if (this.hasTransformControl) {
             this.attachTransformControls();
-        }else{
+        } else {
             this.detachTransformControls();
         }
     }
 
-    attachTransformControls(mode='translate'){
+    attachTransformControls(mode = 'translate') {
         this.hasTransformControl = true;
         this.setTransformMode(mode);
         this.transformControls.attach(this.interactiveObject);
-        this.transformControls.addEventListener('mouseDown',this.viewport.disableOrbitControls);
-        this.transformControls.addEventListener('mouseUp' ,this.viewport.enableOrbitControls);
+        this.transformControls.addEventListener('mouseDown', this.viewport.disableOrbitControls);
+        this.transformControls.addEventListener('mouseUp', this.viewport.enableOrbitControls);
         this.viewport.domElement.addEventListener('keypress', this.onKeypressTransformAction);
         this.viewport.add(this.transformControls);
     }
 
-    detachTransformControls(){
+    detachTransformControls() {
         this.hasTransformControl = false;
         this.transformControls.detach();
         this.transformControls.removeEventListener('mouseDown', this.viewport.disableOrbitControls);
@@ -99,57 +101,61 @@ export default class InteractiveObjectHelper{
         this.viewport.domElement.style.cursor = 'default';
     }
 
-    activateSelection(attach=true, bindDeleteAction = true){
-        if(this.selectable){
+    activateSelection(attach = true, bindDeleteAction = true) {
+        if (this.selectable) {
             this.selected = true;
             this.interactiveObject.add(this.selectionHelper);
-            if(bindDeleteAction)
+            if (bindDeleteAction)
                 this.viewport.domElement.addEventListener('keydown', this.onKeypressDeleteAction);
-            if(attach){
+            if (attach) {
                 this.attachTransformControls();
             }
+            this.dispatchEvent({ type: 'select' });
         }
     }
 
-    deactivateSelection(detach=true){
-        if(this.selectable){
+    deactivateSelection(detach = true) {
+        if (this.selectable) {
             this.selected = false;
             this.interactiveObject.remove(this.selectionHelper);
             this.viewport.domElement.removeEventListener('keydown', this.onKeypressDeleteAction);
-            if(detach){
+            if (detach) {
                 this.detachTransformControls();
             }
+            this.dispatchEvent({ type: 'deselect' });
         }
     }
 
-    onSelectionChange(includeTransformControls=false){
-        if(this.selected){
+    onSelectionChange(includeTransformControls = false) {
+        if (this.selected) {
             this.activateSelection(includeTransformControls);
-        }else{
+        } else {
+            this.deactivateSelection(includeTransformControls);
+        }
+        this.dispatchEvent({ type: 'select-change' });
+        console.log('select change');
+    }
+
+    onClick(includeTransformControls = true) {
+        if (!this.selected) {
+            this.activateSelection(includeTransformControls);
+        } else {
             this.deactivateSelection(includeTransformControls);
         }
     }
 
-    onClick(includeTransformControls=true){
-        if(!this.selected){
-            this.activateSelection(includeTransformControls);
-        }else{
-            this.deactivateSelection(includeTransformControls);
-        }
-    }
-
-    dispose(){
-        if(this.selectable){
-            if(this.selected){
+    dispose() {
+        if (this.selectable) {
+            if (this.selected) {
                 this.deactivateSelection();
             }
-            if(this.edges){
+            if (this.edges) {
                 this.edges.dispose();
                 this.selectionMaterial.dispose();
             }
         }
         this.transformControls.dispose();
-        if(this.hasTransformControl){
+        if (this.hasTransformControl) {
             this.detachTransformControls();
         }
         this.interactiveObject.dispose();

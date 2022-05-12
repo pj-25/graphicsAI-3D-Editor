@@ -2,27 +2,27 @@ import { Mesh } from "three";
 import InteractiveObjectHelper from "./InteractiveObjectHelper";
 
 
-export default class InteractiveMesh extends Mesh{
-    constructor(viewport, geometry, material, selectionColor=0xf49a34){
+export default class InteractiveMesh extends Mesh {
+    constructor(viewport, geometry, material, selectionColor = 0xf49a34) {
         super(geometry, material);
         this.name = "InteractiveMesh";
         this.isInteractive = true;
-        
+
         this.helper = new InteractiveObjectHelper(viewport, this, selectionColor);
     }
 
-    onVisibleChange(){
+    onVisibleChange() {
         this.helper.onVisibleChange();
     }
 
-    updateGeometry(newGeometry){
+    updateGeometry(newGeometry) {
         this.geometry.dispose();
         this.geometry = newGeometry;
         this.helper.updateSelectionHelper();
     }
 
-    dispose(){
-        if(this.properties)
+    dispose() {
+        if (this.properties)
             this.properties.dispose();
         this.geometry.dispose();
         this.material.dispose();
