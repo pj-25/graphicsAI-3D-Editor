@@ -1,7 +1,7 @@
 
 
-export default class CameraSelector extends Map{
-    constructor(defaultCamera, onCameraSwitch, onAddCamera, onDeleteCamera){
+export default class CameraSelector extends Map {
+    constructor(defaultCamera, onCameraSwitch, onAddCamera, onDeleteCamera) {
         super();
         this.currentCameraName = defaultCamera.name;
         this.set(this.currentCameraName, defaultCamera);
@@ -14,10 +14,10 @@ export default class CameraSelector extends Map{
      * 
      * @param {THREE.Camera} camera 
      */
-    add(camera){
+    add(camera) {
         this.set(camera.name, camera);
-        camera.onDisposeCamera = ()=>{
-            if(this.currentCameraName === camera.name){
+        camera.onDisposeCamera = () => {
+            if (this.currentCameraName === camera.name) {
                 this.currentCameraName = 'Primary Camera';
                 this.switchCamera();
             }
@@ -27,7 +27,7 @@ export default class CameraSelector extends Map{
         this.onAddCamera(camera);
     }
 
-    switchCamera(){
+    switchCamera() {
         this.onCameraSwitch(this.get(this.currentCameraName));
     }
 }

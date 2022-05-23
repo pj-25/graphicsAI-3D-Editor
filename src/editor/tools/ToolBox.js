@@ -137,5 +137,21 @@ export default class ToolBox {
         }
     }
 
+    bindProperties(propertiesPane) {
+        this.toolBar = propertiesPane.addFolder('Tool Bar');
+        this.toolBar.add(this.toolMode, 'select').name('Select (B)').listen().onChange(() => {
+            this.activate(ToolBox.TOOLTYPE.SELECTBOX);
+        });
+        this.toolBar.add(this.toolMode, 'translate').name('Move (G)').listen().onChange(() => {
+            this.activate(ToolBox.TOOLTYPE.MOVE);
+        });
+        this.toolBar.add(this.toolMode, 'rotate').name('Rotate (R)').listen().onChange(() => {
+            this.activate(ToolBox.TOOLTYPE.ROTATE);
+        });
+        this.toolBar.add(this.toolMode, 'scale').name('Scale (S)').listen().onChange(() => {
+            this.activate(ToolBox.TOOLTYPE.SCALE);
+        });
+        this.toolBar.add(this, 'delete').name('Delete (del)');
+    }
 }
 

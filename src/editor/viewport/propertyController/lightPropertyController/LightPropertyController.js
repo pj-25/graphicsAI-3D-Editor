@@ -23,7 +23,7 @@ export default class LightPropertyController extends PropertyController {
         this.shadowPropertyFolder = this.propertiesFolder.addFolder("Shadow");
         this.shadowPropertyFolder.add(this.interactiveObject, 'castShadow').name('Cast Shadow');
         this.shadowPropertyFolder.add(this.interactiveObject, 'receiveShadow').name('Receive Shadow');
-        this.shadowPropertyFolder.add(this.interactiveObject.shadow, 'radius').min(0).max(20).step(0.01);
-
+        if (this.interactiveObject.shadow)
+            this.shadowPropertyFolder.add(this.interactiveObject.shadow, 'radius').min(0).max(20).step(0.01);
     }
 }

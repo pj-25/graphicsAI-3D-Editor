@@ -21,6 +21,11 @@ export default class InteractiveMesh extends Mesh {
         this.helper.updateSelectionHelper();
     }
 
+    updateTexture(textureName) {
+        this.material[textureName].needsUpdate = true;
+        this.material.needsUpdate = true;
+    }
+
     dispose() {
         if (this.properties)
             this.properties.dispose();

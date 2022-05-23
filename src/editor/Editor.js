@@ -1,36 +1,29 @@
-import Viewport from './viewport/Viewport';
-import * as dat from 'dat.gui';
-import ToolBox from './tools/ToolBox';
-import ObjectGenerator from './viewport/utils/ObjectGenerator';
+import { Vector3 } from 'three';
 import { OBJExporter } from 'three/examples/jsm/exporters/OBJExporter';
+import ToolBox from './tools/ToolBox';
 import CameraSelector from './viewport/CameraSelector';
-import { Vector3, PCFShadowMap, PCFSoftShadowMap } from 'three';
+import PropertiesPane from './viewport/PropertiesPane';
+import MeshPropertyController from './viewport/propertyController/meshPropertyController/MeshPropertyController';
+import ObjectGenerator from './viewport/utils/ObjectGenerator';
+import Viewport from './viewport/Viewport';
 
 export default class Editor {
     constructor(viewportCanvas, toolBarElement, propertiesPaneContainer) {
         //TODO:add menubar
 
         //creating properties pane 
-        this.propertiesPane = new dat.GUI();
-        this.propertiesPane.domElement.draggable = true;
-        this.propertiesPane.domElement.style.marginRight = "5px";
-
-        if (this.propertiesPaneContainer) {
-            this.propertiesPane.domElement.style.marginTop = "5px";
-            propertiesPaneContainer.appendChild(this.propertiesPane.domElement);
-        }
+        this.propertiesPane = new PropertiesPane(propertiesPaneContainer);
         this.propertiesPane.open();
 
         //add viewport
         this.viewport = new Viewport(viewportCanvas, viewportCanvas.getBoundingClientRect().width, viewportCanvas.getBoundingClientRect().height);
-        this.bindRendererProperties();
-
-        this.bindCameraProperties();
+        this.propertiesPane.bindRendererProperties(this.viewport.renderer, this.viewport);
+        this.propertiesPane.bindControlledCameraProperties(this.viewport.controlledCamera);
 
         //add toolbar
         this.toolBarElement = toolBarElement;
         this.toolBox = new ToolBox(this.viewport);
-        this.bindToolBox();
+        this.toolBox.bindProperties(this.propertiesPane);
 
         //add cameraSelector
         this.cameraSelector = new CameraSelector(this.viewport.controlledCamera.activeCamera,
@@ -38,28 +31,16 @@ export default class Editor {
                 this.viewport.controlledCamera.changeCamera(camera);
             }
         );
-        let cameraSwitchOption = this.propertiesPane.add(this.cameraSelector, 'currentCameraName', Array.from(this.cameraSelector.keys()))
-            .name('Camera')
-            .listen()
-            .onChange(() => {
-                this.cameraSelector.switchCamera();
-            });
-        this.cameraSelector.onAddCamera = (camera) => {
-            let option = document.createElement('option');
-            option.value = camera.name;
-            option.innerHTML = camera.name;
-            cameraSwitchOption.__select.appendChild(option);
-        };
-        this.cameraSelector.onDeleteCamera = (camera) => {
-            cameraSwitchOption.__select.querySelector('option[value="' + camera.name + '"]').remove();
-        }
+        this.propertiesPane.bindCameraSelector(this.cameraSelector);
 
-        //add addMesh menu
+        //add scene outliner
         this.sceneOutliner = this.propertiesPane.addFolder('Scene Outliner');
         this.sceneOutliner.open();
         this.objectGenerator = new ObjectGenerator(this.viewport, this.sceneOutliner, this.cameraSelector);
-        this.bindAddOption();
+        //add addMesh menu
+        this.propertiesPane.bindObjectGenerator(this.objectGenerator);
 
+        MeshPropertyController.assetManager = this.objectGenerator.assetManager;
         //add initial objects
         this.initObjects();
 
@@ -73,23 +54,6 @@ export default class Editor {
 
         //add export to obj option
         this.propertiesPane.add(this, 'exportToObj').name('Export(.obj)');
-    }
-
-    bindRendererProperties() {
-        this.rendererPropertyFolder = this.propertiesPane.addFolder("Renderer");
-
-        let updateShadowOnChilds = () => {
-            this.viewport.traverse((child) => {
-                if (child.material && (child.castShadow || child.receiveShadow)) {
-                    child.material.needsUpdate = true;
-                }
-            })
-        }
-        this.rendererPropertyFolder.add(this.viewport.renderer.shadowMap, 'enabled')
-            .name("Shadow")
-            .onChange(updateShadowOnChilds);
-        this.rendererPropertyFolder.add(this.viewport.renderer.shadowMap, 'type', { "PCFShadowMap": PCFShadowMap, "PCFSoftShadowMap": PCFSoftShadowMap })
-            .onChange(updateShadowOnChilds);
     }
 
     exportToObj() {
@@ -114,95 +78,8 @@ export default class Editor {
         this.objectGenerator.cursorPoint = new Vector3(0, 0, 0);
 
         const basePlane = this.objectGenerator.addPlane();
-        basePlane.rotation.x = Math.PI / 2;
+        basePlane.rotation.x = -Math.PI / 2;
         basePlane.position.y = -0.5;
         basePlane.scale.set(10, 10, 10);
     }
-
-    bindCameraProperties() {
-        const pcameraFolder = this.propertiesPane.addFolder('Viewport(Perspective)');
-        pcameraFolder.add(this.viewport.controlledCamera.perspectiveCamera.position, 'x').min(-10).max(10).listen();
-        pcameraFolder.add(this.viewport.controlledCamera.perspectiveCamera.position, 'y').min(-10).max(10).listen();
-        pcameraFolder.add(this.viewport.controlledCamera.perspectiveCamera.position, 'z').min(-10).max(10).listen();
-        pcameraFolder.add(this.viewport.controlledCamera.perspectiveCamera, 'fov').min(1).max(180).listen().onChange(() => this.viewport.controlledCamera.perspectiveCamera.updateProjectionMatrix());
-
-        const ocameraFolder = this.propertiesPane.addFolder('Viewport(Orthograhpic)');
-        ocameraFolder.add(this.viewport.controlledCamera.orthographicCamera.position, 'x').min(-10).max(10).listen();
-        ocameraFolder.add(this.viewport.controlledCamera.orthographicCamera.position, 'y').min(-10).max(10).listen();
-        ocameraFolder.add(this.viewport.controlledCamera.orthographicCamera.position, 'z').min(-10).max(10).listen();
-        ocameraFolder.add(this.viewport.controlledCamera.orthographicCamera, 'zoom').min(1).max(2000).listen().onChange(() => this.viewport.controlledCamera.orthographicCamera.updateProjectionMatrix());
-
-        this.viewport.controlledCamera.onCameraSwitch = () => {
-            if (this.viewport.controlledCamera.activeCamera.type === 'PerspectiveCamera') {
-                pcameraFolder.domElement.hidden = false;
-                ocameraFolder.domElement.hidden = true;
-            } else {
-                ocameraFolder.domElement.hidden = false;
-                pcameraFolder.domElement.hidden = true;
-            }
-        };
-        this.viewport.controlledCamera.onCameraSwitch();
-    }
-
-
-    bindAddOption() {
-        const addOptionFolder = this.propertiesPane.addFolder('Add');
-
-        const addMeshFolder = addOptionFolder.addFolder('Mesh');
-        addMeshFolder.add(this.objectGenerator, 'addPlane').name('Plane');
-        addMeshFolder.add(this.objectGenerator, 'addCube').name('Cube');
-        addMeshFolder.add(this.objectGenerator, 'addCircle').name('Circle');
-        addMeshFolder.add(this.objectGenerator, 'addUVSphere').name('UVSphere');
-        addMeshFolder.add(this.objectGenerator, 'addIcoSphere').name('IcoSphere');
-        addMeshFolder.add(this.objectGenerator, 'addCylinder').name('Cylinder');
-        addMeshFolder.add(this.objectGenerator, 'addCone').name('Cone');
-        addMeshFolder.add(this.objectGenerator, 'addTorus').name('Torus');
-        addMeshFolder.add(this.objectGenerator, 'addText').name('Text');
-        this.loadHelicopter = () => {
-            this.objectGenerator.addObj(
-                './assets/editor/models/Seahawk.obj',
-                true,
-                'Helicopter',
-                (helicopter) => {
-                    helicopter.scale.x *= 0.1;
-                    helicopter.scale.y *= 0.1;
-                    helicopter.scale.z *= 0.1;
-                }
-            );
-        };
-        addOptionFolder.add(this, 'loadHelicopter').name('Helicopter');
-        addOptionFolder.add(this.objectGenerator, 'addCamera').name('Camera');
-        let addLightFolder = addOptionFolder.addFolder('Light');
-        let ambientOption = addLightFolder.add(this.objectGenerator, 'addAmbientLight').name('Ambient').onChange(() => {
-            addLightFolder.remove(ambientOption);
-        });
-        addLightFolder.add(this.objectGenerator, 'addDirectionalLight').name('Directional');
-        addLightFolder.add(this.objectGenerator, 'addHemisphereLight').name('Hemisphere');
-        addLightFolder.add(this.objectGenerator, 'addPointLight').name('Point');
-        addLightFolder.add(this.objectGenerator, 'addRectAreaLight').name('RectArea')
-        addLightFolder.add(this.objectGenerator, 'addSpotLight').name('Spot');
-
-        //import .obj option
-        addOptionFolder.add(this.objectGenerator, 'importObj').name('Import Obj');
-
-    }
-
-
-    bindToolBox() {
-        this.toolBox.toolBar = this.propertiesPane.addFolder('Tool Bar');
-        this.toolBox.toolBar.add(this.toolBox.toolMode, 'select').name('Select (B)').listen().onChange(() => {
-            this.toolBox.activate(ToolBox.TOOLTYPE.SELECTBOX);
-        });
-        this.toolBox.toolBar.add(this.toolBox.toolMode, 'translate').name('Move (G)').listen().onChange(() => {
-            this.toolBox.activate(ToolBox.TOOLTYPE.MOVE);
-        });
-        this.toolBox.toolBar.add(this.toolBox.toolMode, 'rotate').name('Rotate (R)').listen().onChange(() => {
-            this.toolBox.activate(ToolBox.TOOLTYPE.ROTATE);
-        });
-        this.toolBox.toolBar.add(this.toolBox.toolMode, 'scale').name('Scale (S)').listen().onChange(() => {
-            this.toolBox.activate(ToolBox.TOOLTYPE.SCALE);
-        });
-        this.toolBox.toolBar.add(this.toolBox, 'delete').name('Delete (del)');
-    }
-
 }
