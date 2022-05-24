@@ -81,15 +81,27 @@ export default class PropertiesPane extends dat.GUI {
         this.addObjectFolder = this.addFolder('Add');
 
         const addMeshFolder = this.addObjectFolder.addFolder('Mesh');
-        addMeshFolder.add(objectGenerator, 'addPlane').name('Plane');
-        addMeshFolder.add(objectGenerator, 'addCube').name('Cube');
-        addMeshFolder.add(objectGenerator, 'addCircle').name('Circle');
-        addMeshFolder.add(objectGenerator, 'addUVSphere').name('UVSphere');
-        addMeshFolder.add(objectGenerator, 'addIcoSphere').name('IcoSphere');
-        addMeshFolder.add(objectGenerator, 'addCylinder').name('Cylinder');
-        addMeshFolder.add(objectGenerator, 'addCone').name('Cone');
-        addMeshFolder.add(objectGenerator, 'addTorus').name('Torus');
-        addMeshFolder.add(objectGenerator, 'addText').name('Text');
+        let materialIdList = Array.from(objectGenerator.assetsManager.materials.keys());
+        materialIdList.unshift(null);
+        const materialIdSelect = addMeshFolder.add(objectGenerator, 'sharedMaterial', materialIdList).listen();
+        objectGenerator.assetsManager.addEventListener("add-material", (event) => {
+            const newMaterialOption = document.createElement("option");
+            newMaterialOption.innerHTML = event.assetId;
+            newMaterialOption.value = event.assetId;
+            materialIdSelect.__select.appendChild(newMaterialOption);
+        });
+        objectGenerator.assetsManager.addEventListener("remove-material", (event) => {
+            materialIdSelect.__select.querySelector("option[value='" + event.assetId + "']").remove();
+        });
+        addMeshFolder.add(objectGenerator, 'addPlane').name('Plane').onChange(() => objectGenerator.unsetSharedMaterial());
+        addMeshFolder.add(objectGenerator, 'addCube').name('Cube').onChange(() => objectGenerator.unsetSharedMaterial());
+        addMeshFolder.add(objectGenerator, 'addCircle').name('Circle').onChange(() => objectGenerator.unsetSharedMaterial());
+        addMeshFolder.add(objectGenerator, 'addUVSphere').name('UVSphere').onChange(() => objectGenerator.unsetSharedMaterial());
+        addMeshFolder.add(objectGenerator, 'addIcoSphere').name('IcoSphere').onChange(() => objectGenerator.unsetSharedMaterial());
+        addMeshFolder.add(objectGenerator, 'addCylinder').name('Cylinder').onChange(() => objectGenerator.unsetSharedMaterial());
+        addMeshFolder.add(objectGenerator, 'addCone').name('Cone').onChange(() => objectGenerator.unsetSharedMaterial());
+        addMeshFolder.add(objectGenerator, 'addTorus').name('Torus').onChange(() => objectGenerator.unsetSharedMaterial());
+        addMeshFolder.add(objectGenerator, 'addText').name('Text').onChange(() => objectGenerator.unsetSharedMaterial());
         this.loadHelicopter = () => {
             objectGenerator.addObj(
                 './models/Seahawk.obj',

@@ -56,15 +56,18 @@ export default class ObjectGenerator {
         this.propertiesPane = propertiesPane;
         this.cameraSelector = cameraSelector;
 
-        this.assetManager = new AssetManager(this.loadingManager);
+        this.sharedMaterial = null;
+
+        this.assetsManager = new AssetManager(this.loadingManager);
     }
 
     /**
-     * param : material - if passed as string, will consider it as material Id
+     * @param material if passed as string, will consider it as material Id
      */
     createInteractiveMesh(geometry, material, attachProperties, PropertyController) {
-        if (typeof (material) == String)
-            material = this.assetManager.getMaterial(material);
+        if (typeof (material) == "string") {
+            material = this.assetsManager.getMaterial(material) || this.assetsManager.createNewMaterial();
+        }
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
         if (attachProperties) {
@@ -74,100 +77,107 @@ export default class ObjectGenerator {
         return mesh;
     }
 
-    addPlane(attachProperties = true) {
-        let object = this.createPlane(attachProperties);
+    getMaterial() {
+        if (this.sharedMaterial) {
+            return this.sharedMaterial;
+        }
+        return this.assetsManager.createNewMaterial();
+    }
+
+    setSharedMaterial(material) {
+        this.sharedMaterial = material;
+    }
+
+    unsetSharedMaterial() {
+        this.sharedMaterial = null;
+    }
+
+    addPlane(material = this.getMaterial(), attachProperties = true) {
+        let object = this.createPlane(material, attachProperties);
         this.viewport.add(object);
         return object;
     }
 
-    createPlane(attachProperties = true) {
+    createPlane(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.PlaneGeometry(1, 1);
-        let material = this.assetManager.createNewMaterial();
         material.side = THREE.DoubleSide;
         return this.createInteractiveMesh(geometry, material, attachProperties, PlaneProperty);
     }
 
-    addCube(attachProperties = true) {
-        let object = this.createCube(attachProperties);
+    addCube(material = this.getMaterial(), attachProperties = true) {
+        let object = this.createCube(material, attachProperties);
         this.viewport.add(object);
         return object;
     }
 
-    createCube(attachProperties = true) {
+    createCube(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.BoxGeometry(1, 1, 1);
-        let material = this.assetManager.createNewMaterial();
         return this.createInteractiveMesh(geometry, material, attachProperties, BoxProperty);
     }
 
-    addCircle(attachProperties = true) {
-        let object = this.createCircle(attachProperties);
+    addCircle(material = this.getMaterial(), attachProperties = true) {
+        let object = this.createCircle(material, attachProperties);
         this.viewport.add(object);
         return object;
     }
 
-    createCircle(attachProperties = true) {
+    createCircle(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.CircleGeometry(1, 10);
-        let material = this.assetManager.createNewMaterial();
         return this.createInteractiveMesh(geometry, material, attachProperties, CircleProperty);
     }
 
-    addUVSphere(attachProperties = true) {
-        let object = this.createUVSphere(attachProperties);
+    addUVSphere(material = this.getMaterial(), attachProperties = true) {
+        let object = this.createUVSphere(material, attachProperties);
         this.viewport.add(object);
         return object;
     }
 
-    createUVSphere(attachProperties = true) {
+    createUVSphere(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.SphereGeometry(1, 30, 30);
-        let material = this.assetManager.createNewMaterial();
         return this.createInteractiveMesh(geometry, material, attachProperties, SphereProperty);
     }
 
-    addIcoSphere(attachProperties = true) {
-        let object = this.createIcoSphere(attachProperties);
+    addIcoSphere(material = this.getMaterial(), attachProperties = true) {
+        let object = this.createIcoSphere(material, attachProperties);
         this.viewport.add(object);
         return object;
     }
 
-    createIcoSphere(attachProperties = true) {
+    createIcoSphere(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.IcosahedronGeometry(1, 2);
-        let material = this.assetManager.createNewMaterial();
         return this.createInteractiveMesh(geometry, material, attachProperties, IcosahedronProperty);
     }
 
-    addCylinder(attachProperties = true) {
-        let object = this.createCylinder(attachProperties);
+    addCylinder(material = this.getMaterial(), attachProperties = true) {
+        let object = this.createCylinder(material, attachProperties);
         this.viewport.add(object);
         return object;
     }
 
-    createCylinder(attachProperties = true) {
+    createCylinder(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.CylinderGeometry(1, 1, 1, 20, 20);
-        let material = this.assetManager.createNewMaterial();
         return this.createInteractiveMesh(geometry, material, attachProperties, CylinderProperty);
     }
 
-    addCone(attachProperties = true) {
-        let object = this.createCone(attachProperties);
+    addCone(material = this.getMaterial(), attachProperties = true) {
+        let object = this.createCone(material, attachProperties);
         this.viewport.add(object);
         return object;
     }
 
-    createCone(attachProperties = true) {
+    createCone(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.ConeGeometry(1, 2, 10, 10);
-        let material = this.assetManager.createNewMaterial();
         return this.createInteractiveMesh(geometry, material, attachProperties, ConeProperty);
     }
 
-    addTorus(attachProperties = true) {
-        let object = this.createTorus(attachProperties);
+    addTorus(material = this.getMaterial(), attachProperties = true) {
+        let object = this.createTorus(material, attachProperties);
         this.viewport.add(object);
         return object;
     }
 
-    createTorus(attachProperties = true) {
+    createTorus(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.TorusGeometry(.5, 0.1, 10, 50);
-        let material = this.assetManager.createNewMaterial();
         return this.createInteractiveMesh(geometry, material, attachProperties, TorusProperty);
     }
 
@@ -185,18 +195,17 @@ export default class ObjectGenerator {
         });
         geometry.parameters.text = text;
         geometry.center();
-        let material = this.assetManager.createNewMaterial();
         return this.createInteractiveMesh(geometry, material, attachProperties, TextProperty);
     }
 
     addText(text = 'graphicsAI', fontPath = './fonts/helvetiker_regular.typeface.json', attachProperties = true) {
-        this.assetManager.loadFont(fontPath, (font) => {
+        this.assetsManager.loadFont(fontPath, (font) => {
             this.viewport.add(this.createText(text, font, attachProperties));
         });
     }
 
     addCamera(attachProperties = true) {
-        let object = this.createCamera(attachProperties);
+        let object = this.createCamera(material, attachProperties);
         this.viewport.add(object);
         this.viewport.add(object.camera);
         this.cameraSelector.add(object.camera);
@@ -321,7 +330,7 @@ export default class ObjectGenerator {
     }
 
     parseAndAddObj(objectData, attachProperties = true, name = 'Obj') {
-        let object = this.assetManager.objLoader.parse(objectData);
+        let object = this.assetsManager.objLoader.parse(objectData);
         if (attachProperties) {
             this.attachPropertiesToObj(object, name);
         }
@@ -329,7 +338,7 @@ export default class ObjectGenerator {
     }
 
     addObj(objFile, attachProperties = true, name = 'Obj', onAfterAdd) {
-        this.assetManager.loadObj(objFile, (object) => {
+        this.assetsManager.loadObj(objFile, (object) => {
             if (attachProperties) {
                 this.attachPropertiesToObj(object, name);
             }

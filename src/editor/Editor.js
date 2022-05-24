@@ -40,7 +40,7 @@ export default class Editor {
         //add addMesh menu
         this.propertiesPane.bindObjectGenerator(this.objectGenerator);
 
-        MeshPropertyController.assetManager = this.objectGenerator.assetManager;
+        MeshPropertyController.assetsManager = this.objectGenerator.assetsManager;
         //add initial objects
         this.initObjects();
 
@@ -71,12 +71,12 @@ export default class Editor {
     }
 
     initObjects() {
-        this.objectGenerator.addCube();
         this.objectGenerator.addAmbientLight();
         this.objectGenerator.cursorPoint = new Vector3(-4, 3, 2);
         this.objectGenerator.addDirectionalLight();
         this.objectGenerator.cursorPoint = new Vector3(0, 0, 0);
 
+        this.objectGenerator.addCube();
         const basePlane = this.objectGenerator.addPlane();
         basePlane.rotation.x = -Math.PI / 2;
         basePlane.position.y = -0.5;

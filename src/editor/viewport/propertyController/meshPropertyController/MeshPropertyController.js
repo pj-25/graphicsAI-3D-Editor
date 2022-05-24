@@ -52,15 +52,15 @@ export default class MeshPropertyController extends PropertyController {
         this.materialPropertyFolder = this.propertiesFolder.addFolder('Material');
         this.color = this.interactiveObject.material.color.getHex();
         this.interactiveObject.assetId = this.interactiveObject.material.assetId;
-        this.assetIdProperty = this.materialPropertyFolder.add(this.interactiveObject, 'assetId', Array.from(MeshPropertyController.assetManager.materials.keys())).name("Material").onChange(() => {
-            this.updateMaterial(MeshPropertyController.assetManager.getMaterial(this.interactiveObject.assetId));
+        this.assetIdProperty = this.materialPropertyFolder.add(this.interactiveObject, 'assetId', Array.from(MeshPropertyController.assetsManager.materials.keys())).name("Material").onChange(() => {
+            this.updateMaterial(MeshPropertyController.assetsManager.getMaterial(this.interactiveObject.assetId));
             this.materialPropertyFolder.open();
         });
-        MeshPropertyController.assetManager.addEventListener("add-material", this.onAddMaterial.bind(this));
-        MeshPropertyController.assetManager.addEventListener("remove-material", this.onRemoveMaterial.bind(this));
+        MeshPropertyController.assetsManager.addEventListener("add-material", this.onAddMaterial.bind(this));
+        MeshPropertyController.assetsManager.addEventListener("remove-material", this.onRemoveMaterial.bind(this));
         this.interactiveObject.materialType = this.interactiveObject.material.constructor.name;
         this.materialPropertyFolder.add(this.interactiveObject, 'materialType', AssetManager.MATERIAL_TYPE).onChange(() => {
-            this.updateMaterial(MeshPropertyController.assetManager.createNewMaterial(this.interactiveObject.materialType));
+            this.updateMaterial(MeshPropertyController.assetsManager.createNewMaterial(this.interactiveObject.materialType));
         });
         this.materialPropertyFolder.addColor(this, 'color').onChange(() => {
             this.interactiveObject.material.color.setHex(this.color);
@@ -71,7 +71,6 @@ export default class MeshPropertyController extends PropertyController {
         });
 
         this.materialPropertyFolder.add(this.interactiveObject.material, 'wireframe');
-        //FIXME: opacity not updating
         this.materialPropertyFolder.add(this.interactiveObject.material, 'opacity').min(0).max(1).step(0.0001).onChange(() => {
             this.interactiveObject.material.transparent = true
         });
@@ -114,8 +113,8 @@ export default class MeshPropertyController extends PropertyController {
 
     updateMaterialPropertyFolder() {
         //FIXME: not sure about the callback reference without bind
-        MeshPropertyController.assetManager.removeEventListener("add-material", this.onAddMaterial);
-        MeshPropertyController.assetManager.removeEventListener("remove-material", this.onRemoveMaterial);
+        MeshPropertyController.assetsManager.removeEventListener("add-material", this.onAddMaterial);
+        MeshPropertyController.assetsManager.removeEventListener("remove-material", this.onRemoveMaterial);
         this.texturePropertyFolder = null;
         this.propertiesFolder.removeFolder(this.materialPropertyFolder);
         this.addMaterialPropertyFolder();
@@ -133,7 +132,7 @@ export default class MeshPropertyController extends PropertyController {
         this[texturePropertyFolderName].add(this.interactiveObject.material, textureName + "Path", MeshPropertyController[textureName + "s"])
             .name(textureName)
             .onChange(() => {
-                const texture = MeshPropertyController.assetManager.applyTexture(this.interactiveObject, textureName, this.interactiveObject.material[textureName + "Path"]);
+                const texture = MeshPropertyController.assetsManager.applyTexture(this.interactiveObject, textureName, this.interactiveObject.material[textureName + "Path"]);
                 this.addTextureProperty(this[texturePropertyFolderName], textureName, texture);
             });
     }
