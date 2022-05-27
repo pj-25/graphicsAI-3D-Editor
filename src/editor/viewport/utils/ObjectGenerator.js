@@ -23,7 +23,8 @@ import SpotLightProperty from "../propertyController/lightPropertyController/Spo
 import PointLightProperty from "../propertyController/lightPropertyController/PointLightProperty";
 import InteractiveModel from "../interactiveObjects/InteractiveModel";
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import AssetManager from "./AssetsManager";
+import AssetsManager from "./AssetsManager";
+import MeshPropertyController from "../propertyController/meshPropertyController/MeshPropertyController";
 
 export default class ObjectGenerator {
     static OBJECT_TYPE = {
@@ -58,17 +59,17 @@ export default class ObjectGenerator {
 
         this.sharedMaterial = null;
 
-        this.assetsManager = new AssetManager(this.loadingManager);
+        this.assetsManager = new AssetsManager(this.loadingManager);
     }
 
     /**
      * @param material if passed as string, will consider it as material Id
      */
-    createInteractiveMesh(geometry, material, attachProperties, PropertyController) {
+    createInteractiveObject(geometry, material, attachProperties, PropertyController, InteractiveObject = InteractiveMesh) {
         if (typeof (material) == "string") {
             material = this.assetsManager.getMaterial(material) || this.assetsManager.createNewMaterial();
         }
-        let mesh = new InteractiveMesh(this.viewport, geometry, material);
+        let mesh = new InteractiveObject(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
         if (attachProperties) {
             mesh.properties = new PropertyController(mesh, this.propertiesPane);
@@ -101,7 +102,7 @@ export default class ObjectGenerator {
     createPlane(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.PlaneGeometry(1, 1);
         material.side = THREE.DoubleSide;
-        return this.createInteractiveMesh(geometry, material, attachProperties, PlaneProperty);
+        return this.createInteractiveObject(geometry, material, attachProperties, PlaneProperty);
     }
 
     addCube(material = this.getMaterial(), attachProperties = true) {
@@ -112,7 +113,7 @@ export default class ObjectGenerator {
 
     createCube(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.BoxGeometry(1, 1, 1);
-        return this.createInteractiveMesh(geometry, material, attachProperties, BoxProperty);
+        return this.createInteractiveObject(geometry, material, attachProperties, BoxProperty);
     }
 
     addCircle(material = this.getMaterial(), attachProperties = true) {
@@ -123,7 +124,7 @@ export default class ObjectGenerator {
 
     createCircle(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.CircleGeometry(1, 10);
-        return this.createInteractiveMesh(geometry, material, attachProperties, CircleProperty);
+        return this.createInteractiveObject(geometry, material, attachProperties, CircleProperty);
     }
 
     addUVSphere(material = this.getMaterial(), attachProperties = true) {
@@ -134,7 +135,7 @@ export default class ObjectGenerator {
 
     createUVSphere(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.SphereGeometry(1, 30, 30);
-        return this.createInteractiveMesh(geometry, material, attachProperties, SphereProperty);
+        return this.createInteractiveObject(geometry, material, attachProperties, SphereProperty);
     }
 
     addIcoSphere(material = this.getMaterial(), attachProperties = true) {
@@ -145,7 +146,7 @@ export default class ObjectGenerator {
 
     createIcoSphere(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.IcosahedronGeometry(1, 2);
-        return this.createInteractiveMesh(geometry, material, attachProperties, IcosahedronProperty);
+        return this.createInteractiveObject(geometry, material, attachProperties, IcosahedronProperty);
     }
 
     addCylinder(material = this.getMaterial(), attachProperties = true) {
@@ -156,7 +157,7 @@ export default class ObjectGenerator {
 
     createCylinder(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.CylinderGeometry(1, 1, 1, 20, 20);
-        return this.createInteractiveMesh(geometry, material, attachProperties, CylinderProperty);
+        return this.createInteractiveObject(geometry, material, attachProperties, CylinderProperty);
     }
 
     addCone(material = this.getMaterial(), attachProperties = true) {
@@ -167,7 +168,7 @@ export default class ObjectGenerator {
 
     createCone(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.ConeGeometry(1, 2, 10, 10);
-        return this.createInteractiveMesh(geometry, material, attachProperties, ConeProperty);
+        return this.createInteractiveObject(geometry, material, attachProperties, ConeProperty);
     }
 
     addTorus(material = this.getMaterial(), attachProperties = true) {
@@ -178,34 +179,38 @@ export default class ObjectGenerator {
 
     createTorus(material = this.getMaterial(), attachProperties = true) {
         let geometry = new THREE.TorusGeometry(.5, 0.1, 10, 50);
-        return this.createInteractiveMesh(geometry, material, attachProperties, TorusProperty);
+        return this.createInteractiveObject(geometry, material, attachProperties, TorusProperty);
     }
 
-    createText(text = 'graphicsAI', font, attachProperties = true) {
-        let geometry = new TextGeometry(text, {
-            font,
-            size: 0.5,
-            height: 0.2,
-            curveSegments: 6,
-            bevelEnabled: true,
-            bevelThickness: 0.03,
-            bevelSize: 0.02,
-            bevelOffset: 0,
-            bevelSegments: 4
-        });
+    createText(text = 'graphicsAI', textGeometryOptions, material = this.getMaterial(), attachProperties = true) {
+        let geometry = new TextGeometry(text, textGeometryOptions);
         geometry.parameters.text = text;
         geometry.center();
-        return this.createInteractiveMesh(geometry, material, attachProperties, TextProperty);
+        return this.createInteractiveObject(geometry, material, attachProperties, TextProperty);
     }
 
-    addText(text = 'graphicsAI', fontPath = './fonts/helvetiker_regular.typeface.json', attachProperties = true) {
-        this.assetsManager.loadFont(fontPath, (font) => {
-            this.viewport.add(this.createText(text, font, attachProperties));
-        });
+    addText(text = 'graphicsAI', onAfterAdd = (t) => { }, material = this.getMaterial(), textGeometryOptions = {
+        size: 0.5,
+        height: 0.2,
+        curveSegments: 6,
+        bevelEnabled: true,
+        bevelThickness: 0.03,
+        bevelSize: 0.02,
+        bevelOffset: 0,
+        bevelSegments: 4
+    }, fontPath = './fonts/helvetiker_regular.typeface.json', attachProperties = true) {
+        this.assetsManager.loadFont(
+            fontPath,
+            (font) => {
+                let textObj = this.createText(text, { font, ...textGeometryOptions }, material, attachProperties);
+                this.viewport.add(textObj);
+                onAfterAdd(textObj);
+            }
+        );
     }
 
     addCamera(attachProperties = true) {
-        let object = this.createCamera(material, attachProperties);
+        let object = this.createCamera(attachProperties);
         this.viewport.add(object);
         this.viewport.add(object.camera);
         this.cameraSelector.add(object.camera);
@@ -321,7 +326,7 @@ export default class ObjectGenerator {
         return this.addLight(this.createSpotLight, attachProperties);
     }
 
-    attachPropertiesToObj(object, name = 'Obj') {
+    attachPropertiesToModel(object, name = 'Model') {
         new InteractiveModel(this.viewport, object);
         let properties = new PropertyController(object, this.propertiesPane, name);
         properties.initProperties();
@@ -329,34 +334,59 @@ export default class ObjectGenerator {
         return object;
     }
 
-    parseAndAddObj(objectData, attachProperties = true, name = 'Obj') {
-        let object = this.assetsManager.objLoader.parse(objectData);
+    parseAndAddObj(objectData, attachProperties = true) {
+        let obj = this.parseOBJ(objectData);
         if (attachProperties) {
-            this.attachPropertiesToObj(object, name);
+            this.attachPropertiesToModel(obj, "Obj");
         }
-        this.viewport.add(object);
+        this.viewport.add(obj);
+        return obj;
     }
 
-    addObj(objFile, attachProperties = true, name = 'Obj', onAfterAdd) {
+    parseOBJ(objectData) {
+        return this.assetsManager.parseModel(objectData);
+    }
+
+    parseSTL(objectData, material = this.getMaterial(), attachProperties = true) {
+        return this.createInteractiveObject(this.assetsManager.parseModel(objectData, AssetsManager.MODEL_LOADER.STLLOADER), material, attachProperties, MeshPropertyController);
+    }
+
+    addModel(model, attachProperties = false, name = 'Model') {
+        if (attachProperties) {
+            this.attachPropertiesToModel(model, name);
+        }
+        this.viewport.add(model);
+    }
+
+    addObj(objFile, attachProperties = true, name = 'Model', onAfterAdd) {
         this.assetsManager.loadObj(objFile, (object) => {
             if (attachProperties) {
-                this.attachPropertiesToObj(object, name);
+                this.attachPropertiesToModel(object, name);
             }
             this.viewport.add(object);
             onAfterAdd(object);
         });
     }
 
-    importObj() {
+    importModel() {
         const fileInputElement = document.createElement('input');
         fileInputElement.setAttribute('type', 'file');
-        fileInputElement.setAttribute('accept', '.obj');
+        fileInputElement.setAttribute('accept', '.obj,.stl');
         fileInputElement.onchange = () => {
             let fileReader = new FileReader();
             let file = fileInputElement.files[0];
 
             fileReader.onload = () => {
-                this.parseAndAddObj(fileReader.result);
+                switch (file.name.split('.').pop()) {
+                    case "obj":
+                        this.parseAndAddObj(fileReader.result);
+                        break;
+                    case "stl":
+                        this.addModel(this.parseSTL(fileReader.result));
+                        break;
+                    default:
+                        alert("Invalid file! File should be of .obj or .stl");
+                }
             };
             if (file) {
                 fileReader.readAsBinaryString(file);

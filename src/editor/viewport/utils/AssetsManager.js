@@ -1,8 +1,9 @@
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import * as THREE from 'three';
 
-export default class AssetManager extends THREE.EventDispatcher {
+export default class AssetsManager extends THREE.EventDispatcher {
 
     static MATERIAL_TYPE = {
         MESH_STANDARD_MATERIAL: "MeshStandardMaterial",
@@ -27,11 +28,17 @@ export default class AssetManager extends THREE.EventDispatcher {
         "Light": "lightMap"
     };
 
+    static MODEL_LOADER = {
+        OBJLOADER: "objLoader",
+        STLLOADER: "stlLoader"
+    }
+
     constructor(loadingManager = new THREE.LoadingManager()) {
         super();
         this.loadingManager = loadingManager;
 
         this.objLoader = new OBJLoader(this.loadingManager);
+        this.stlLoader = new STLLoader(this.loadingManager);
 
         this.fontLoader = new FontLoader(this.loadingManager);
         this.fonts = new Map();
@@ -89,7 +96,7 @@ export default class AssetManager extends THREE.EventDispatcher {
         return material.assetId;
     }
 
-    createNewMaterial(materialType = AssetManager.MATERIAL_TYPE.MESH_STANDARD_MATERIAL) {
+    createNewMaterial(materialType = AssetsManager.MATERIAL_TYPE.MESH_STANDARD_MATERIAL) {
         let material = new THREE[materialType]({ color: 0x8e9091 });
         this.addMaterial(material);
         return material;
@@ -117,6 +124,10 @@ export default class AssetManager extends THREE.EventDispatcher {
                 console.log(error);
             }
         );
+    }
+
+    parseModel(modelData, modelLoader = AssetsManager.MODEL_LOADER.OBJLOADER) {
+        return this[modelLoader].parse(modelData);
     }
 
     getNewFontId() {

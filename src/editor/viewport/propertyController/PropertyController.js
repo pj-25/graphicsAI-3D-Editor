@@ -3,6 +3,8 @@ export default class PropertyController {
 
     constructor(interactiveObject, propertiesPane, name) {
         this.interactiveObject = interactiveObject;
+        if (name == "")
+            name = "Object"
         this.propertiesFolder = propertiesPane.addFolder(name + "-" + interactiveObject.id);
         this.dispose = () => { propertiesPane.removeFolder(this.propertiesFolder) };
     }

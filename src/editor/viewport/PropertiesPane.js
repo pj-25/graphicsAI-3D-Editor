@@ -127,6 +127,6 @@ export default class PropertiesPane extends dat.GUI {
         addLightFolder.add(objectGenerator, 'addSpotLight').name('Spot');
 
         //import .obj option
-        this.addObjectFolder.add(objectGenerator, 'importObj').name('Import Obj');
+        this.addObjectFolder.add(objectGenerator, 'importModel').name('Import (.obj | .stl)');
     }
 }

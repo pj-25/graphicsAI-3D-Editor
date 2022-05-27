@@ -1,5 +1,5 @@
 import { BackSide, ClampToEdgeWrapping, DoubleSide, FrontSide, LinearFilter, LinearMipmapLinearFilter, LinearMipmapNearestFilter, MirroredRepeatWrapping, NearestFilter, NearestMipmapLinearFilter, NearestMipmapNearestFilter, RepeatWrapping } from "three";
-import AssetManager from "../../utils/AssetsManager";
+import AssetsManager from "../../utils/AssetsManager";
 import PropertyController from "../PropertyController";
 
 
@@ -50,7 +50,8 @@ export default class MeshPropertyController extends PropertyController {
 
     addMaterialPropertyFolder() {
         this.materialPropertyFolder = this.propertiesFolder.addFolder('Material');
-        this.color = this.interactiveObject.material.color.getHex();
+        if (this.interactiveObject.material.color)
+            this.color = this.interactiveObject.material.color.getHex();
         this.interactiveObject.assetId = this.interactiveObject.material.assetId;
         this.assetIdProperty = this.materialPropertyFolder.add(this.interactiveObject, 'assetId', Array.from(MeshPropertyController.assetsManager.materials.keys())).name("Material").onChange(() => {
             this.updateMaterial(MeshPropertyController.assetsManager.getMaterial(this.interactiveObject.assetId));
@@ -59,12 +60,13 @@ export default class MeshPropertyController extends PropertyController {
         MeshPropertyController.assetsManager.addEventListener("add-material", this.onAddMaterial.bind(this));
         MeshPropertyController.assetsManager.addEventListener("remove-material", this.onRemoveMaterial.bind(this));
         this.interactiveObject.materialType = this.interactiveObject.material.constructor.name;
-        this.materialPropertyFolder.add(this.interactiveObject, 'materialType', AssetManager.MATERIAL_TYPE).onChange(() => {
+        this.materialPropertyFolder.add(this.interactiveObject, 'materialType', AssetsManager.MATERIAL_TYPE).onChange(() => {
             this.updateMaterial(MeshPropertyController.assetsManager.createNewMaterial(this.interactiveObject.materialType));
         });
-        this.materialPropertyFolder.addColor(this, 'color').onChange(() => {
-            this.interactiveObject.material.color.setHex(this.color);
-        });
+        if (this.color)
+            this.materialPropertyFolder.addColor(this, 'color').onChange(() => {
+                this.interactiveObject.material.color.setHex(this.color);
+            });
         //FIXME: changes side only once
         this.materialPropertyFolder.add(this.interactiveObject.material, "side", { "Front": FrontSide, "Back": BackSide, "Double": DoubleSide }).listen().onChange(() => {
             this.interactiveObject.material.needsUpdate = true;
@@ -74,19 +76,22 @@ export default class MeshPropertyController extends PropertyController {
         this.materialPropertyFolder.add(this.interactiveObject.material, 'opacity').min(0).max(1).step(0.0001).onChange(() => {
             this.interactiveObject.material.transparent = true
         });
-        this.materialPropertyFolder.add(this.interactiveObject.material, 'metalness').min(0).max(1).step(0.0001);
-        this.materialPropertyFolder.add(this.interactiveObject.material, 'roughness').min(0).max(1).step(0.0001);
+        if (this.interactiveObject.material.metalness)
+            this.materialPropertyFolder.add(this.interactiveObject.material, 'metalness').min(0).max(1).step(0.0001);
+        if (this.interactiveObject.material.roughness)
+            this.materialPropertyFolder.add(this.interactiveObject.material, 'roughness').min(0).max(1).step(0.0001);
         //FIXME: flatShadding not working
-        this.materialPropertyFolder.add(this.interactiveObject.material, 'flatShading').onChange(() => {
-            this.interactiveObject.material.needsUpdate = true;
-        });
+        if (this.interactiveObject.material.flatShadding)
+            this.materialPropertyFolder.add(this.interactiveObject.material, 'flatShading').onChange(() => {
+                this.interactiveObject.material.needsUpdate = true;
+            });
         this.shadowPropertyFolder = this.materialPropertyFolder.addFolder("Shadow");
         this.shadowPropertyFolder.add(this.interactiveObject, 'castShadow').name('Cast Shadow');
         this.shadowPropertyFolder.add(this.interactiveObject, 'receiveShadow').name('Receive Shadow');
 
         this.textureSelection = "Select a texture";
         this.materialPropertyFolder
-            .add(this, "textureSelection", AssetManager.textureTypes)
+            .add(this, "textureSelection", AssetsManager.textureTypes)
             .name("Add Texture").listen()
             .listen()
             .onChange(() => {
