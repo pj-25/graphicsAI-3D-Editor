@@ -25,6 +25,8 @@ import InteractiveModel from "../interactiveObjects/InteractiveModel";
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import AssetsManager from "./AssetsManager";
 import MeshPropertyController from "../propertyController/meshPropertyController/MeshPropertyController";
+import SpiralGalaxy from "../interactiveObjects/SpiralGalaxy";
+import SpiralGalaxyPropertyController from "../propertyController/particlesProperty/SpiralGalaxyPropertyController";
 
 export default class ObjectGenerator {
     static OBJECT_TYPE = {
@@ -393,6 +395,19 @@ export default class ObjectGenerator {
             }
         };
         fileInputElement.click();
+    }
+
+    createSpiralGalaxy(options, attachProperties = true) {
+        let spiralGalaxy = SpiralGalaxy.generate(options);
+        if (attachProperties) {
+            spiralGalaxy.properties = new SpiralGalaxyPropertyController(spiralGalaxy, this.propertiesPane);
+            spiralGalaxy.properties.initProperties();
+        }
+        return spiralGalaxy;
+    }
+
+    addSpiralGalaxy(options = { size: 0.1, totalParticles: 100, radius: 10, branch: 3, curl: 2, width: 0 }, attachProperties = true) {
+        this.viewport.add(this.createSpiralGalaxy(options, attachProperties))
     }
 
     create(objectType, attachProperties = true) {
