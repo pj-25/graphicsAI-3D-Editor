@@ -16,9 +16,6 @@ export default class SpiralGalaxyPropertyController {
         this.spiralProperties.add(this.particleGalaxy.material, 'size').min(0.1).max(2).step(0.001);
         this.spiralProperties.add(this.particleGalaxy.material, 'sizeAttenuation');
         this.spiralProperties.add(options, 'totalParticles').min(10).max(1000).step(1).onFinishChange(() => { this.regenerate() });
-        this.spiralProperties.addColor(options, 'color').onChange(() => {
-            this.particleGalaxy.material.color.set(new Color(options.color));
-        });
         this.spiralProperties.add(options, 'radius').min(1).max(500).step(0.1).onFinishChange(() => {
             this.regenerate();
         });
@@ -29,6 +26,12 @@ export default class SpiralGalaxyPropertyController {
             this.regenerate();
         });
         this.spiralProperties.add(options, 'width').min(0).max(5).step(0.01).onFinishChange(() => {
+            this.regenerate();
+        });
+        this.spiralProperties.addColor(options, 'centerColor').onChange(() => {
+            this.regenerate();
+        });
+        this.spiralProperties.addColor(options, 'tipColor').onChange(() => {
             this.regenerate();
         });
 

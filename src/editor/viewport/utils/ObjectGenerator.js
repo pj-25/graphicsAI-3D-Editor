@@ -406,7 +406,7 @@ export default class ObjectGenerator {
         return spiralGalaxy;
     }
 
-    addSpiralGalaxy(options = { size: 0.1, totalParticles: 100, radius: 10, branch: 3, curl: 2, width: 0 }, attachProperties = true) {
+    addSpiralGalaxy(options = { size: 0.1, totalParticles: 300, radius: 5, branch: 3, curl: 6, width: 0, centerColor: 0xd0de64, tipColor: 0x8f56cd }, attachProperties = true) {
         this.viewport.add(this.createSpiralGalaxy(options, attachProperties))
     }
 
