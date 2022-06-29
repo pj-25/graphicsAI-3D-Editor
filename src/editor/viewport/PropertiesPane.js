@@ -114,6 +114,7 @@ export default class PropertiesPane extends dat.GUI {
                 }
             );
         };
+        addMeshFolder.add(objectGenerator, 'addSpiralGalaxy').name('Spiral Galaxy');
         this.addObjectFolder.add(this, 'loadHelicopter').name('Helicopter');
         this.addObjectFolder.add(objectGenerator, 'addCamera').name('Camera');
         let addLightFolder = this.addObjectFolder.addFolder('Light');

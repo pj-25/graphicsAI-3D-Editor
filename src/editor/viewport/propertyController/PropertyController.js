@@ -38,19 +38,23 @@ export default class PropertyController {
 
         // transform
         this.transformPropertyFolder = this.propertiesFolder.addFolder('Transform');
-        this.transformPropertyFolder.add(this.interactiveObject.position, 'x').name('PositionX').min(-50).max(50).step(0.01).listen();
-        this.transformPropertyFolder.add(this.interactiveObject.position, 'y').name('PositionY').min(-50).max(50).step(0.01).listen();
-        this.transformPropertyFolder.add(this.interactiveObject.position, 'z').name('PositionZ').min(-50).max(50).step(0.01).listen();
-
-        this.transformPropertyFolder.add(this.interactiveObject.rotation, 'x').name('RotateX').min(-3.14).max(3.14).step(0.01).listen();
-        this.transformPropertyFolder.add(this.interactiveObject.rotation, 'y').name('RotateY').min(-3.14).max(3.14).step(0.01).listen();
-        this.transformPropertyFolder.add(this.interactiveObject.rotation, 'z').name('RotateZ').min(-3.14).max(3.14).step(0.01).listen();
-
-        this.transformPropertyFolder.add(this.interactiveObject.scale, 'x').name('ScaleX').min(-100).max(100).step(0.01).listen();
-        this.transformPropertyFolder.add(this.interactiveObject.scale, 'y').name('ScaleY').min(-100).max(100).step(0.01).listen();
-        this.transformPropertyFolder.add(this.interactiveObject.scale, 'z').name('ScaleZ').min(-100).max(100).step(0.01).listen();
+        PropertyController.attachTranformProperties(this.interactiveObject, this.transformPropertyFolder);
 
     }
 
+    static attachTranformProperties(interactiveObject, propertiesFolder) {
+        propertiesFolder.add(interactiveObject.position, 'x').name('PositionX').min(-50).max(50).step(0.01).listen();
+        propertiesFolder.add(interactiveObject.position, 'y').name('PositionY').min(-50).max(50).step(0.01).listen();
+        propertiesFolder.add(interactiveObject.position, 'z').name('PositionZ').min(-50).max(50).step(0.01).listen();
+
+        propertiesFolder.add(interactiveObject.rotation, 'x').name('RotateX').min(-3.14).max(3.14).step(0.01).listen();
+        propertiesFolder.add(interactiveObject.rotation, 'y').name('RotateY').min(-3.14).max(3.14).step(0.01).listen();
+        propertiesFolder.add(interactiveObject.rotation, 'z').name('RotateZ').min(-3.14).max(3.14).step(0.01).listen();
+
+        propertiesFolder.add(interactiveObject.scale, 'x').name('ScaleX').min(-100).max(100).step(0.01).listen();
+        propertiesFolder.add(interactiveObject.scale, 'y').name('ScaleY').min(-100).max(100).step(0.01).listen();
+        propertiesFolder.add(interactiveObject.scale, 'z').name('ScaleZ').min(-100).max(100).step(0.01).listen();
+
+    }
 
 }
