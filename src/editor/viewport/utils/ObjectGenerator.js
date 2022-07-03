@@ -25,7 +25,7 @@ import InteractiveModel from "../interactiveObjects/InteractiveModel";
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import AssetsManager from "./AssetsManager";
 import MeshPropertyController from "../propertyController/meshPropertyController/MeshPropertyController";
-import SpiralGalaxy from "../interactiveObjects/SpiralGalaxy";
+import InteractiveSpiralGalaxy from "../interactiveObjects/InteractiveSpiralGalaxy";
 import SpiralGalaxyPropertyController from "../propertyController/particlesProperty/SpiralGalaxyPropertyController";
 
 export default class ObjectGenerator {
@@ -50,7 +50,7 @@ export default class ObjectGenerator {
             RECTAREA: "RectAreaLight",
             SPOT: "SpotLight"
         },
-        OBJ: "16"
+        OBJ: "Obj"
     };
 
     constructor(viewport, propertiesPane, cameraSelector, cursorPoint = new THREE.Vector3(0, 0, 0)) {
@@ -67,24 +67,24 @@ export default class ObjectGenerator {
     /**
      * @param material if passed as string, will consider it as material Id
      */
-    createInteractiveObject(geometry, material, attachProperties, PropertyController, InteractiveObject = InteractiveMesh) {
+    createInteractiveObject(geometry, material, attachProperties, PropertyController, InteractiveObject = InteractiveMesh, options) {
         if (typeof (material) == "string") {
             material = this.assetsManager.getMaterial(material) || this.assetsManager.createNewMaterial();
         }
-        let mesh = new InteractiveObject(this.viewport, geometry, material);
-        mesh.position.copy(this.cursorPoint);
+        let object = new InteractiveObject(this.viewport, geometry, material, options);
+        object.position.copy(this.cursorPoint);
         if (attachProperties) {
-            mesh.properties = new PropertyController(mesh, this.propertiesPane);
-            mesh.properties.initProperties();
+            object.properties = new PropertyController(object, this.propertiesPane);
+            object.properties.initProperties();
         }
-        return mesh;
+        return object;
     }
 
-    getMaterial() {
+    getMaterial(defaultType = AssetsManager.MATERIAL_TYPE.MESH_STANDARD_MATERIAL) {
         if (this.sharedMaterial) {
             return this.sharedMaterial;
         }
-        return this.assetsManager.createNewMaterial();
+        return this.assetsManager.createNewMaterial(defaultType);
     }
 
     setSharedMaterial(material) {
@@ -209,6 +209,22 @@ export default class ObjectGenerator {
                 onAfterAdd(textObj);
             }
         );
+    }
+
+    createSpiralGalaxy(options, material = this.getMaterial(AssetsManager.MATERIAL_TYPE.POINTS_MATERIAL), attachProperties = true) {
+        material = this.assetsManager.createNewMaterial(AssetsManager.MATERIAL_TYPE.POINTS_MATERIAL);
+        material.size = options.size;
+        material.color.setHex(0xffffff);
+        material.sizeAttenuation = true;
+        material.vertexColors = true;
+        material.transparent = true;
+        material.depthWrite = false;
+        // material.blending = THREE.AdditiveBlending;
+        return this.createInteractiveObject(InteractiveSpiralGalaxy.generateGeometry(options), material, attachProperties, SpiralGalaxyPropertyController, InteractiveSpiralGalaxy, options);
+    }
+
+    addSpiralGalaxy(options = { size: 0.1, totalParticles: 3000, radius: 5, branch: 3, curl: 6, width: 0, centerColor: 0xd0de64, tipColor: 0x8f56cd, randomness: 0.5, randomPower: 5 }, attachProperties = true) {
+        this.viewport.add(this.createSpiralGalaxy(options, attachProperties))
     }
 
     addCamera(attachProperties = true) {
@@ -395,19 +411,6 @@ export default class ObjectGenerator {
             }
         };
         fileInputElement.click();
-    }
-
-    createSpiralGalaxy(options, attachProperties = true) {
-        let spiralGalaxy = SpiralGalaxy.generate(options);
-        if (attachProperties) {
-            spiralGalaxy.properties = new SpiralGalaxyPropertyController(spiralGalaxy, this.propertiesPane);
-            spiralGalaxy.properties.initProperties();
-        }
-        return spiralGalaxy;
-    }
-
-    addSpiralGalaxy(options = { size: 0.1, totalParticles: 300, radius: 5, branch: 3, curl: 6, width: 0, centerColor: 0xd0de64, tipColor: 0x8f56cd }, attachProperties = true) {
-        this.viewport.add(this.createSpiralGalaxy(options, attachProperties))
     }
 
     create(objectType, attachProperties = true) {

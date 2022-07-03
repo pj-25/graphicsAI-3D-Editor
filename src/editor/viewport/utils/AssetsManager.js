@@ -12,7 +12,8 @@ export default class AssetsManager extends THREE.EventDispatcher {
         MESH_PHONG_MATERIAL: "MeshPhongMaterial",
         MESH_TOON_MATERIAL: "MeshToonMaterial",
         MESH_LAMBERT_MATERIAL: "MeshLambertMaterial",
-        MESH_MATCAP_MATERIAL: "MeshMatcapMaterial"
+        MESH_MATCAP_MATERIAL: "MeshMatcapMaterial",
+        POINTS_MATERIAL: "PointsMaterial"
     }
 
     static textureTypes = {

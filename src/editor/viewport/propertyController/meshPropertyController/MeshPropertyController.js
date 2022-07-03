@@ -32,7 +32,7 @@ export default class MeshPropertyController extends PropertyController {
     }
     static bumpMaps = { "Ground-CobbleStone": "/textures/GroundCobblestone001/GroundCobblestone001_BUMP_2K.jpg" }
     static lightMaps = { "Ground-CobbleStone": "/textures/GroundCobblestone001/GroundCobblestone001_REFL_2K.jpg" }
-    static alphaMaps = { "Door": "/textures/door/alpha.jpg" }
+    static alphaMaps = { "Door": "/textures/door/alpha.jpg", "Smoke": "/textures/particles/smoke_01.png", "Star1": "/textures/particles/star_01.png", "Star2": "/textures/particles/star_06.png", "Star3": "/textures/particles/star_07.png" }
     static emissiveMaps = {}
     static environmentMaps = {}
     static metalnessMaps = { "Door": "/textures/door/metalness.jpg" }
@@ -72,7 +72,8 @@ export default class MeshPropertyController extends PropertyController {
             this.interactiveObject.material.needsUpdate = true;
         });
 
-        this.materialPropertyFolder.add(this.interactiveObject.material, 'wireframe');
+        if (this.interactiveObject.material.wireframe)
+            this.materialPropertyFolder.add(this.interactiveObject.material, 'wireframe');
         this.materialPropertyFolder.add(this.interactiveObject.material, 'opacity').min(0).max(1).step(0.0001).onChange(() => {
             this.interactiveObject.material.transparent = true
         });
