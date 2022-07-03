@@ -10,32 +10,32 @@ export default class MeshPropertyController extends PropertyController {
     static wrapTypes = { "RepeatWrapping": RepeatWrapping, "ClampToEdgeWrapping": ClampToEdgeWrapping, "MirroredRepeatWrapping": MirroredRepeatWrapping };
 
     static maps = {
-        "Ground-CobbleStone": "/textures/GroundCobblestone001/GroundCobblestone001_COL_2K.jpg",
-        "Minecraft": "/textures/minecraft/minecraft.png",
-        "Door": "/textures/door/color.jpg"
+        "Ground-CobbleStone": "./textures/GroundCobblestone001/GroundCobblestone001_COL_2K.jpg",
+        "Minecraft": "./textures/minecraft/minecraft.png",
+        "Door": "./textures/door/color.jpg"
     }
     static normalMaps = {
-        "Ground-CobbleStone": "/textures/GroundCobblestone001/GroundCobblestone001_NRM_2K.jpg",
-        "Door": "/textures/door/normal.jpg"
+        "Ground-CobbleStone": "./textures/GroundCobblestone001/GroundCobblestone001_NRM_2K.jpg",
+        "Door": "./textures/door/normal.jpg"
     }
     static aoMaps = {
-        "Ground-CobbleStone": "/textures/GroundCobblestone001/GroundCobblestone001_AO_2K.jpg",
-        "Door": "/textures/door/ambientOcclusion.jpg"
+        "Ground-CobbleStone": "./textures/GroundCobblestone001/GroundCobblestone001_AO_2K.jpg",
+        "Door": "./textures/door/ambientOcclusion.jpg"
     }
     static displacementMaps = {
-        "Ground-CobbleStone": "/textures/GroundCobblestone001/GroundCobblestone001_DISP_2K.jpg",
-        "Door": "/textures/door/height.jpg"
+        "Ground-CobbleStone": "./textures/GroundCobblestone001/GroundCobblestone001_DISP_2K.jpg",
+        "Door": "./textures/door/height.jpg"
     }
     static roughnessMaps = {
-        "Ground-CobbleStone": "/textures/GroundCobblestone001/GroundCobblestone001_GLOSS_2K.jpg",
-        "Door": "/textures/door/roughness.jpg"
+        "Ground-CobbleStone": "./textures/GroundCobblestone001/GroundCobblestone001_GLOSS_2K.jpg",
+        "Door": "./textures/door/roughness.jpg"
     }
-    static bumpMaps = { "Ground-CobbleStone": "/textures/GroundCobblestone001/GroundCobblestone001_BUMP_2K.jpg" }
-    static lightMaps = { "Ground-CobbleStone": "/textures/GroundCobblestone001/GroundCobblestone001_REFL_2K.jpg" }
-    static alphaMaps = { "Door": "/textures/door/alpha.jpg", "Smoke": "/textures/particles/smoke_01.png", "Star1": "/textures/particles/star_01.png", "Star2": "/textures/particles/star_06.png", "Star3": "/textures/particles/star_07.png" }
+    static bumpMaps = { "Ground-CobbleStone": "./textures/GroundCobblestone001/GroundCobblestone001_BUMP_2K.jpg" }
+    static lightMaps = { "Ground-CobbleStone": "./textures/GroundCobblestone001/GroundCobblestone001_REFL_2K.jpg" }
+    static alphaMaps = { "Door": "./textures/door/alpha.jpg", "Smoke": "./textures/particles/smoke_01.png", "Star1": "./textures/particles/star_01.png", "Star2": "./textures/particles/star_06.png", "Star3": "./textures/particles/star_07.png" }
     static emissiveMaps = {}
     static environmentMaps = {}
-    static metalnessMaps = { "Door": "/textures/door/metalness.jpg" }
+    static metalnessMaps = { "Door": "./textures/door/metalness.jpg" }
 
     constructor(mesh, propertiesPane, name = mesh.geometry.type.replace('BufferGeometry', "")) {
         super(mesh, propertiesPane, name);
