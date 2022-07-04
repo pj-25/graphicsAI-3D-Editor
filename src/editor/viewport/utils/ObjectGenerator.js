@@ -223,7 +223,7 @@ export default class ObjectGenerator {
         return this.createInteractiveObject(InteractiveSpiralGalaxy.generateGeometry(options), material, attachProperties, SpiralGalaxyPropertyController, InteractiveSpiralGalaxy, options);
     }
 
-    addSpiralGalaxy(options = { size: 0.1, totalParticles: 3000, radius: 5, branch: 3, curl: 6, width: 0, centerColor: 0xd0de64, tipColor: 0x8f56cd, randomness: 0.5, randomPower: 5 }, attachProperties = true) {
+    addSpiralGalaxy(options = { size: 0.1, totalParticles: 3000, radius: 5, branch: 3, curl: 6, width: 0, centerColor: 0xd0de64, tipColor: 0x8f56cd, randomness: 0.5, gravityPull: 5 }, attachProperties = true) {
         this.viewport.add(this.createSpiralGalaxy(options, attachProperties))
     }
 

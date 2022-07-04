@@ -39,9 +39,9 @@ export default class InteractiveSpiralGalaxy extends Points {
             // positions[i] = randomRadius * Math.cos(theta) * Math.cos(alpha);
             // positions[i + 1] = y * options.width;
             // positions[i + 2] = randomRadius * Math.sin(theta) * Math.cos(alpha);
-            const randomX = Math.pow(Math.random(), options.randomPower) * (Math.random() < 0.5 ? 1 : -1) * options.randomness;
-            const randomY = Math.pow(Math.random(), options.randomPower) * (Math.random() < 0.5 ? 1 : -1) * options.randomness;
-            const randomZ = Math.pow(Math.random(), options.randomPower) * (Math.random() < 0.5 ? 1 : -1) * options.randomness;
+            const randomX = Math.pow(Math.random(), options.gravityPull) * (Math.random() < 0.5 ? 1 : -1) * options.randomness;
+            const randomY = Math.pow(Math.random(), options.gravityPull) * (Math.random() < 0.5 ? 1 : -1) * options.randomness;
+            const randomZ = Math.pow(Math.random(), options.gravityPull) * (Math.random() < 0.5 ? 1 : -1) * options.randomness;
             positions[i] = randomRadius * Math.cos(theta) + randomX;
             positions[i + 1] = randomY;
             positions[i + 2] = randomRadius * Math.sin(theta) + randomZ;

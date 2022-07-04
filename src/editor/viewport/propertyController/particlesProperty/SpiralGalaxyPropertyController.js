@@ -39,7 +39,7 @@ export default class SpiralGalaxyPropertyController extends MeshPropertyControll
         this.spiralProperties.add(options, 'randomness').min(0).max(2).step(0.001).onFinishChange(() => {
             this.regenerate();
         });
-        this.spiralProperties.add(options, 'randomPower').min(1).max(10).step(0.001).onFinishChange(() => {
+        this.spiralProperties.add(options, 'gravityPull').min(1).max(10).step(0.001).onFinishChange(() => {
             this.regenerate();
         });
     }
