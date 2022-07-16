@@ -57,7 +57,7 @@ function signIn(){
 
 function signOutNow(){
     signOut(auth).then(() => {
-        $("#offcanvas-img").attr("src", "/images/graphicsAI-Icon.png");
+        $("#offcanvas-img").attr("src", "./images/graphicsAI-Icon.png");
         $("#offcanvasNavbarLabel").text("graphicsAI");
         $("#nav-action-btn").text("SignIn").on('click', signIn)
     }).catch((error) => {
