@@ -4,6 +4,8 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import * as $ from 'jquery';
+import { Color } from 'three';
+import AssetsManager from './editor/viewport/utils/AssetsManager';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -32,6 +34,20 @@ const editor = new Editor(viewportCanvas);
 //rendering the editor.viewport
 editor.viewport.render();
 
+function displayWelcome(name){
+    editor.objectGenerator.addText("Welcome "+name, (text)=>{
+        text.position.y += 1;
+        function fadeOut(){
+            text.material.opacity -= 0.02;
+            if(text.material.opacity <= 0){
+                text.dispose();
+                clearInterval(fadeOutInterval);
+            }        
+        }
+        const fadeOutInterval = setInterval(fadeOut, 200);
+    }, editor.objectGenerator.assetsManager.createNewMaterial(AssetsManager.MATERIAL_TYPE.MESH_NORMAL_MATERIAL));
+}
+
 function signIn(){
     signInWithPopup(auth, provider)
     .then((result) => {
@@ -42,7 +58,8 @@ function signIn(){
         window.currentUser = result.user;
         $("#offcanvas-img").attr("src", currentUser.photoURL);
         $("#offcanvasNavbarLabel").text(currentUser.email);
-        $("#nav-action-btn").text("SignOut").off().on('click', signOutNow)
+        $("#nav-action-btn").text("SignOut").off().on('click', signOutNow);
+        displayWelcome(currentUser.displayName);
     }).catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
