@@ -8,7 +8,7 @@ import ObjectGenerator from './viewport/utils/ObjectGenerator';
 import Viewport from './viewport/Viewport';
 
 export default class Editor {
-    constructor(viewportCanvas, toolBarElement, propertiesPaneContainer) {
+    constructor(viewportCanvas, propertiesPaneContainer) {
         //TODO:add menubar
 
         //creating properties pane 
@@ -21,7 +21,6 @@ export default class Editor {
         this.propertiesPane.bindControlledCameraProperties(this.viewport.controlledCamera);
 
         //add toolbar
-        this.toolBarElement = toolBarElement;
         this.toolBox = new ToolBox(this.viewport);
         this.toolBox.bindProperties(this.propertiesPane);
 
