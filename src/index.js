@@ -4,7 +4,6 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import * as $ from 'jquery';
-import { Color } from 'three';
 import AssetsManager from './editor/viewport/utils/AssetsManager';
 
 // Your web app's Firebase configuration
@@ -56,7 +55,7 @@ function signIn(){
         const token = credential.accessToken;
         // The signed-in user info.
         window.currentUser = result.user;
-        $("#offcanvas-img").attr("src", currentUser.photoURL);
+        $("#offcanvas-img").attr("src", currentUser.photoURL).css('border-radius', '50%');
         $("#offcanvasNavbarLabel").text(currentUser.email);
         $("#nav-action-btn").text("SignOut").off().on('click', signOutNow);
         displayWelcome(currentUser.displayName);
@@ -74,7 +73,7 @@ function signIn(){
 
 function signOutNow(){
     signOut(auth).then(() => {
-        $("#offcanvas-img").attr("src", "./images/graphicsAI-Icon.png");
+        $("#offcanvas-img").attr("src", "./images/graphicsAI-Icon.png").css('border-radius', '0');
         $("#offcanvasNavbarLabel").text("graphicsAI");
         $("#nav-action-btn").text("SignIn").on('click', signIn)
     }).catch((error) => {
