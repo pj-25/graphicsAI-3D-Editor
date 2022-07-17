@@ -98,7 +98,7 @@ export default class AssetsManager extends THREE.EventDispatcher {
     }
 
     createNewMaterial(materialType = AssetsManager.MATERIAL_TYPE.MESH_STANDARD_MATERIAL) {
-        let material = new THREE[materialType]({ color: 0x8e9091 });
+        let material = new THREE[materialType]({ color: 0x8e9091, transparent: true });
         this.addMaterial(material);
         return material;
     }
