@@ -1,5 +1,5 @@
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import MeshPropertyController from "./MeshPropertyController";
-import * as THREE from 'three';
 
 export default class TextProperty extends MeshPropertyController {
     constructor(Mesh, propertiesPane) {
@@ -7,7 +7,7 @@ export default class TextProperty extends MeshPropertyController {
 
         this.geometryPropertyFolder = this.propertiesFolder.addFolder('Geometry');
         this.regenerate = () => {
-            let newGeometry = new THREE.TextGeometry(this.geometryData.text, this.geometryData.options);
+            let newGeometry = new TextGeometry(this.geometryData.text, this.geometryData.options);
             newGeometry.center();
             this.interactiveObject.updateGeometry(newGeometry);
         }
