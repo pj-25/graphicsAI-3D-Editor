@@ -12,7 +12,8 @@ export default class AssetsManager extends THREE.EventDispatcher {
         MESH_PHONG_MATERIAL: "MeshPhongMaterial",
         MESH_TOON_MATERIAL: "MeshToonMaterial",
         MESH_LAMBERT_MATERIAL: "MeshLambertMaterial",
-        MESH_MATCAP_MATERIAL: "MeshMatcapMaterial"
+        MESH_MATCAP_MATERIAL: "MeshMatcapMaterial",
+        POINTS_MATERIAL: "PointsMaterial"
     }
 
     static textureTypes = {
@@ -97,7 +98,7 @@ export default class AssetsManager extends THREE.EventDispatcher {
     }
 
     createNewMaterial(materialType = AssetsManager.MATERIAL_TYPE.MESH_STANDARD_MATERIAL) {
-        let material = new THREE[materialType]({ color: 0x8e9091 });
+        let material = new THREE[materialType]({ color: 0x8e9091, transparent: true });
         this.addMaterial(material);
         return material;
     }

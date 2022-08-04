@@ -16,9 +16,7 @@ export default class InteractiveObjectHelper extends EventDispatcher {
             this.selectionColor = selectionColor;
             this.selectable = true;
             this.selected = false;
-            this.edges = new THREE.EdgesGeometry(this.interactiveObject.geometry);
-            this.selectionMaterial = new THREE.LineBasicMaterial({ color: this.selectionColor });
-            this.selectionHelper = new THREE.LineSegments(this.edges, this.selectionMaterial);
+            this.selectionHelper = new THREE.BoxHelper(this.interactiveObject, selectionColor);
         }
 
         this.onKeypressTransformAction = (event) => {
@@ -63,8 +61,7 @@ export default class InteractiveObjectHelper extends EventDispatcher {
 
 
     updateSelectionHelper() {
-        this.edges.copy(new THREE.EdgesGeometry(this.interactiveObject.geometry));
-        this.selectionHelper.geometry = this.edges;
+        this.selectionHelper.update();
     }
 
     onVisibleChange() {
